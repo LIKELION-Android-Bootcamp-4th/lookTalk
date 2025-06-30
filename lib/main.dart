@@ -19,11 +19,19 @@ class MyApp extends StatelessWidget {
           // 제목
           headlineLarge: TextStyle(
             fontSize: TextSizes.headline,
+            fontWeight: FontWeight.w800
+          ),
+          //
+
+
+          // 일반 본문
+          bodyLarge: TextStyle(
+            fontSize: TextSizes.body,
             fontWeight: FontWeight.w700
           ),
 
           // 일반 본문
-          bodyLarge: TextStyle(
+          bodyMedium: TextStyle(
             fontSize: TextSizes.body,
             fontWeight: FontWeight.w400
           ),
