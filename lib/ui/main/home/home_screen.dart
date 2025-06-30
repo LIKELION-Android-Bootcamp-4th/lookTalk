@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/ui/common/common_modal.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,12 +14,12 @@ class HomeScreen extends StatelessWidget {
           children: [
             Text(
               '헤드라인 텍스트입니다',
-              style: Theme.of(context).textTheme.headlineLarge,
+              style: context.h1,
             ),
             const SizedBox(height: 8),
-            Text('본문 텍스트입니다', style: Theme.of(context).textTheme.bodyLarge),
+            Text('본문 텍스트입니다', style: context.body),
             const SizedBox(height: 8),
-            Text('설명 텍스트입니다', style: Theme.of(context).textTheme.bodySmall),
+            Text('설명 텍스트입니다', style: context.caption),
             const SizedBox(height: 8),
             ElevatedButton(
               onPressed: () {
@@ -32,7 +35,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                 );
               },
-              child: Text('모달 열기'),
+              child: Text('모달 열기', style: context.body,),
             ),
           ],
         ),
