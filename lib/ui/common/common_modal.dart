@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/ui/common/const/colors.dart';
+import 'package:look_talk/ui/common/const/gap.dart';
 
 class CommonModal extends StatelessWidget {
   final String title;
@@ -22,33 +24,38 @@ class CommonModal extends StatelessWidget {
     return Dialog(
       backgroundColor: Colors.white,
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(32.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: Theme.of(context).textTheme.headlineLarge),
-            const SizedBox(height: 12),
-            Text(content, style: Theme.of(context).textTheme.bodyMedium),
-            const SizedBox(height: 12),
+            Text(title, style: context.h1.copyWith(color: AppColors.btnPrimary)),
+            gap32,
+            Text(content, style: context.body),
+            gap24,
             Row(
-              //mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextButton(
+                ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text(cancelText),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.btnSecondary,
+                    fixedSize: Size(110, 42),
+                  ),
+                  child: Text(cancelText, style: context.bodyBold),
                 ),
-                const SizedBox(width: 8),
+                gapW8,
                 ElevatedButton(
                   onPressed: onConfirm,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.btnPrimary,
+                    fixedSize: Size(110, 42),
                   ),
                   child: Text(
                     confirmText,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.white),
+                    style: context.bodyBold?.copyWith(color: AppColors.white),
                   ),
                 ),
               ],

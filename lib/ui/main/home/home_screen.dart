@@ -28,7 +28,7 @@ class HomeScreen extends StatelessWidget {
                   builder: (context) => CommonModal(
                     title: '로그아웃',
                     content: '로그아웃 하시겠습니까?',
-                    confirmText: '로그아웃 하기',
+                    confirmText: '로그아웃',
                     onConfirm: () {
                       Navigator.of(context).pop();
                     },
