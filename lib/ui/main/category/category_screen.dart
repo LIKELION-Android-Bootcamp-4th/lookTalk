@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:look_talk/ui/main/category/gender_toggle.dart';
 import 'package:look_talk/view_model/category/category_select_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -49,6 +50,3 @@ class CategoryScreen extends StatelessWidget{
       ),
 
     );
-
-  }
-}
