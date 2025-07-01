@@ -14,7 +14,7 @@ final GoRouter router = GoRouter(
     },
       routes: [
         GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
-        GoRoute(path: '/category', builder: (context, state) => const CategoryScreen()),
+        GoRoute(path: '/category', builder: (context, state) => CategoryScreen()),
         GoRoute(path: '/community', builder: (context, state) => const CommunityScreen()),
         GoRoute(path: '/wishlist', builder: (context, state) => const WishlistScreen()),
         GoRoute(path: '/mypage', builder: (context, state) => const MyPageScreen()),
