@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:look_talk/ui/common/const/colors.dart';
 import 'package:look_talk/ui/common/const/text_sizes.dart';
+import 'package:look_talk/ui/product/product_detail/product_detail_bottom_sheet.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   const ProductDetailScreen({super.key});
@@ -143,15 +144,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           children: [
             IconButton(
               icon: const Icon(Icons.favorite_border, color: Colors.black),
-              onPressed: () {
-                //위시리스트 기능
+              onPressed: () { //찜하기(위시리스트)버튼
               },
             ),
             const SizedBox(width: 8),
+            //구매하기 bottom_sheet 연동
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
-                  //구매하기 기능
+                  showOptionBottomSheet(context);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.btnPrimary,
