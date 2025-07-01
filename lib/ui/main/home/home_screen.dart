@@ -26,18 +26,6 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-
-            gap16,
-            CommonDropdown(
-              items: example,
-              selectedValue: selectedItem,
-              hintText: '조회 기간',
-              onChanged: (value) {
-                setState(() {
-                  selectedItem = value;
-                });
-              },
-            ),
           ],
         ),
       ),
