@@ -3,6 +3,25 @@ import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/ui/common/const/colors.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
 
+// 사용 예시 ( ex. 모달 열기 버튼 클릭시 로그아웃 모달 표시 )
+//             ElevatedButton(
+//               onPressed: () {
+//                 showDialog(
+//                   context: context,
+//                   builder: (context) => CommonModal(
+//                     title: '로그아웃',
+//                     content: '로그아웃 하시겠습니까?',
+//                     confirmText: '로그아웃',
+//                     onConfirm: () {
+//                       Navigator.of(context).pop();
+//                     },
+//                   ),
+//                 );
+//               },
+//               child: Text('모달 열기', style: context.body),
+//             ),
+
+
 class CommonModal extends StatelessWidget {
   final String title;
   final String content;

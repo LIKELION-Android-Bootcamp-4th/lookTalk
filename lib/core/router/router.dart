@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:look_talk/ui/main/bottom_nav_screen.dart';
 import 'package:look_talk/ui/main/category/category_screen.dart';
@@ -10,7 +11,7 @@ final GoRouter router = GoRouter(
   initialLocation: '/home',
   routes: [
     ShellRoute(builder: (context, state, child){
-      return BottomNavScreen(child: child);
+      return BottomNavScreen(child: Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: child,));
     },
       routes: [
         GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
