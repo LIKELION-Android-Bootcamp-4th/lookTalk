@@ -4,11 +4,12 @@ import 'package:look_talk/ui/main/category/gender_toggle.dart';
 import 'package:look_talk/view_model/category/category_select_viewmodel.dart';
 import 'package:provider/provider.dart';
 
-class CategoryScreen extends StatelessWidget{
+class CategoryScreen extends StatelessWidget {
+  const CategoryScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_)=> CategorySelectViewmodel(),
+      create: (_) => CategorySelectViewmodel(),
       child: Scaffold(
         appBar: AppBar(
 
@@ -24,15 +25,16 @@ class CategoryScreen extends StatelessWidget{
                 padding: EdgeInsets.only(right: 16),
                 child: Row(
                     children: [
-                      IconButton(onPressed: (){}, icon: Icon(Icons.search)),
-                      IconButton(onPressed: (){}, icon: Icon(Icons.shopping_cart_outlined)),
+                      IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+                      IconButton(onPressed: () {},
+                          icon: Icon(Icons.shopping_cart_outlined)),
                     ]
                 )
             )
           ],
         ),
         body: Consumer<CategorySelectViewmodel>(
-            builder: (context,viewModel,child){
+            builder: (context, viewModel, child) {
               return Column(
                 children: [
                   Padding(
@@ -50,3 +52,5 @@ class CategoryScreen extends StatelessWidget{
       ),
 
     );
+  }
+}
