@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 class CategorySelectViewmodel extends ChangeNotifier{
-  //카테고리 중 성별 전환 기능
+  //중복 기능이어서 삭제 후 플로우 재 설정
   String _selectedGender = "남자";
   String get selectedGender => _selectedGender;
 
