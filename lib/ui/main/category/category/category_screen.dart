@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:look_talk/ui/main/category/gender_toggle.dart';
-import 'package:look_talk/ui/main/category/main_category.dart';
-import 'package:look_talk/ui/main/category/sub_category.dart';
+import 'package:look_talk/model/entity/category_entity.dart';
+import 'package:look_talk/ui/main/category/category/gender_toggle.dart';
+import 'package:look_talk/ui/main/category/category/main_category.dart';
+import 'package:look_talk/ui/main/category/category/sub_category.dart';
+import 'package:look_talk/ui/main/category/categorydetail/category_detail_screen.dart';
 import 'package:look_talk/view_model/category/category_data_select_viewmodel.dart';
 import 'package:look_talk/view_model/category/category_select_viewmodel.dart';
 import 'package:look_talk/view_model/category/category_sub_data_select_viewmodel.dart';
@@ -13,21 +15,18 @@ class CategoryScreen extends StatefulWidget {
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
-  String selectedMainCategory = '';
-  String selectedSubCategory = '';
+
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => CategorySelectViewmodel()),
         ChangeNotifierProvider(create: (_) => CategoryDataSelectViewmodel()),
         ChangeNotifierProvider(create: (_) => CategorySubDataSelectViewModel())
       ],
 
       child: Scaffold(
         appBar: AppBar(
-
           title: Text("카테고리"),
           titleTextStyle:
           TextStyle(
@@ -47,20 +46,27 @@ class _CategoryScreenState extends State<CategoryScreen> {
             )
           ],
         ),
-        body: Consumer2<CategorySelectViewmodel, CategoryDataSelectViewmodel>(
-            builder: (context,selectedViewmodel,dataViewModel,child){
+        body: Consumer2<CategoryDataSelectViewmodel, CategorySubDataSelectViewModel>(
+            builder: (context,mainViewmodel,subViewmodel,child){
+              final mainCategories = mainViewmodel.categories;
+              final subCategories = mainCategories
+              .firstWhere(
+                  (category) =>
+                      category.mainCategory == subViewmodel.selectedMainCategory,
+                orElse: ()=>CategoryEntity(id: 0, mainCategory: '', subCategory: [])
+              )
+              .subCategory;
+
               return Column(
                 children: [
                   Padding(
                     padding: EdgeInsets.all(16),
                     child: GenderToggle(
-                      selectedGender: selectedViewmodel.selectedGender,
+                      selectedGender: mainViewmodel.selectedGender,
                       onSelectedButton: (gender) {
-                        selectedViewmodel.changeGender(gender);
-                        dataViewModel.getData(gender);
-                        setState(() {
-                          selectedMainCategory = '상의';
-                        });
+                        mainViewmodel.changeGender(gender);
+                        subViewmodel.changeMainCategory(gender);
+
                       },
                     ),
                   ),
@@ -68,23 +74,28 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     child: Row(
                       children:[
                       MainCategory(
-                          selectedMainCategory: selectedMainCategory,
+                          selectedMainCategory: subViewmodel.selectedMainCategory,
                           onSelect: (category) {
                             setState(() {
-                              selectedMainCategory = category;
+                              subViewmodel.changeMainCategory(category);
                             });
-                            Provider.of<CategorySubDataSelectViewModel>(context, listen: false)
-                                .changeMainCategory(category);
                           }),
                         SubCategory(
-                            selectedSubCategory: selectedSubCategory,
+                            selectedSubCategory: subViewmodel.selectedSubCategory,
+                            subCategories: subCategories,
                             onSelect: (category) {
-                              setState(() {
-                                selectedSubCategory = category;
-                              });
-                            }),
-              ]
+                              subViewmodel.changeSubCategory(category);
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (_)=>CategoryDetailScreen(
+                                    mainCategory : subViewmodel.selectedMainCategory,
+                                    subCategory: category
+                                  )
+                                  )
+                              );
 
+                            }
+                            ),
+              ]
                     ),
                   )
                 ],
