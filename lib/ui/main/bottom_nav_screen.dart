@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:look_talk/ui/common/const/colors.dart';
+import 'package:look_talk/ui/common/const/text_sizes.dart';
 
 class BottomNavScreen extends StatelessWidget {
   final Widget child;
@@ -15,6 +16,21 @@ class BottomNavScreen extends StatelessWidget {
     if (location.startsWith('/wishlist')) return 3;
     if (location.startsWith('/mypage')) return 4;
     return 0;
+  }
+
+  String _getTitle(int index) {
+    switch (index) {
+      case 1:
+        return '카테고리';
+      case 2:
+        return '커뮤니티';
+      case 3:
+        return '찜';
+      case 4:
+        return '마이페이지';
+      default:
+        return '';
+    }
   }
 
   void _onTap(BuildContext context, int index) {
@@ -42,6 +58,19 @@ class BottomNavScreen extends StatelessWidget {
     final selectedIndex = _calculateSelectedIndex(context);
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          _getTitle(selectedIndex),
+          style: const TextStyle(
+            color: AppColors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: TextSizes.headline,
+          ),
+        ),
+        backgroundColor: AppColors.white,
+        elevation: 1,
+        iconTheme: const IconThemeData(color: AppColors.black),
+      ),
       body: child,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: selectedIndex,
