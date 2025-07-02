@@ -11,7 +11,7 @@ class CommonTextField extends StatelessWidget {
   final TextEditingController? controller;
   final bool obscureText;
   final TextInputType keyboardType;
-  final int maxLines;
+  final int? maxLines;
   final FormFieldValidator<String>? validator;
   final EdgeInsetsGeometry contentPadding;
   final FocusNode? focusNode;
@@ -23,7 +23,7 @@ class CommonTextField extends StatelessWidget {
     this.controller,
     this.obscureText = false,
     this.keyboardType = TextInputType.text,
-    this.maxLines = 1,
+    this.maxLines,
     this.validator,
     this.contentPadding = const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
     this.focusNode,
