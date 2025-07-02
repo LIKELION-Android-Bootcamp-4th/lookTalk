@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:look_talk/ui/common/component/product_register_screen.dart';
 import 'package:look_talk/ui/main/bottom_nav_screen.dart';
 import 'package:look_talk/ui/main/category/category_screen.dart';
 import 'package:look_talk/ui/main/community/community_screen.dart';
@@ -14,6 +15,12 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/community/write',
       builder: (context, state) => PostCreateScreen(),
+      routes: [
+        GoRoute(
+          path: 'product-register',
+          builder: (context, state) => ProductRegisterScreen(),
+        ),
+      ]
     ),
     ShellRoute(
       builder: (context, state, child) {
