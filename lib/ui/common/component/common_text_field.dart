@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // 아래와 같이 사용하면 기본 값으로 되고 hintText, 높이, 너비 등 추가 설정 가능합니다!
 // CommonTextField()
 
+// 높이는 maxLines 로 조정하시면 됩니다!
 
 class CommonTextField extends StatelessWidget {
   final String? hintText;
@@ -15,7 +16,6 @@ class CommonTextField extends StatelessWidget {
   final EdgeInsetsGeometry contentPadding;
   final FocusNode? focusNode;
   final double? width;
-  final double? height;
 
   const CommonTextField({
     super.key,
@@ -28,14 +28,12 @@ class CommonTextField extends StatelessWidget {
     this.contentPadding = const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
     this.focusNode,
     this.width,
-    this.height,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: width ?? double.infinity,
-      height: height, // null 이면 자동 높이
       child: TextFormField(
         controller: controller,
         obscureText: obscureText,

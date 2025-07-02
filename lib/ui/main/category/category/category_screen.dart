@@ -43,6 +43,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         ),
         body: Consumer2<CategoryDataSelectViewmodel, CategorySubDataSelectViewModel>(
           builder: (context, mainViewmodel, subViewmodel, child) {
+            final mainCategories = mainViewmodel.categories;
             final subCategories = mainViewmodel.categories
                 .firstWhere(
                   (category) => category.mainCategory == subViewmodel.selectedMainCategory,

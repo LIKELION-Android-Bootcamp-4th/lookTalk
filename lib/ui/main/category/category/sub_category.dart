@@ -5,23 +5,28 @@ import 'package:provider/provider.dart';
 
 class SubCategory extends StatelessWidget {
   final String selectedSubCategory;
+  final List<String> subCategories;
   final Function(String) onSelect;
+
   const SubCategory({
     required this.selectedSubCategory,
+    required this.subCategories,
     required this.onSelect,
   });
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<CategorySubDataSelectViewModel>(context);
+
 
     return Container(
       width: 243,
       color: Colors.white,
       child: ListView(
-        children: viewModel.getSubCategories.map((sub) {
+        children: subCategories.map((sub) {
           final isSelected = selectedSubCategory == sub;
 
-          return GestureDetector(
+          return Column(
+            children: [
+            GestureDetector(
             onTap: () => onSelect(sub),
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 20),
@@ -45,7 +50,16 @@ class SubCategory extends StatelessWidget {
                 ],
               ),
             ),
+
+          ),
+              Divider(
+                color: Colors.grey[100],
+                thickness: 1,
+                height: 1,
+              ),
+            ]
           );
+
         }).toList(),
       ),
     );
