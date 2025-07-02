@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 class CategoryDetailScreen extends StatefulWidget{
   final String mainCategory;
-  final String subCategory;
+  final List<String> subCategory;
+  final String selectedCategory;
 
   const CategoryDetailScreen({
     required this.mainCategory,
-    required this.subCategory
+    required this.subCategory,
+    required this.selectedCategory
 });
   @override
   State<CategoryDetailScreen> createState() => _CategoryDetailScreenState();
