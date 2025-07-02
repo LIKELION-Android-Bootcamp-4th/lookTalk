@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/ui/main/community/community_my_tab.dart';
 import 'package:look_talk/ui/main/community/community_question_tab.dart';
@@ -37,10 +38,7 @@ class _CommunityScreenState extends State<CommunityScreen>
   }
 
   void onFabPressed() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => PostCreateScreen()),
-    );
+    context.push('/community/write');
   }
 
   @override
