@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
+import 'package:look_talk/ui/common/component/app_bar/app_bar_text.dart';
 import 'package:look_talk/ui/common/component/common_dropdown.dart';
 import 'package:look_talk/ui/common/component/common_text_field.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
@@ -14,18 +15,7 @@ class PostCreateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('게시글 작성'),
-        actions: [
-          TextButton(
-            onPressed: () {},
-            child: Text(
-              '등록',
-              style: context.bodyBold.copyWith(color: AppColors.black),
-            ),
-          ),
-        ],
-      ),
+      appBar: AppBarText(title: '게시글 등록', text: '등록'),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
         child: SingleChildScrollView(

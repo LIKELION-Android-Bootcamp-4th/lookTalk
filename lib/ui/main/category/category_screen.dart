@@ -83,7 +83,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             MaterialPageRoute(
                               builder: (_) => CategoryDetailScreen(
                                 mainCategory: subViewmodel.selectedMainCategory,
-                                subCategory: category,
+                                subCategory: subCategories,
+                                selectedCategory: category,
                               ),
                             ),
                           );

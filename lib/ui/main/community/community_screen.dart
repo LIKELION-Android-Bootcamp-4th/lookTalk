@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
+import 'package:look_talk/ui/common/component/app_bar/app_bar_search_cart.dart';
 import 'package:look_talk/ui/main/community/community_my_tab.dart';
 import 'package:look_talk/ui/main/community/community_question_tab.dart';
 import 'package:look_talk/ui/main/community/community_recommend_tab.dart';
@@ -37,15 +38,11 @@ class _CommunityScreenState extends State<CommunityScreen>
     super.dispose();
   }
 
-  void onFabPressed() {
-    context.push('/community/write');
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('커뮤니티'),
+      appBar: AppBarSearchCart(
+        title: '커뮤니티',
         bottom: TabBar(
           controller: _tabController,
           tabs: tabs,
@@ -73,10 +70,13 @@ class _CommunityScreenState extends State<CommunityScreen>
       floatingActionButton: FloatingActionButton(
         shape: const CircleBorder(side: BorderSide(width: 2, color: AppColors.black)),
         backgroundColor: AppColors.white,
-        onPressed: onFabPressed,
-        child: Icon(Icons.add),
+        onPressed: (){
+          context.push('/community/write');
+        },
         elevation: 0,
+        child: Icon(Icons.add),
       ),
+
     );
   }
 }
