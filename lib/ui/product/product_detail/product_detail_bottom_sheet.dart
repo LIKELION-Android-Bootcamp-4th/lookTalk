@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:look_talk/ui/common/const/colors.dart';
 import 'package:look_talk/ui/common/const/text_sizes.dart';
-import 'package:look_talk/view_model/product/product_detail_viewmodel.dart';
+import 'package:look_talk/view_model/product/product_detail_bottom_sheet_viewmodel.dart';
 import 'package:look_talk/ui/common/component/primary_button.dart';
 
 void showOptionBottomSheet(BuildContext context) {

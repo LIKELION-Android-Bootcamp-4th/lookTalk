@@ -1,35 +1,26 @@
 import 'package:flutter/material.dart';
 
-class OptionSelectionViewModel extends ChangeNotifier {
-  List<String> colorOptions = ['검정색', '흰색'];
-  List<String> sizeOptions = ['S', 'M', 'L'];
-  int discountedPrice = 10000;
+class ProductDetailViewModel extends ChangeNotifier {
+  int selectedIndex = 0;
+  bool isWishlist = false;
 
-  String? selectedColor;
-  String? selectedSize;
-  int quantity = 1;
+  final List<String> tabs = ['상품정보', '리뷰', '커뮤니티', '문의'];
+  String productName = '상품 명';
+  String imageUrl = '상품이미지';
+  int discountPercent = 20;
+  int originalPrice = 50000;
+  int finalPrice = 40000;
 
-  int get totalPrice => discountedPrice * quantity;
-
-  void selectColor(String? color) {
-    selectedColor = color;
-    notifyListeners();
-  }
-
-  void selectSize(String? size) {
-    selectedSize = size;
-    notifyListeners();
-  }
-
-  void increaseQuantity() {
-    quantity++;
-    notifyListeners();
-  }
-
-  void decreaseQuantity() {
-    if (quantity > 1) {
-      quantity--;
+  void selectTab(int index) {
+    if (selectedIndex != index) {
+      selectedIndex = index;
       notifyListeners();
     }
+  }
+
+  void toggleWishlist() {
+    isWishlist = !isWishlist;
+    // 찜기능
+    notifyListeners();
   }
 }
