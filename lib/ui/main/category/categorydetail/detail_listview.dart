@@ -4,25 +4,37 @@ import 'package:provider/provider.dart';
 
 class DetailListview extends StatelessWidget {
 
-
-
   @override
   Widget build(BuildContext context) {
+   final viewmodel = Provider.of<DetailListviewViewmodel>(context);
 
-    final viewModel = Provider.of<DetailListviewViewmodel>(context);
+   if(viewmodel.subCategories.isEmpty){
+     return Center(child: Text("설정이 잘못되었습니다."));
+   }
 
-    if(viewModel..isEmpty){
-      return Center(child: Text("아이템이 없습니다."));
-    }
+   return SingleChildScrollView(
+     scrollDirection: Axis.horizontal,
+     child: Row(
+       children: viewmodel.subCategories.map((category){
 
-    return ListView.builder(
-      itemCount: items.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text("${items[index]}"),
-        );
-      },
-    );
+         return GestureDetector(
+           onTap: () => viewmodel.changeSubCategory(category),
+           child: Container(
+             padding: EdgeInsets.only(right: 12),
+             child: Text(
+               category
+               ,
+               style: TextStyle(
+                 fontSize: 30,
+                 color: viewmodel.isSelected(category) ? Colors.blue : Colors.grey
+             ),
+             ),
+           ),
+         );
+       }
+       ).toList()
+     ),
+   );
   }
 
 
