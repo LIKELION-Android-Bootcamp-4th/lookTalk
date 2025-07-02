@@ -58,19 +58,6 @@ class BottomNavScreen extends StatelessWidget {
     final selectedIndex = _calculateSelectedIndex(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          _getTitle(selectedIndex),
-          style: const TextStyle(
-            color: AppColors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: TextSizes.headline,
-          ),
-        ),
-        backgroundColor: AppColors.white,
-        elevation: 1,
-        iconTheme: const IconThemeData(color: AppColors.black),
-      ),
       body: child,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: selectedIndex,
