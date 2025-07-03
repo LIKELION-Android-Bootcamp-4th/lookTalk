@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:look_talk/ui/common/const/colors.dart';
 import 'package:look_talk/ui/common/const/text_sizes.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
+import 'package:look_talk/ui/main/mypage/mypage_screen_product_manage.dart';
 
 class MyPageScreenSeller extends StatelessWidget {
   const MyPageScreenSeller({super.key});
@@ -33,7 +34,12 @@ class MyPageScreenSeller extends StatelessWidget {
           ),
           gap32,
 
-          const _MyPageMenu(title: '상품 조회 / 등록'),
+          _MyPageMenu(title: '상품 조회 / 등록', onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const MyPageProductManageScreen()),
+            );
+          }),
           const _MyPageMenu(title: '주문 조회'),
           const _MyPageMenu(title: '공지사항'),
           const _MyPageMenu(title: '로그아웃'),
@@ -46,17 +52,19 @@ class MyPageScreenSeller extends StatelessWidget {
 
 class _MyPageMenu extends StatelessWidget {
   final String title;
+  final VoidCallback? onTap;
 
-  const _MyPageMenu({required this.title});
+  const _MyPageMenu({
+    required this.title,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: GestureDetector(
-        onTap: () {
-          // 메뉴 클릭시 이동 아직 안됨
-        },
+        onTap: onTap,
         child: Text(
           title,
           style: const TextStyle(

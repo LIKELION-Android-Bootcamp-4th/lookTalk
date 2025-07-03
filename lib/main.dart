@@ -7,7 +7,7 @@ import 'core/app.dart';
 void main() {
   runApp(
     MaterialApp(
-      home: CategoryScreen(),
+      home: MyApp(),
     ),
   );
 }
