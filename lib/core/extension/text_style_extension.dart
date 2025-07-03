@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 // Text('예시', style: context.caption)
 
 extension TextStyleExtension on BuildContext {
-  TextStyle get h1 => Theme.of(this).textTheme.headlineLarge!;
-  TextStyle get body => Theme.of(this).textTheme.bodyMedium!;
-  TextStyle get bodyBold => Theme.of(this).textTheme.bodyLarge!;
-  TextStyle get caption => Theme.of(this).textTheme.bodySmall!;
+  TextStyle get h1 => Theme.of(this).textTheme.headlineLarge!; // 20, extra bold
+  TextStyle get body => Theme.of(this).textTheme.bodyMedium!; // 15, regular
+  TextStyle get bodyBold => Theme.of(this).textTheme.bodyLarge!; // 15, bold
+  TextStyle get caption => Theme.of(this).textTheme.bodySmall!; // 13, light
 }

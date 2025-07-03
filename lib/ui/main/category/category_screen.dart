@@ -14,6 +14,7 @@ class CategoryScreen extends StatefulWidget {
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -66,7 +67,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   child: Row(
                     children: [
                       Expanded(
-                        flex: 2,
+                        flex : 2,
                         child:
                       MainCategory(
                         selectedMainCategory: subViewmodel.selectedMainCategory,
@@ -77,28 +78,28 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         },
                       ),
                       ),
-
                       Expanded(
-                        flex: 3, // flex로 비율 설정.
+                          flex: 3,
                           child:
-                      SubCategory(
+                        SubCategory(
                         selectedSubCategory: subViewmodel.selectedSubCategory,
                         subCategories: subCategories,
                         onSelect: (category) {
-                          subViewmodel.changeSubCategory(category);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => CategoryDetailScreen(
-                                mainCategory: subViewmodel.selectedMainCategory,
-                                subCategory: subCategories,
-                                selectedCategory: category,
-                              ),
-                            ),
-                          );
+                        subViewmodel.changeSubCategory(category);
+                        Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                        builder: (_) => CategoryDetailScreen(
+                        mainCategory: subViewmodel.selectedMainCategory,
+                        subCategory: subCategories,
+                        selectedCategory: category,
+                        ),
+                        ),
+                        );
                         },
+              )
                       ),
-                      ),
+
                     ],
                   ),
                 ),
