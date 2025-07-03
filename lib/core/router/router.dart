@@ -11,11 +11,16 @@ import 'package:look_talk/ui/main/home/home_screen.dart';
 import 'package:look_talk/ui/main/mypage/mypage_screen.dart';
 import 'package:look_talk/ui/main/wishlist/wishlist_screen.dart';
 import 'package:look_talk/ui/search/search_screen.dart';
+import 'package:look_talk/view_model/auth/login_view_model.dart';
+import 'package:provider/provider.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/home',
   routes: [
-    GoRoute(path: '/login', builder: (context, state) => LoginScreen()),
+    GoRoute(path: '/login', builder: (context, state) {
+      return ChangeNotifierProvider(
+        create: (_) => LoginViewModel(), child: const LoginScreen(),);
+    }),
     GoRoute(
       path: '/community/write',
       builder: (context, state) => PostCreateScreen(),

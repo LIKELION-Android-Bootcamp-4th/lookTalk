@@ -71,7 +71,8 @@ class _CommunityScreenState extends State<CommunityScreen>
         shape: const CircleBorder(side: BorderSide(width: 2, color: AppColors.black)),
         backgroundColor: AppColors.white,
         onPressed: (){
-          context.push('/community/write');
+          //context.push('/community/write');
+          context.push('/login');
         },
         elevation: 0,
         child: Icon(Icons.add),

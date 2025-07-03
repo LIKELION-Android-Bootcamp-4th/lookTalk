@@ -45,5 +45,15 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+	<key>CFBundleURLTypes</key>
+    <array>
+      <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>kakao2be79d6c89568bf54e78a7e7b1bc3fbc</string>  <!-- 예: kakao1234567890 -->
+        </array>
+      </dict>
+    </array>
 </dict>
 </plist>
