@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/core/theme/app_theme.dart';
 import 'package:look_talk/ui/common/component/app_bar/app_bar_search_cart.dart';
+import 'package:look_talk/ui/common/component/common_text_field.dart';
 import 'package:look_talk/ui/common/const/colors.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
 
@@ -11,7 +12,13 @@ class AlterMember extends StatelessWidget {
     final thema = AppTheme.light();
 
     return Scaffold(
-      appBar: AppBar(title: Text('회원 정보 수정'),
+      appBar: AppBar(
+        leading: IconButton(onPressed: (){
+          Navigator.pop(context);
+        }
+            , icon: Icon(Icons.chevron_left,
+            size: 30,)),
+        title: Text('회원 정보 수정'),
         titleTextStyle: thema.textTheme.headlineLarge,
       centerTitle: true,
       actions: [
@@ -37,7 +44,7 @@ class AlterMember extends StatelessWidget {
             child: Icon(Icons.person, size: 60, color: AppColors.white),
           ),
           ),
-          gap4,
+          gap16,
           Align(
             child:
           Container(
@@ -63,6 +70,8 @@ class AlterMember extends StatelessWidget {
           ),
           ),
 
+          gap32,
+
           Text("이메일",
           style: context.bodyBold,),
           gap4,
@@ -76,6 +85,8 @@ class AlterMember extends StatelessWidget {
           gap8,
           Text("닉네임",
           style: context.bodyBold,),
+          gap8,
+          _buildNicknameField(),
 
 
         ],
@@ -83,4 +94,8 @@ class AlterMember extends StatelessWidget {
 
     );
   }
+}
+
+Widget _buildNicknameField() {
+  return CommonTextField(hintText: '닉네임을 입력하세요.',);
 }
