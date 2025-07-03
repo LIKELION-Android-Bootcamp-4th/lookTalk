@@ -65,6 +65,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 Expanded(
                   child: Row(
                     children: [
+                      Expanded(
+                        flex: 2,
+                        child:
                       MainCategory(
                         selectedMainCategory: subViewmodel.selectedMainCategory,
                         onSelect: (category) {
@@ -73,6 +76,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           });
                         },
                       ),
+                      ),
+
+                      Expanded(
+                        flex: 3, // flex로 비율 설정.
+                          child:
                       SubCategory(
                         selectedSubCategory: subViewmodel.selectedSubCategory,
                         subCategories: subCategories,
@@ -89,6 +97,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             ),
                           );
                         },
+                      ),
                       ),
                     ],
                   ),

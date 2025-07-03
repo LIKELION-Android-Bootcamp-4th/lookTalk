@@ -45,3 +45,5 @@ final List<CategoryEntity> womanCategory = [
       subCategory: ['전체', '패딩', '코트', '트렌치 코트', '야상', '무스탕', '자켓']
   )
 ];
+
+final List<String> homeCategoryData = ['전체','상의','하의','아우터'];
