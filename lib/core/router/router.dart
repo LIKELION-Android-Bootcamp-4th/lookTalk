@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:look_talk/ui/auth/login_screen.dart';
 import 'package:look_talk/ui/cart/cart_screen.dart';
 import 'package:look_talk/ui/common/component/product_register_screen.dart';
 import 'package:look_talk/ui/main/bottom_nav_screen.dart';
@@ -14,6 +15,7 @@ import 'package:look_talk/ui/search/search_screen.dart';
 final GoRouter router = GoRouter(
   initialLocation: '/home',
   routes: [
+    GoRoute(path: '/login', builder: (context, state) => LoginScreen()),
     GoRoute(
       path: '/community/write',
       builder: (context, state) => PostCreateScreen(),
