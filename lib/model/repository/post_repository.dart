@@ -6,7 +6,7 @@ import '../entity/post_entity.dart';
 class PostRepository {
   Future<List<Post>> fetchPosts(String category) async {
     final response = await http.get(
-      Uri.parse('https://your.api/posts?category=$category'),
+      Uri.parse('https://your.api/posts?category=$category'), // TODO: 수정
     );
 
     if (response.statusCode == 200) {
