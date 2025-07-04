@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:look_talk/model/post_dummy.dart';
 import 'package:look_talk/ui/cart/cart_screen.dart';
 import 'package:look_talk/ui/common/component/product_register_screen.dart';
 import 'package:look_talk/ui/main/bottom_nav_screen.dart';
 import 'package:look_talk/ui/main/category/category/category_screen.dart';
 import 'package:look_talk/ui/main/community/community_screen.dart';
 import 'package:look_talk/ui/main/community/post_create_screen.dart';
+import 'package:look_talk/ui/main/community/post_detail_screen.dart';
 import 'package:look_talk/ui/main/home/home_screen.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/mypage_screen.dart';
 import 'package:look_talk/ui/main/mypage/mypage_screen_seller.dart';
@@ -24,6 +26,16 @@ final GoRouter router = GoRouter(
           builder: (context, state) => ProductRegisterScreen(),
         ),
       ],
+    ),
+    GoRoute(
+      path: '/post/:id',
+      builder: (context, state) {
+        final postId = state.pathParameters['id']!;
+        final post = dummyPosts.firstWhere(
+          (p) => p.id == postId,
+        ); // TODO: 서버 요청시 제외하기
+        return PostDetailScreen(post: post);
+      },
     ),
     GoRoute(path: '/search', builder: (context, state) => SearchScreen()),
     GoRoute(path: '/cart', builder: (context, state) => CartScreen()),
