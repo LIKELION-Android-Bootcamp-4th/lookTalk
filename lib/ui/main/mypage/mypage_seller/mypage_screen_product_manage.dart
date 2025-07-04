@@ -1,30 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:look_talk/ui/main/mypage/mypage_seller/product_screen_edit.dart';
 import 'package:provider/provider.dart';
 import 'package:look_talk/view_model/product/product_list_viewmodel.dart';
+import 'package:look_talk/ui/main/mypage/mypage_seller/mypage_screen_product_register.dart';
+import 'package:look_talk/ui/main/mypage/mypage_seller/product_screen_edit.dart';
+import 'package:look_talk/model/entity/product_entity.dart';
+
+import '../../../../view_model/product/product_register_viewmodel.dart';
+
 
 class MyPageProductManageScreen extends StatelessWidget {
   const MyPageProductManageScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => ProductViewModel(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ProductViewModel()),
+        ChangeNotifierProvider(create: (_) => ProductRegisterViewModel()),
+      ],
       child: DefaultTabController(
         length: 2,
         child: Scaffold(
           appBar: AppBar(
-            title: const Text('상품 조회 / 등록'),
-            bottom: const TabBar(
+            title: Text('상품 조회 / 등록'),
+            bottom: TabBar(
               tabs: [
                 Tab(text: '상품 조회'),
                 Tab(text: '상품 등록'),
               ],
             ),
           ),
-          body: const TabBarView(
+          body: TabBarView(
             children: [
               _ProductListTab(),
-              _ProductRegisterTab(),
+              ProductRegisterScreen(),
             ],
           ),
         ),
@@ -48,19 +58,16 @@ class _ProductListTab extends StatelessWidget {
         return ListTile(
           title: Text(product.name),
           trailing: Text(product.code),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ProductEditScreen(product: product),
+              ),
+            );
+          },
         );
       },
-    );
-  }
-}
-
-class _ProductRegisterTab extends StatelessWidget {
-  const _ProductRegisterTab();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('상품 등록 화면'),
     );
   }
 }
