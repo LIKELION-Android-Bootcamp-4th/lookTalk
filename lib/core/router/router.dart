@@ -9,7 +9,8 @@ import 'package:look_talk/ui/main/community/community_screen.dart';
 import 'package:look_talk/ui/main/community/post_create_screen.dart';
 import 'package:look_talk/ui/main/community/post_detail_screen.dart';
 import 'package:look_talk/ui/main/home/home_screen.dart';
-import 'package:look_talk/ui/main/mypage/mypage_screen.dart';
+import 'package:look_talk/ui/main/mypage/mypage_customer/mypage_screen.dart';
+import 'package:look_talk/ui/main/mypage/mypage_screen_seller.dart';
 import 'package:look_talk/ui/main/wishlist/wishlist_screen.dart';
 import 'package:look_talk/ui/search/search_screen.dart';
 
@@ -63,7 +64,7 @@ final GoRouter router = GoRouter(
         ),
         GoRoute(
           path: '/mypage',
-          builder: (context, state) => const MyPageScreen(),
+          builder: (context, state) => const MyPageScreenCustomer(),
         ),
       ],
     ),
