@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:look_talk/model/post_dummy.dart';
 import 'package:look_talk/ui/cart/cart_screen.dart';
-import 'package:look_talk/ui/common/component/product_register_screen.dart';
+import 'package:look_talk/ui/main/community/product_register_screen.dart';
 import 'package:look_talk/ui/main/bottom_nav_screen.dart';
 import 'package:look_talk/ui/main/category/category/category_screen.dart';
 import 'package:look_talk/ui/main/community/community_screen.dart';
