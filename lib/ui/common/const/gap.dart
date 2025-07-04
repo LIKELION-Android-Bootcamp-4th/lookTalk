@@ -15,3 +15,4 @@ const gapW8 = SizedBox(width: 8);
 const gapW12 = SizedBox(width: 12);
 const gapW16 = SizedBox(width: 16);
 const gapW24 = SizedBox(width: 24);
+const gapW32 = SizedBox(width: 32);

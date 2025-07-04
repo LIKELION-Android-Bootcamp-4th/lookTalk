@@ -39,36 +39,39 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:look_talk/core/network/dio_client.dart'; // 너의 dio 설정 파일 경로
+import 'package:go_router/go_router.dart';
+import 'package:look_talk/core/network/dio_client.dart';
+
+import '../../model/client/auth_api_client.dart';
 
 class LoginViewModel with ChangeNotifier {
-  String? error;
-  dynamic response;
+  final AuthApiClient _authApiClient = AuthApiClient();
 
-  Future<void> socialLogin({
-    required String platformRole,
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
+
+  Future<void> onSocialLoginSuccess({
+    required String email,
     required String provider,
-    required Map<String, dynamic> authInfo,
+    required BuildContext context,
   }) async {
     try {
-      final dio = DioClient.instance;
+      final result = await _authApiClient.checkUserExists(
+        email: email,
+        provider: provider,
+      );
 
-      final res = await dio.post('/api/auth/login', data: {
-        'email': 'test@kakao.com',  // 일단 테스트용 이메일
-        'platformRole': platformRole,
-        'provider': provider,
-        'authInfo': authInfo,
-      });
-
-      print('✅ 서버 응답: ${res.data}');
-      response = res.data;
-      error = null;
-      notifyListeners();
+      if (result.exists) {
+        // TODO: 기존 회원이면 이전 화면으로
+        Navigator.pop(context);
+      } else {
+        // TODO: 신규 회원 -> 회원가입 시작
+        context.pushReplacement('/signup?email=$email&provider=$provider');
+      }
     } catch (e) {
-      print('❌ 서버 요청 실패: $e');
-      error = '로그인 중 오류가 발생했어요.';
-      response = null;
+      _errorMessage = '서버 오류가 발생했습니다.';
       notifyListeners();
     }
   }
+
 }

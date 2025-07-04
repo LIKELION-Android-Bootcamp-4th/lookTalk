@@ -51,6 +51,8 @@ dependencies:
 
   http: ^1.4.0
 
+  flutter_naver_login: ^2.1.1
+  flutter_secure_storage: ^9.2.4
 
 dev_dependencies:
   flutter_test:

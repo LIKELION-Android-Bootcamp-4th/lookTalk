@@ -17,6 +17,9 @@ import 'package:provider/provider.dart';
 
 import '../../model/post_dummy.dart';
 import '../../ui/auth/login_screen.dart';
+import '../../ui/auth/seller_info_screen.dart';
+import '../../ui/auth/signup_choice_screen.dart';
+import '../../ui/auth/user_info_screen.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/home',
@@ -29,6 +32,42 @@ final GoRouter router = GoRouter(
           child: const LoginScreen(),
         );
       },
+    ),
+    GoRoute(
+      path: '/signup',
+      builder: (context, state) {
+        final email = state.uri.queryParameters['email']!;
+        final provider = state.uri.queryParameters['provider']!;
+        return SignupChoiceScreen(email: email, provider: provider);
+      },
+      routes: [
+        GoRoute(
+          path: 'user',
+          builder: (context, state) {
+            final email = state.uri.queryParameters['email']!;
+            final provider = state.uri.queryParameters['provider']!;
+            final role = state.uri.queryParameters['platformRole']!;
+            return UserInfoScreen(
+              email: email,
+              provider: provider,
+              role: role,
+            );
+          },
+        ),
+        GoRoute(
+          path: 'seller',
+          builder: (context, state) {
+            final email = state.uri.queryParameters['email']!;
+            final provider = state.uri.queryParameters['provider']!;
+            final role = state.uri.queryParameters['platformRole']!;
+            return SellerInfoScreen(
+              email: email,
+              provider: provider,
+              role: role,
+            );
+          },
+        ),
+      ],
     ),
     GoRoute(
       path: '/community/write',
