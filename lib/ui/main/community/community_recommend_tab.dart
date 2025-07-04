@@ -10,7 +10,7 @@ class CommunityRecommendTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final recommendPosts = dummyPosts
-        .where((post) => post.category == PostCategory.question)
+        .where((post) => post.category == PostCategory.recommend)
         .toList();
 
     return PostList(posts: recommendPosts);
