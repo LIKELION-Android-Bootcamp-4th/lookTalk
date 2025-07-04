@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:look_talk/view_model/product/product_register_viewmodel.dart';
+import 'package:look_talk/view_model/product/product_list_viewmodel.dart';
 import 'package:look_talk/ui/common/component/common_text_field.dart';
 
 class ProductRegisterScreen extends StatelessWidget {
@@ -8,10 +9,7 @@ class ProductRegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => ProductRegisterViewModel(),
-      child: const _ProductRegisterForm(),
-    );
+    return const _ProductRegisterForm();
   }
 }
 
@@ -99,7 +97,12 @@ class _ProductRegisterForm extends StatelessWidget {
             width: double.infinity,
             height: 48,
             child: ElevatedButton(
-              onPressed: vm.submitProduct,
+              onPressed: () {
+                vm.registerAndNotify(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('상품이 등록되었습니다.')),
+                );
+              },
               child: const Text('완료'),
             ),
           ),

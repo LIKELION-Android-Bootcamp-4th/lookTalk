@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:look_talk/model/entity/category_entity.dart';
 import 'package:look_talk/model/category_dummydata.dart';
+import 'package:look_talk/model/product_dummy.dart';
+import 'package:look_talk/view_model/product/product_list_viewmodel.dart';
+import 'package:provider/provider.dart';
+import '../../model/entity/product_entity.dart';
 
 class ProductRegisterViewModel extends ChangeNotifier {
   String? selectedGender;
@@ -12,52 +16,57 @@ class ProductRegisterViewModel extends ChangeNotifier {
   final priceController = TextEditingController();
   final discountController = TextEditingController();
 
-  List<CategoryEntity> get availableCategories {
-    if (selectedGender == '남성') return manCategory;
-    if (selectedGender == '여성') return womanCategory;
-    return [];
-  }
-
-  List<String> get topCategoryNames => availableCategories.map((e) => e.mainCategory).toList();
-
-  List<String> get subCategoryNames {
-    if (selectedTopCategoryEntity != null) {
-      return selectedTopCategoryEntity!.subCategory;
-    }
-    return [];
-  }
-
   void setGender(String? gender) {
-    if (selectedGender != gender) {
-      selectedGender = gender;
-      selectedTopCategoryEntity = null;
-      selectedSubCategory = null;
-      notifyListeners();
-    }
-  }
-
-  void setTopCategory(String? categoryName) {
-    selectedTopCategoryEntity = availableCategories.firstWhere(
-          (cat) => cat.mainCategory == categoryName,
-      orElse: () => CategoryEntity(id: 0, mainCategory: '', subCategory: []),
-    );
-
-    if (selectedTopCategoryEntity!.mainCategory.isEmpty) {
-      selectedTopCategoryEntity = null;
-    }
-  }
-  void setSubCategory(String? subCategoryName) {
-    selectedSubCategory = subCategoryName;
+    selectedGender = gender;
+    selectedTopCategoryEntity = null;
+    selectedSubCategory = null;
     notifyListeners();
   }
 
+  void setTopCategory(String? category) {
+    final list = selectedGender == '남성' ? manCategory : womanCategory;
+    selectedTopCategoryEntity = list.firstWhere(
+          (c) => c.mainCategory == category,
+      orElse: () => CategoryEntity(id: -1, mainCategory: '', subCategory: []),
+    );
+    selectedSubCategory = null;
+    notifyListeners();
+  }
+
+  void setSubCategory(String? subCategory) {
+    selectedSubCategory = subCategory;
+    notifyListeners();
+  }
+
+  List<String> get topCategoryNames {
+    final list = selectedGender == '남성' ? manCategory : womanCategory;
+    return list.map((e) => e.mainCategory).toList();
+  }
+
+  List<String> get subCategoryNames {
+    return selectedTopCategoryEntity?.subCategory ?? [];
+  }
+
+  void registerAndNotify(BuildContext context) {
+    final product = Product(
+      name: nameController.text,
+      code: 'P${DateTime
+          .now()
+          .millisecondsSinceEpoch}',
+    );
+
+    context.read<ProductViewModel>().addProduct(product);
+    submitProduct();
+  }
+
   void submitProduct() {
-    print('상품명: ${nameController.text}');
-    print('설명: ${descController.text}');
-    print('성별: $selectedGender');
-    print('카테고리: ${selectedTopCategoryEntity?.mainCategory} / $selectedSubCategory');
-    print('가격: ${priceController.text}');
-    print('할인율: ${discountController.text}');
+    debugPrint('상품명: ${nameController.text}');
+    debugPrint('설명: ${descController.text}');
+    debugPrint('성별: $selectedGender');
+    debugPrint('카테고리: ${selectedTopCategoryEntity
+        ?.mainCategory} / $selectedSubCategory');
+    debugPrint('가격: ${priceController.text}');
+    debugPrint('할인율: ${discountController.text}');
   }
 
   @override
