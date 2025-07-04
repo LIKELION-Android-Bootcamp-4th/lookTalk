@@ -1,26 +1,35 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:look_talk/ui/auth/login_screen.dart';
 import 'package:look_talk/ui/cart/cart_screen.dart';
 import 'package:look_talk/ui/common/component/product_register_screen.dart';
 import 'package:look_talk/ui/main/bottom_nav_screen.dart';
 import 'package:look_talk/ui/main/category/category/category_screen.dart';
 import 'package:look_talk/ui/main/community/community_screen.dart';
 import 'package:look_talk/ui/main/community/post_create_screen.dart';
+import 'package:look_talk/ui/main/community/post_detail_screen.dart';
 import 'package:look_talk/ui/main/home/home_screen.dart';
-import 'package:look_talk/ui/main/mypage/mypage_screen.dart';
+import 'package:look_talk/ui/main/mypage/mypage_customer/mypage_screen.dart';
+import 'package:look_talk/ui/main/mypage/mypage_screen_seller.dart';
 import 'package:look_talk/ui/main/wishlist/wishlist_screen.dart';
 import 'package:look_talk/ui/search/search_screen.dart';
 import 'package:look_talk/view_model/auth/login_view_model.dart';
 import 'package:provider/provider.dart';
 
+import '../../model/post_dummy.dart';
+import '../../ui/auth/login_screen.dart';
+
 final GoRouter router = GoRouter(
   initialLocation: '/home',
   routes: [
-    GoRoute(path: '/login', builder: (context, state) {
-      return ChangeNotifierProvider(
-        create: (_) => LoginViewModel(), child: const LoginScreen(),);
-    }),
+    GoRoute(
+      path: '/login',
+      builder: (context, state) {
+        return ChangeNotifierProvider(
+          create: (_) => LoginViewModel(),
+          child: const LoginScreen(),
+        );
+      },
+    ),
     GoRoute(
       path: '/community/write',
       builder: (context, state) => PostCreateScreen(),
@@ -30,6 +39,16 @@ final GoRouter router = GoRouter(
           builder: (context, state) => ProductRegisterScreen(),
         ),
       ],
+    ),
+    GoRoute(
+      path: '/post/:id',
+      builder: (context, state) {
+        final postId = state.pathParameters['id']!;
+        final post = dummyPosts.firstWhere(
+          (p) => p.id == postId,
+        ); // TODO: 서버 요청시 제외하기
+        return PostDetailScreen(post: post);
+      },
     ),
     GoRoute(path: '/search', builder: (context, state) => SearchScreen()),
     GoRoute(path: '/cart', builder: (context, state) => CartScreen()),
@@ -58,7 +77,7 @@ final GoRouter router = GoRouter(
         ),
         GoRoute(
           path: '/mypage',
-          builder: (context, state) => const MyPageScreen(),
+          builder: (context, state) => const MyPageScreenCustomer(),
         ),
       ],
     ),
