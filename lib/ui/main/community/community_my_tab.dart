@@ -11,7 +11,7 @@ class CommunityMyTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final myPosts = dummyPosts
-        .where((post) => post.category == PostCategory.question)
+        .where((post) => post.category == PostCategory.my)
         .toList();
 
     return PostList(posts: myPosts);
