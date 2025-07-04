@@ -8,7 +8,7 @@ import 'package:look_talk/ui/main/mypage/mypage_customer/alter_member.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/manage_product.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/notice.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/recent_product.dart';
-import 'package:look_talk/ui/main/mypage/mypage_screen_product_manage.dart';
+import 'package:look_talk/ui/main/mypage/mypage_seller/mypage_screen_product_manage.dart';
 
 class MyPageScreenCustomer extends StatelessWidget {
   const MyPageScreenCustomer({super.key});
