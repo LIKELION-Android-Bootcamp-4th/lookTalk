@@ -34,7 +34,7 @@ class _FilterTabState extends State<FilterTab>{
                 }
               },
             ),
-            SizedBox(width: 8,),
+            gapW8,
             Expanded(
               child: Container(
                 height: 40,
@@ -51,7 +51,7 @@ class _FilterTabState extends State<FilterTab>{
                 ),
               ),
             ),
-            SizedBox(width: 8,),
+            gapW8,
             // 조회 버튼 - 고정 크기
             ElevatedButton(
               style: ElevatedButton.styleFrom(
