@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:look_talk/ui/common/const/colors.dart';
 import 'package:look_talk/ui/common/const/text_sizes.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
-import 'package:look_talk/ui/main/mypage/mypage_screen_product_manage.dart';
+import 'package:look_talk/ui/main/mypage/mypage_seller/manage_product_seller_screen.dart';
+import 'package:look_talk/ui/main/mypage/mypage_seller/mypage_screen_product_manage.dart';
 
 class MyPageScreenSeller extends StatelessWidget {
   const MyPageScreenSeller({super.key});
@@ -50,7 +51,12 @@ class MyPageScreenSeller extends StatelessWidget {
               );
             }),
             gap16,
-            const _MyPageMenu(title: '주문 조회',),
+            GestureDetector(
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (_)=>ManageProductSellerScreen()));
+              },
+              child: const _MyPageMenu(title: '주문 조회',),
+            ),
             gap16,
             const _MyPageMenu(title: '공지사항'),
             gap16,
