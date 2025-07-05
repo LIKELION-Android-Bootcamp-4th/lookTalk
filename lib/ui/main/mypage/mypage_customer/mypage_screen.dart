@@ -5,10 +5,9 @@ import 'package:look_talk/ui/common/const/colors.dart';
 import 'package:look_talk/ui/common/const/text_sizes.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/alter_member.dart';
-import 'package:look_talk/ui/main/mypage/mypage_customer/manage_product.dart';
+import 'package:look_talk/ui/main/mypage/mypage_customer/manage_product/manage_product_screen.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/notice.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/recent_product.dart';
-import 'package:look_talk/ui/main/mypage/mypage_screen_product_manage.dart';
 
 class MyPageScreenCustomer extends StatelessWidget {
   const MyPageScreenCustomer({super.key});
@@ -66,9 +65,9 @@ class MyPageScreenCustomer extends StatelessWidget {
             gap16,
             GestureDetector(
               onTap: ()=> {
-                Navigator.push(context, MaterialPageRoute(builder: (_)=> ManageProduct())),
+                Navigator.push(context, MaterialPageRoute(builder: (_)=> ManageProductScreen())),
               },
-              child:  _MyPageMenu(title: '주문/교환/반품/취소 내역'),
+              child:  _MyPageMenu(title: '주문/교환/반품/취소'),
             ),
             gap16,
             GestureDetector(
