@@ -5,10 +5,14 @@ import 'package:look_talk/ui/common/const/colors.dart';
 import 'package:look_talk/ui/common/const/text_sizes.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/alter_member.dart';
-import 'package:look_talk/ui/main/mypage/mypage_customer/manage_product.dart';
+import 'package:look_talk/ui/main/mypage/mypage_customer/manage_product/manage_product_screen.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/notice.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/recent_product.dart';
+
+import 'package:look_talk/ui/main/mypage/mypage_seller/mypage_screen_seller.dart';
+
 import 'package:look_talk/ui/main/mypage/mypage_seller/mypage_screen_product_manage.dart';
+
 
 class MyPageScreenCustomer extends StatelessWidget {
   const MyPageScreenCustomer({super.key});
@@ -66,9 +70,9 @@ class MyPageScreenCustomer extends StatelessWidget {
             gap16,
             GestureDetector(
               onTap: ()=> {
-                Navigator.push(context, MaterialPageRoute(builder: (_)=> ManageProduct())),
+                Navigator.push(context, MaterialPageRoute(builder: (_)=> ManageProductScreen())),
               },
-              child:  _MyPageMenu(title: '주문/교환/반품/취소 내역'),
+              child:  _MyPageMenu(title: '주문/교환/반품/취소'),
             ),
             gap16,
             GestureDetector(
@@ -78,18 +82,24 @@ class MyPageScreenCustomer extends StatelessWidget {
               child:  _MyPageMenu(title: '공지사항'),
             ),
             gap16,
+            // GestureDetector(
+            //   onTap: () {
+            //     showDialog(
+            //       context: context,
+            //       builder: (context) => CommonModal(
+            //         title: "로그아웃",
+            //         content: "로그아웃 하시겠습니까?",
+            //         confirmText: "로그아웃 하기",
+            //         onConfirm: () {
+            //         },
+            //       ),
+            //     );
+            //   },
+            //   child: _MyPageMenu(title: '로그아웃'),
+            // ),
             GestureDetector(
               onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => CommonModal(
-                    title: "로그아웃",
-                    content: "로그아웃 하시겠습니까?",
-                    confirmText: "로그아웃 하기",
-                    onConfirm: () {
-                    },
-                  ),
-                );
+                Navigator.push(context, MaterialPageRoute(builder: (_)=> MyPageScreenSeller()));
               },
               child: _MyPageMenu(title: '로그아웃'),
             ),

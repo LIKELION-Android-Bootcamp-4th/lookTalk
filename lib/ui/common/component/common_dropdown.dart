@@ -53,7 +53,7 @@ class CommonDropdown extends StatelessWidget {
             .toList(),
         decoration: InputDecoration(
           hintText: hintText ?? '선택하세요',
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 4),
           border: border,
           focusedBorder: border
         ),
