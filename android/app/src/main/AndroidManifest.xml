@@ -1,20 +1,15 @@
-<<<<<<< HEAD
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.example.look_talk">
-=======
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
->>>>>>> develop
 
     <application
         android:label="look_talk"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
-<<<<<<< HEAD
         <meta-data
             android:name="com.naver.sdk.clientId"
             android:value="@string/client_id" />
@@ -40,8 +35,6 @@
             </intent-filter>
         </activity>
 
-=======
->>>>>>> develop
         <activity
             android:name=".MainActivity"
             android:exported="true"
