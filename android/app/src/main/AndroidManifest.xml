@@ -1,6 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.example.look_talk">
 
-
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -35,7 +34,6 @@
                 <data android:scheme="kakao2be79d6c89568bf54e78a7e7b1bc3fbc" android:host="oauth"/>
             </intent-filter>
         </activity>
-
 
         <activity
             android:name=".MainActivity"
