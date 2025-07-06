@@ -15,7 +15,7 @@ import 'core/app.dart';
 void main() async {
   KakaoSdk.init(nativeAppKey: '2be79d6c89568bf54e78a7e7b1bc3fbc', loggingEnabled: true);
   await GoogleSignIn.instance.initialize(
-    serverClientId: '297394298746-raup1i84v0a4r395uesg08kkht2nalo5.apps.googleusercontent.com'
+    serverClientId: '297394298746-334r4944egru9obvf9au90es85pvv5va.apps.googleusercontent.com'
   );
   runApp(MultiProvider(
       providers: [
