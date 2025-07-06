@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:flutter_naver_login/interface/types/naver_login_result.dart';
 import 'package:flutter_naver_login/interface/types/naver_login_status.dart';
@@ -8,14 +9,15 @@ import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
 import 'package:provider/provider.dart';
 
-import '../../view_model/auth/login_view_model.dart';
+import '../../model/entity/request/auth_info.dart';
+import '../../view_model/auth/auth_view_model.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.watch<LoginViewModel>();
+    final vm = context.watch<AuthViewModel>();
 
     return Scaffold(
       appBar: _buildAppBar(context),
@@ -51,7 +53,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLoginButtons(BuildContext context, LoginViewModel vm) {
+  Widget _buildLoginButtons(BuildContext context, AuthViewModel vm) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -82,58 +84,96 @@ class LoginScreen extends StatelessWidget {
 
   Future<void> _handleKakaoLogin(
     BuildContext context,
-    LoginViewModel vm,
+    AuthViewModel vm,
   ) async {
     try {
+      kakao.OAuthToken token;
+
       if (await kakao.isKakaoTalkInstalled()) {
-        await kakao.UserApi.instance.loginWithKakaoTalk();
+        try {
+          token = await kakao.UserApi.instance.loginWithKakaoTalk();
+          print('1 ');
+        } catch (error) {
+          print('2 ');
+          if (error is PlatformException &&
+              error.code == 'NotSupportError' &&
+              error.message?.contains('not connected') == true) {
+            debugPrint('[Kakao] KakaoTalk 연결 안됨, 웹 로그인으로 대체');
+            token = await kakao.UserApi.instance.loginWithKakaoAccount();
+          } else {
+            rethrow;
+          }
+        }
       } else {
-        await kakao.UserApi.instance.loginWithKakaoAccount();
+        token = await kakao.UserApi.instance.loginWithKakaoAccount();
+        print('3 ');
       }
 
+      // 사용자 정보 조회
       final kakaoUser = await kakao.UserApi.instance.me();
       final email = kakaoUser.kakaoAccount?.email;
 
       if (email != null) {
-        await vm.onSocialLoginSuccess(
-          email: email,
-          provider: 'kakao',
-          context: context,
+        final authInfo = AuthInfo(
+          accessToken: token.accessToken,
+          tokenType: 'bearer',
+          refreshToken: token.refreshToken ?? '',
+          expiresIn: 21599,
+          scope: 'account_email profile',
+          refreshTokenExpiresIn: 5184000,
         );
+
+        print('login and navigate : ${authInfo.toJson()}');
+
+
+        // 로그인 결과 서버로 전달
+        await vm.loginAndNavigate(context, authInfo, 'kakao');
       } else {
         _showError(context, '이메일을 가져올 수 없습니다.');
+        print('4 ');
       }
     } catch (e) {
       _showError(context, '카카오 로그인 실패: $e');
+      print('5 : $e');
     }
   }
 
   Future<void> _handleNaverLogin(
     BuildContext context,
-    LoginViewModel vm,
+    AuthViewModel vm,
   ) async {
     try {
       final NaverLoginResult result = await FlutterNaverLogin.logIn();
 
       if (result.status == NaverLoginStatus.loggedIn) {
         final account = result.account;
+        final token = await FlutterNaverLogin.getCurrentAccessToken();
 
         if (account != null && account.email != null) {
-          await vm.onSocialLoginSuccess(
-            email: account.email!,
-            provider: 'naver',
-            context: context,
+          final authInfo = AuthInfo(
+            accessToken: token.accessToken,
+            tokenType: 'bearer',
+            refreshToken: token.refreshToken ?? '',
+            expiresIn: 21599,
+            scope: 'account_email profile',
+            refreshTokenExpiresIn: 5184000,
           );
+
+          await vm.loginAndNavigate(context, authInfo, 'naver');
         } else {
           _showError(context, '이메일을 가져올 수 없습니다.');
         }
       } else {
         _showError(context, '네이버 로그인 실패');
       }
+
     } catch (e) {
       _showError(context, '네이버 로그인 실패: $e');
     }
   }
+
+
+
 
   void _showError(BuildContext context, String message) {
     ScaffoldMessenger.of(

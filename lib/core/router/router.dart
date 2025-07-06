@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:look_talk/model/client/auth_api_client.dart';
 import 'package:look_talk/ui/cart/cart_screen.dart';
 import 'package:look_talk/ui/main/community/product_register_screen.dart';
 import 'package:look_talk/ui/main/bottom_nav_screen.dart';
@@ -12,7 +14,7 @@ import 'package:look_talk/ui/main/mypage/mypage_customer/mypage_screen.dart';
 import 'package:look_talk/ui/main/mypage/mypage_seller/mypage_screen_seller.dart';
 import 'package:look_talk/ui/main/wishlist/wishlist_screen.dart';
 import 'package:look_talk/ui/search/search_screen.dart';
-import 'package:look_talk/view_model/auth/login_view_model.dart';
+import 'package:look_talk/view_model/auth/auth_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/post_dummy.dart';
@@ -28,7 +30,7 @@ final GoRouter router = GoRouter(
       path: '/login',
       builder: (context, state) {
         return ChangeNotifierProvider(
-          create: (_) => LoginViewModel(),
+          create: (_) => AuthViewModel(AuthApiClient()),
           child: const LoginScreen(),
         );
       },
