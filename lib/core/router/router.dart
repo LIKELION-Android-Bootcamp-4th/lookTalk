@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:look_talk/model/client/auth_api_client.dart';
 import 'package:look_talk/ui/cart/cart_screen.dart';
+import 'package:look_talk/ui/main/community/communication_product_registration/product_registration-screen.dart';
 import 'package:look_talk/ui/main/community/product_register_screen.dart';
 import 'package:look_talk/ui/main/bottom_nav_screen.dart';
 import 'package:look_talk/ui/main/category/category/category_screen.dart';
@@ -11,7 +12,9 @@ import 'package:look_talk/ui/main/community/post_create_screen.dart';
 import 'package:look_talk/ui/main/community/post_detail_screen.dart';
 import 'package:look_talk/ui/main/home/home_screen.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/mypage_screen.dart';
-import 'package:look_talk/ui/main/mypage/mypage_seller/mypage_screen_seller.dart';
+
+//import 'package:look_talk/ui/main/mypage/mypage_product/mypage_screen_seller.dart';
+
 import 'package:look_talk/ui/main/wishlist/wishlist_screen.dart';
 import 'package:look_talk/ui/search/search_screen.dart';
 import 'package:look_talk/view_model/auth/auth_view_model.dart';
@@ -77,7 +80,7 @@ final GoRouter router = GoRouter(
       routes: [
         GoRoute(
           path: 'product-register',
-          builder: (context, state) => ProductRegisterScreen(),
+          builder: (context, state) => ProductRegistrationScreen(),
         ),
       ],
     ),
