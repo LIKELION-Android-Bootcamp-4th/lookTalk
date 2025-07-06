@@ -4,6 +4,7 @@ import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:flutter_naver_login/interface/types/naver_login_result.dart';
 import 'package:flutter_naver_login/interface/types/naver_login_status.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart' as kakao;
 import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
@@ -67,8 +68,8 @@ class LoginScreen extends StatelessWidget {
             await _handleNaverLogin(context, vm);
           }),
           gap16,
-          _buildLoginButton('assets/images/google_login.png', () {
-            // TODO: 구글 로그인 처리
+          _buildLoginButton('assets/images/google_login.png', () async {
+            await _handleGoogleLogin(context, vm);
           }),
         ],
       ),
@@ -82,10 +83,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _handleKakaoLogin(
-    BuildContext context,
-    AuthViewModel vm,
-  ) async {
+  Future<void> _handleKakaoLogin(BuildContext context, AuthViewModel vm) async {
     try {
       kakao.OAuthToken token;
 
@@ -125,7 +123,6 @@ class LoginScreen extends StatelessWidget {
 
         print('login and navigate : ${authInfo.toJson()}');
 
-
         // 로그인 결과 서버로 전달
         await vm.loginAndNavigate(context, authInfo, 'kakao');
       } else {
@@ -138,10 +135,7 @@ class LoginScreen extends StatelessWidget {
     }
   }
 
-  Future<void> _handleNaverLogin(
-    BuildContext context,
-    AuthViewModel vm,
-  ) async {
+  Future<void> _handleNaverLogin(BuildContext context, AuthViewModel vm) async {
     try {
       final NaverLoginResult result = await FlutterNaverLogin.logIn();
 
@@ -166,14 +160,45 @@ class LoginScreen extends StatelessWidget {
       } else {
         _showError(context, '네이버 로그인 실패');
       }
-
     } catch (e) {
       _showError(context, '네이버 로그인 실패: $e');
     }
   }
 
+  Future<void> _handleGoogleLogin(
+    BuildContext context,
+    AuthViewModel vm,
+  ) async {
+    try {
+      final GoogleSignIn signIn = GoogleSignIn.instance;
 
+      final GoogleSignInAccount user = await signIn.authenticate(
+        scopeHint: ['email', 'profile'],
+      );
 
+      final GoogleSignInClientAuthorization? auth =
+      await user.authorizationClient.authorizationForScopes(['email', 'profile']);
+
+      if (auth == null) {
+        _showError(context, '권한 요청 실패');
+        return;
+      }
+
+      final authInfo = AuthInfo(
+        accessToken: auth.accessToken,
+        tokenType: 'bearer',
+        refreshToken: '',
+        expiresIn: 3600,
+        scope: 'email profile',
+        refreshTokenExpiresIn: 0,
+      );
+
+      await vm.loginAndNavigate(context, authInfo, 'google');
+    } catch (e) {
+      _showError(context, '구글 로그인 실패: $e');
+      print(e);
+    }
+  }
 
   void _showError(BuildContext context, String message) {
     ScaffoldMessenger.of(
