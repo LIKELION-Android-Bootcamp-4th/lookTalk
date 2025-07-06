@@ -4,7 +4,7 @@ import 'package:look_talk/core/network/token_storage.dart';
 import 'package:look_talk/model/entity/response/login_response.dart';
 
 import '../../core/network/api_result.dart';
-import '../../core/network/endpoints.dart';
+import '../../core/network/end_points/login_manager/auth_endpoints.dart';
 import '../entity/request/auth_info.dart';
 
 class AuthApiClient {
@@ -17,7 +17,7 @@ class AuthApiClient {
     required String platformRole,
   }) async {
     final response = await _dio.post(
-      Endpoints.socialLogin,
+      AuthEndpoints.socialLogin,
       data: {
         'provider': provider,
         'platformRole': platformRole,
