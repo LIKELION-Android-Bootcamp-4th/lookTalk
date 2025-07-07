@@ -137,31 +137,47 @@ class LoginScreen extends StatelessWidget {
 
   Future<void> _handleNaverLogin(BuildContext context, AuthViewModel vm) async {
     try {
+      //await FlutterNaverLogin.logOut();
+
       final NaverLoginResult result = await FlutterNaverLogin.logIn();
 
       if (result.status == NaverLoginStatus.loggedIn) {
         final account = result.account;
         final token = await FlutterNaverLogin.getCurrentAccessToken();
 
-        if (account != null && account.email != null) {
-          final authInfo = AuthInfo(
-            accessToken: token.accessToken,
-            tokenType: 'bearer',
-            refreshToken: token.refreshToken ?? '',
-            expiresIn: 21599,
-            scope: 'account_email profile',
-            refreshTokenExpiresIn: 5184000,
-          );
-
-          await vm.loginAndNavigate(context, authInfo, 'naver');
-        } else {
-          _showError(context, '이메일을 가져올 수 없습니다.');
+        if (account?.email == null) {
+          _showError(context, '이메일 정보를 가져올 수 없습니다.');
+          print('[네이버] account: null 또는 email: null');
+          return;
         }
+
+        final authInfo = AuthInfo(
+          accessToken: token.accessToken,
+          tokenType: 'bearer',
+          refreshToken: token.refreshToken ?? '',
+          expiresIn: 21599,
+          scope: 'account_email profile',
+          refreshTokenExpiresIn: 5184000,
+        );
+
+        try {
+          await vm.loginAndNavigate(context, authInfo, 'naver');
+        } catch (e) {
+          print('loginAndNavigate 예외 발생: $e');
+          _showError(context, '로그인 처리 중 오류가 발생했습니다.');
+        }
+
       } else {
         _showError(context, '네이버 로그인 실패');
+        print('여기ㅣ이ㅣ');
+        print('NAVER login failed');
+        print('Status: ${result.status}');
+        print('ErrorMessage: ${result.errorMessage}');
+        _showError(context, '네이버 로그인 실패: ${result.errorMessage}');
       }
     } catch (e) {
       _showError(context, '네이버 로그인 실패: $e');
+      print('네이버 로그인 예외 발생: $e');
     }
   }
 
@@ -172,6 +188,11 @@ class LoginScreen extends StatelessWidget {
     try {
       final GoogleSignIn signIn = GoogleSignIn.instance;
 
+      await signIn.initialize(
+        serverClientId:
+            '297394298746-334r4944egru9obvf9au90es85pvv5va.apps.googleusercontent.com',
+      );
+
       final GoogleSignInAccount user = await signIn.authenticate(
         scopeHint: ['email', 'profile'],
       );
@@ -180,7 +201,10 @@ class LoginScreen extends StatelessWidget {
           .authorizationClient
           .authorizationForScopes(['email', 'profile']);
 
-      if (auth == null) {
+      final GoogleSignInAuthentication authTokens = await user.authentication;
+      final String? idToken = authTokens.idToken;
+
+      if (auth == null || idToken == null) {
         _showError(context, '권한 요청 실패');
         return;
       }
@@ -188,7 +212,7 @@ class LoginScreen extends StatelessWidget {
       final authInfo = AuthInfo(
         accessToken: auth.accessToken,
         tokenType: 'bearer',
-        refreshToken: '',
+        idToken: idToken,
         expiresIn: 3600,
         scope: 'email profile',
         refreshTokenExpiresIn: 0,

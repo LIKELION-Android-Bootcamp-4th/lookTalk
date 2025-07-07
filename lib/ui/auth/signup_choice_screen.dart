@@ -4,12 +4,8 @@ import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
 
 class SignupChoiceScreen extends StatelessWidget {
-  final String email;
-  final String provider;
 
   const SignupChoiceScreen({
-    required this.email,
-    required this.provider,
     super.key,
   });
 
@@ -37,11 +33,11 @@ class SignupChoiceScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildRoundedButton(context, '판매자로\n시작하기', () {
-                  context.push('/signup/seller?email=$email&provider=$provider&platformRole=seller');
+                  context.push('/signup/seller');
                 }),
                 gapW32,
                 _buildRoundedButton(context, '쇼핑하러\n가기', () {
-                  context.push('/signup/user?email=$email&provider=$provider&platformRole=buyer');
+                  context.push('/signup/user');
                 }),
               ],
             ),

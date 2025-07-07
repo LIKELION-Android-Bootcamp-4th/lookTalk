@@ -8,15 +8,9 @@ import '../common/const/colors.dart';
 import '../common/const/gap.dart';
 
 class SellerInfoScreen extends StatelessWidget {
-  final String email;
-  final String provider;
-  final String role;
 
   const SellerInfoScreen({
     super.key,
-    required this.email,
-    required this.provider,
-    required this.role,
   });
 
   @override
