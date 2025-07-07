@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/ui/common/component/common_text_field.dart';
 import 'package:look_talk/ui/common/component/primary_button.dart';
-import 'package:look_talk/view_model/auth/buyer_view_model.dart';
+import 'package:look_talk/view_model/auth/buyer_signup_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../view_model/auth/nickname_check_view_model.dart';
@@ -135,7 +135,7 @@ class BuyerInfoScreen extends StatelessWidget {
     );
   }
 }
-
+// TODO: 서버 요청하고 서버 응답 오기전까지 로딩화면 띄우기!!
 // class BuyerInfoScreen extends StatelessWidget {
 //   const BuyerInfoScreen({super.key});
 //
