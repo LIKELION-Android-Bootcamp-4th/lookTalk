@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'token_storage.dart';
 
+// HTTP 요청 보내는 도구
 class DioClient {
   static final TokenStorage _tokenStorage = TokenStorage();
 

@@ -16,6 +16,7 @@ class CommonTextField extends StatelessWidget {
   final EdgeInsetsGeometry contentPadding;
   final FocusNode? focusNode;
   final double? width;
+  final ValueChanged<String>? onChanged;
 
   const CommonTextField({
     super.key,
@@ -28,6 +29,7 @@ class CommonTextField extends StatelessWidget {
     this.contentPadding = const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
     this.focusNode,
     this.width,
+    this.onChanged
   });
 
   @override
@@ -35,6 +37,7 @@ class CommonTextField extends StatelessWidget {
     return SizedBox(
       width: width ?? double.infinity,
       child: TextFormField(
+        onChanged: onChanged,
         controller: controller,
         obscureText: obscureText,
         keyboardType: keyboardType,

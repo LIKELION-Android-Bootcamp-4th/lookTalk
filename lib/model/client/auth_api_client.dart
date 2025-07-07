@@ -5,28 +5,22 @@ import 'package:look_talk/model/entity/response/login_response.dart';
 
 import '../../core/network/api_result.dart';
 import '../../core/network/endpoints.dart';
-import '../entity/request/auth_info.dart';
+import '../entity/request/social_login_request.dart';
 
+// dio 를 이용해 서버 api 를 직접 호출
 class AuthApiClient {
-  final Dio _dio = DioClient.instance;
-  final TokenStorage _tokenStorage = TokenStorage();
+  final Dio _dio;
+
+  AuthApiClient(this._dio);
 
   Future<ApiResult<LoginResponse>> loginWithSocial({
-    required String provider,
-    required AuthInfo authInfo,
-    required String platformRole,
+    required SocialLoginRequest request,
   }) async {
     final response = await _dio.post(
       Endpoints.socialLogin,
-      data: {
-        'provider': provider,
-        'platformRole': platformRole,
-        'authInfo': authInfo.toJson(),
-      },
+      data: request.toJson(),
     );
     return ApiResult.fromResponse(response, LoginResponse.fromJson);
   }
-
-
 }
 
