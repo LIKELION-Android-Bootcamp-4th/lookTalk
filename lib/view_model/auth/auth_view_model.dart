@@ -35,20 +35,18 @@ class AuthViewModel with ChangeNotifier {
 
       Navigator.of(context).pop();
 
-      result.when(
-        success: (res) {
-          if (res.user.isNewUser) {
-            context.go('/signup');
-          } else {
-            context.pop(); // TODO: 이전 화면으로 잘 가는지 확인
-          }
-        },
-        error: (e) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(e.errorMessage ?? '로그인 실패')));
-        },
-      );
+      if (result.success && result.data != null) {
+        final user = result.data!;
+        if (user.user.isNewUser) {
+          context.go('/signup');
+        } else {
+          context.pop(); // TODO: 이전 화면으로 잘 가는지 확인
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(result.message)),
+        );
+      }
     } catch (e) {
       if (navigator.canPop()) navigator.pop();
 

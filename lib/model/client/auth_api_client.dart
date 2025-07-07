@@ -18,7 +18,7 @@ class AuthApiClient {
       AuthEndpoints.socialLogin,
       data: request.toJson(),
     );
-    return ApiResult.fromResponse(response, LoginResponse.fromJson);
+    return ApiResult.fromResponse(response, (json) => LoginResponse.fromJson(json as Map<String, dynamic>));
   }
 }
 
