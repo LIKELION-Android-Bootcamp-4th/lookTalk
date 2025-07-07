@@ -10,12 +10,10 @@ class NicknameCheckResponse {
   });
 
   factory NicknameCheckResponse.fromJson(Map<String, dynamic> json) {
-    final data = json['data'] as Map<String, dynamic>;
-
     return NicknameCheckResponse(
-      available: data['available'] as bool,
-      nickname: data['nickname'] as String,
-      message: data['message'] as String,
+      available: json['available'] as bool,
+      nickname: json['nickname'] as String,
+      message: json['message'] as String,
     );
   }
 }

@@ -1,3 +1,7 @@
+import 'package:look_talk/model/client/buyer_signup_api_client.dart';
+import 'package:look_talk/model/repository/buyer_signup_repository.dart';
+import 'package:look_talk/view_model/auth/buyer_signup_view_model.dart';
+
 import '../core/network/dio_client.dart';
 import '../model/client/auth_api_client.dart';
 import '../model/client/nickname_api_client.dart';
@@ -11,4 +15,4 @@ final dio = DioClient.instance;
 
 AuthViewModel provideAuthViewModel() => AuthViewModel(AuthRepository(AuthApiClient(dio)));
 NicknameCheckViewModel provideNicknameCheckViewModel() => NicknameCheckViewModel(NicknameRepository(NicknameApiClient(dio)));
-
+BuyerSignupViewModel provideBuyerSignupViewModel() => BuyerSignupViewModel(BuyerSignupRepository(BuyerSignupApiClient(dio)));

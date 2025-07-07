@@ -104,6 +104,9 @@ flutter_native_splash:
     android_12:
       image: assets/images/splash_logo.png
       color: "#FFFFFF"
+
+    fullscreen: true
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
