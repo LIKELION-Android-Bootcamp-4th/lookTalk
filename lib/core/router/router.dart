@@ -15,6 +15,7 @@ import 'package:look_talk/ui/main/mypage/mypage_customer/mypage_screen.dart';
 import 'package:look_talk/ui/main/wishlist/wishlist_screen.dart';
 import 'package:look_talk/ui/search/search_screen.dart';
 import 'package:look_talk/view_model/auth/auth_view_model.dart';
+import 'package:look_talk/view_model/auth/nickname_check_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/post_dummy.dart';
@@ -22,6 +23,7 @@ import '../../ui/auth/login_screen.dart';
 import '../../ui/auth/seller_info_screen.dart';
 import '../../ui/auth/signup_choice_screen.dart';
 import '../../ui/auth/user_info_screen.dart';
+import '../../view_model/viewmodel_provider.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/home',
@@ -32,37 +34,20 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       path: '/signup',
-      builder: (context, state) {
-        final email = state.uri.queryParameters['email']!;
-        final provider = state.uri.queryParameters['provider']!;
-        return SignupChoiceScreen(email: email, provider: provider);
-      },
+      builder: (context, state) => const SignupChoiceScreen(),
       routes: [
         GoRoute(
           path: 'user',
           builder: (context, state) {
-            final email = state.uri.queryParameters['email']!;
-            final provider = state.uri.queryParameters['provider']!;
-            final role = state.uri.queryParameters['platformRole']!;
-            return UserInfoScreen(
-              email: email,
-              provider: provider,
-              role: role,
+            return ChangeNotifierProvider(
+              create: (_) => provideNicknameCheckViewModel(),
+              child: const UserInfoScreen(),
             );
-          },
+          }
         ),
         GoRoute(
           path: 'seller',
-          builder: (context, state) {
-            final email = state.uri.queryParameters['email']!;
-            final provider = state.uri.queryParameters['provider']!;
-            final role = state.uri.queryParameters['platformRole']!;
-            return SellerInfoScreen(
-              email: email,
-              provider: provider,
-              role: role,
-            );
-          },
+          builder: (context, state) => const SellerInfoScreen()
         ),
       ],
     ),
