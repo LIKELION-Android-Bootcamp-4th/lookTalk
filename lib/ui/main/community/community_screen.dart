@@ -66,7 +66,9 @@ class CommunityScreen extends StatelessWidget {
                   side: BorderSide(width: 2, color: AppColors.black)),
               backgroundColor: AppColors.white,
               onPressed: () {
-                context.push('/community/write');
+                //context.push('/community/write');
+                //context.push('/login');
+                context.push('/signup?email=test@example.com&provider=google');
               },
               elevation: 0,
               child: const Icon(Icons.add),

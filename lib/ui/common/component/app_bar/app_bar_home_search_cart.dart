@@ -14,7 +14,7 @@ class AppBarHomeSearchCart extends StatelessWidget implements PreferredSizeWidge
       title: Text(title ?? ''),
       actions: [
         IconButton(
-          icon: const Icon(Icons.home),
+          icon: const Icon(Icons.home_outlined),
           onPressed: () => context.push('/home')
         ),
         IconButton(
