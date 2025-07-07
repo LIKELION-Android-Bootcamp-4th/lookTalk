@@ -33,16 +33,15 @@ class NicknameCheckViewModel extends ChangeNotifier {
 
       final result = await _repository.checkNickname(request);
 
-      result.when(
-        success: (response) {
-          _nicknameResult = response;
-          _errorMessage = null;
-        },
-        error: (errorMessage) {
-          _nicknameResult = null;
-          _errorMessage = errorMessage?.toString() ?? '닉네임 확인 중 오류 발생';
-        },
-      );
+      if (result.success && result.data != null) {
+        _nicknameResult = result.data;
+        _errorMessage = null;
+      } else {
+        _nicknameResult = null;
+        _errorMessage = result.message.isNotEmpty
+            ? result.message
+            : '닉네임 확인 중 오류 발생';
+      }
 
       _isLoading = false;
       notifyListeners();
