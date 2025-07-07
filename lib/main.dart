@@ -30,7 +30,6 @@ void main() async {
         ChangeNotifierProvider(create: (_) => CommunityTabViewModel()),
         ChangeNotifierProvider(create: (_) => CommunityViewModel(PostRepository())),
         ChangeNotifierProvider(create: (_) => provideAuthViewModel()),
-        //ChangeNotifierProvider(create: (_) => provideNicknameCheckViewModel())
       ],
       child: MyApp()));
 }

@@ -9,9 +9,9 @@ import '../../view_model/auth/nickname_check_view_model.dart';
 import '../common/const/colors.dart';
 import '../common/const/gap.dart';
 
-class UserInfoScreen extends StatelessWidget {
+class BuyerInfoScreen extends StatelessWidget {
 
-  const UserInfoScreen({
+  const BuyerInfoScreen({
     super.key,
   });
 
@@ -78,7 +78,7 @@ class UserInfoScreen extends StatelessWidget {
     }
 
     if (result == null) {
-      return const SizedBox.shrink(); // 아무것도 표시하지 않음
+      return const SizedBox.shrink();
     }
 
     return Text(
@@ -96,7 +96,9 @@ class UserInfoScreen extends StatelessWidget {
       borderRadius: BorderRadius.circular(10),
       backgroundColor: AppColors.secondary,
       height: 60,
-      onPressed: () {},
+      onPressed: () async {
+        
+      },
     );
   }
 }
