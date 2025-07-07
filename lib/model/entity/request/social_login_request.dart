@@ -1,4 +1,35 @@
-// entity/request/auth_info.dart
+
+import 'social_login_request.dart';
+
+class SocialLoginRequest {
+  final String provider;      // ex: "kakao", "google", "naver"
+  final String platformRole;  // ex: "buyer", "seller"
+  final AuthInfo authInfo;    // OAuth2 토큰 정보
+
+  SocialLoginRequest({
+    required this.provider,
+    required this.platformRole,
+    required this.authInfo,
+  });
+
+  factory SocialLoginRequest.fromJson(Map<String, dynamic> json) {
+    return SocialLoginRequest(
+      provider: json['provider'] as String,
+      platformRole: json['platformRole'] as String,
+      authInfo: AuthInfo.fromJson(json['authInfo'] as Map<String, dynamic>),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'provider': provider,
+      'platformRole': platformRole,
+      'authInfo': authInfo.toJson(),
+    };
+  }
+}
+
+
 class AuthInfo {
   final String accessToken;
   final String tokenType;

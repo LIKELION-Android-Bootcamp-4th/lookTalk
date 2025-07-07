@@ -8,6 +8,8 @@ const gap12 = SizedBox(height: 12);
 const gap16 = SizedBox(height: 16);
 const gap24 = SizedBox(height: 24);
 const gap32 = SizedBox(height: 32);
+const gap48 = SizedBox(height: 48);
+const gap64 = SizedBox(height: 64);
 
 // 너비 간격
 const gapW4 = SizedBox(width: 4);

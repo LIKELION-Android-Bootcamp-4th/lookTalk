@@ -29,15 +29,18 @@ class SignupChoiceScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            gap64,
+            gap32,
             Text('어떻게 이용하실 건가요?', style: context.h1.copyWith(fontSize: 25)),
-            gap16,
+            gap64,
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildRoundedButton(context, '판매자로 시작하기', () {
+                _buildRoundedButton(context, '판매자로\n시작하기', () {
                   context.push('/signup/seller?email=$email&provider=$provider&platformRole=seller');
                 }),
                 gapW32,
-                _buildRoundedButton(context, '쇼핑하러 가기', () {
+                _buildRoundedButton(context, '쇼핑하러\n가기', () {
                   context.push('/signup/user?email=$email&provider=$provider&platformRole=buyer');
                 }),
               ],
@@ -63,7 +66,7 @@ class SignupChoiceScreen extends StatelessWidget {
           side: BorderSide(color: Colors.black, width: 2),
         ),
       ),
-      child: Text(text, style: context.h1.copyWith(fontSize: 25)),
+      child: Center(child: Text(text, style: context.h1.copyWith(fontSize: 25), textAlign: TextAlign.center,)),
     );
   }
 }

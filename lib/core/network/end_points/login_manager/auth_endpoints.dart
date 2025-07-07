@@ -9,5 +9,6 @@ class AuthEndpoints {
 
   static const String checkNickname = '/api/auth/check-nickname'; //GET 닉네임 체크
 
+  static const String nicknameCheck = '/api/auth/check-nickname'; // 닉네임 중복 체크
 
 }

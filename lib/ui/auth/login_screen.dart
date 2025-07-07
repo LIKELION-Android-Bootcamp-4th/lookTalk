@@ -10,7 +10,7 @@ import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/entity/request/auth_info.dart';
+import '../../model/entity/request/social_login_request.dart';
 import '../../view_model/auth/auth_view_model.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -176,8 +176,9 @@ class LoginScreen extends StatelessWidget {
         scopeHint: ['email', 'profile'],
       );
 
-      final GoogleSignInClientAuthorization? auth =
-      await user.authorizationClient.authorizationForScopes(['email', 'profile']);
+      final GoogleSignInClientAuthorization? auth = await user
+          .authorizationClient
+          .authorizationForScopes(['email', 'profile']);
 
       if (auth == null) {
         _showError(context, '권한 요청 실패');
