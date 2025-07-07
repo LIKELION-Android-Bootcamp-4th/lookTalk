@@ -9,7 +9,7 @@ import 'package:look_talk/ui/common/const/colors.dart';
 
 class PrimaryButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final double height;
   final double minWidth;
   final TextStyle? textStyle;
