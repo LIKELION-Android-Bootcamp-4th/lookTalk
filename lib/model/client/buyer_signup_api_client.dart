@@ -12,7 +12,7 @@ class BuyerSignupApiClient {
   Future<ApiResult<void>> submitBuyerSignup({
     required BuyerSignupRequest request,
   }) async {
-    final response = await _dio.post(
+    final response = await _dio.patch(
       AuthEndpoints.buyerSignUp,
       data: request.toJson()
     );
