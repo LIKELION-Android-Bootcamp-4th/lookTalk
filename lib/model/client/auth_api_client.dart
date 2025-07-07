@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:look_talk/model/entity/response/login_response.dart';
 
 import '../../core/network/api_result.dart';
+import '../../core/network/end_points/login_manager/auth_endpoints.dart';
 import '../entity/request/social_login_request.dart';
 
 // dio 를 이용해 서버 api 를 직접 호출
