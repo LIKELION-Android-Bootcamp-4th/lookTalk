@@ -9,7 +9,7 @@ class DioClient {
   static final Dio _dio =
       Dio(
           BaseOptions(
-            baseUrl: 'http://git.hansul.kr:3001',
+            baseUrl: 'http://git.hansul.kr:2999',
             connectTimeout: const Duration(seconds: 10),
             receiveTimeout: const Duration(seconds: 10),
             headers: {
@@ -72,4 +72,27 @@ class DioClient {
         ]);
 
   static Dio get instance => _dio;
+
+  // GET 요청 메서드
+  Future<Response> get(String path, {Map<String, dynamic>? queryParameters}) async {
+    return await _dio.get(path, queryParameters: queryParameters);
+  }
+
+  // POST 요청 메서드
+  Future<Response> post(String path, {dynamic data}) async {
+    return await _dio.post(path, data: data);
+  }
+
+  // PUT 요청 메서드
+  Future<Response> put(String path, {dynamic data}) async {
+    return await _dio.put(path, data: data);
+  }
+
+  // DELETE 요청 메서드
+  Future<Response> delete(String path, {Map<String, dynamic>? queryParameters}) async {
+    return await _dio.delete(path, queryParameters: queryParameters);
+  }
+
+
+
 }

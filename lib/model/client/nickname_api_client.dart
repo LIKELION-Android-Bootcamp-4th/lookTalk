@@ -19,6 +19,6 @@ class NicknameApiClient {
       queryParameters: request.toQuery()
     );
 
-    return ApiResult.fromResponse(response, NicknameCheckResponse.fromJson);
+    return ApiResult.fromResponse(response, (json) => NicknameCheckResponse.fromJson(json as Map<String, dynamic>));
   }
 }
