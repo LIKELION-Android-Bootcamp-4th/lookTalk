@@ -1,3 +1,5 @@
+// lib/main.dart
+
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
@@ -19,21 +21,47 @@ import 'package:look_talk/view_model/viewmodel_provider.dart';
 import 'package:provider/provider.dart';
 import 'core/app.dart';
 
-void main() async {
+// [✅ viewmodel_provider.dart 임포트 추가]
+import 'view_model/viewmodel_provider.dart';
 
-  KakaoSdk.init(nativeAppKey: '2be79d6c89568bf54e78a7e7b1bc3fbc', loggingEnabled: true);
-  await GoogleSignIn.instance.initialize(
-    serverClientId: '297394298746-334r4944egru9obvf9au90es85pvv5va.apps.googleusercontent.com'
-  );
+// 기존 Provider import들
+import 'view_model/community/community_tab_view_model.dart';
+import 'view_model/community/community_view_model.dart';
+import 'model/repository/post_repository.dart';
 
-  runApp(MultiProvider(
+
+void main() {
+  runApp(
+    MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => CommunityTabViewModel()),
         ChangeNotifierProvider(create: (_) => CommunityViewModel(PostRepository())),
         ChangeNotifierProvider(create: (_) => provideAuthViewModel()),
+        ChangeNotifierProvider(create: (_) => provideNicknameCheckViewModel()),
+
+        // [✅ CartViewModel Provider를 함수 호출로 변경]
+        ChangeNotifierProvider(create: (_) => provideCartViewModel()),
         ChangeNotifierProvider(
           create: (_) => NoticeViewModel()..loadNotices(),
         ),
       ],
-      child: MyApp()));
+      child: const MyApp(),
+    ),
+  );
+}
+
+// 기존 MyApp 코드 예시 (프로젝트 상황에 따라 다를 수 있음)
+class MyApp extends StatelessWidget {
+  const MyApp({super.key}); // [✅ key 파라미터 추가 권장]
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'LookTalk',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const Scaffold(), // 예시 홈 화면 위젯
+    );
+  }
 }

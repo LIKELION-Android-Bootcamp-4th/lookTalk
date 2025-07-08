@@ -16,6 +16,7 @@ import 'package:look_talk/ui/main/wishlist/wishlist_screen.dart';
 import 'package:look_talk/ui/search/search_screen.dart';
 import 'package:look_talk/view_model/auth/auth_view_model.dart';
 import 'package:look_talk/view_model/auth/nickname_check_view_model.dart';
+import 'package:look_talk/view_model/cart/cart_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/post_dummy.dart';
@@ -31,10 +32,7 @@ import '../../view_model/viewmodel_provider.dart';
 final GoRouter router = GoRouter(
   initialLocation: '/home',
   routes: [
-    GoRoute(
-      path: '/login',
-      builder: (context, state) => const LoginScreen(),
-    ),
+    GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
     GoRoute(
       path: '/signup',
       builder: (context, state) => const SignupChoiceScreen(),
@@ -53,11 +51,11 @@ final GoRouter router = GoRouter(
               ],
               child: const BuyerInfoScreen(),
             );
-          }
+          },
         ),
         GoRoute(
           path: 'seller',
-          builder: (context, state) => const SellerInfoScreen()
+          builder: (context, state) => const SellerInfoScreen(),
         ),
       ],
     ),
@@ -88,7 +86,15 @@ final GoRouter router = GoRouter(
         );
 }
     ),
-    GoRoute(path: '/cart', builder: (context, state) => CartScreen()),
+    GoRoute(
+      path: '/cart',
+      builder: (context, state) {
+        return ChangeNotifierProvider(
+          create: (_) => provideCartViewModel(),
+          child: CartScreen(),
+        );
+      },
+    ),
     ShellRoute(
       builder: (context, state, child) {
         return BottomNavScreen(
