@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
+import 'package:look_talk/core/utils/auth_guard.dart';
 import 'package:look_talk/ui/common/component/app_bar/app_bar_search_cart.dart';
 import 'package:look_talk/ui/main/community/community_my_tab.dart';
 import 'package:look_talk/ui/main/community/community_question_tab.dart';
@@ -36,7 +37,9 @@ class CommunityScreen extends StatelessWidget {
           final tabController = DefaultTabController.of(context)!;
           tabController.addListener(() {
             if (!tabController.indexIsChanging) {
-              context.read<CommunityTabViewModel>().setTabIndex(tabController.index);
+              context.read<CommunityTabViewModel>().setTabIndex(
+                tabController.index,
+              );
             }
           });
 
@@ -58,17 +61,21 @@ class CommunityScreen extends StatelessWidget {
                 indicatorSize: TabBarIndicatorSize.tab,
               ),
             ),
-            body: TabBarView(
-              children: tabViews,
-            ),
+            body: TabBarView(children: tabViews),
             floatingActionButton: FloatingActionButton(
               shape: const CircleBorder(
-                  side: BorderSide(width: 2, color: AppColors.black)),
+                side: BorderSide(width: 2, color: AppColors.black),
+              ),
               backgroundColor: AppColors.white,
               onPressed: () {
                 //context.push('/community/write');
-                context.push('/login');
-                //context.push('/signup?email=test@example.com&provider=google');
+                //context.push('/login');
+                //context.push('/signup');
+                navigateWithAuthCheck(
+                  context: context,
+                  destinationIfLoggedIn: '/community/write',
+                  fallbackIfNotLoggedIn: '/login',
+                );
               },
               elevation: 0,
               child: const Icon(Icons.add),

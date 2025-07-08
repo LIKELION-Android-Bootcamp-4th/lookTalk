@@ -11,10 +11,14 @@ import '../../model/repository/auth_repository.dart';
 // auth repository 를 호출 & ui 상태 관리
 class AuthViewModel with ChangeNotifier {
   final AuthRepository repository;
+  final TokenStorage _tokenStorage = TokenStorage();
 
   AuthViewModel(this.repository);
 
-  final TokenStorage _tokenStorage = TokenStorage();
+  Future<bool> isLoggedIn() async{
+    final accessToken = await _tokenStorage.getAccessToken();
+    return accessToken != null && accessToken.isNotEmpty;
+  }
 
   Future<void> loginAndNavigate(
     BuildContext context,
@@ -36,11 +40,10 @@ class AuthViewModel with ChangeNotifier {
 
       final result = await repository.loginWithSocial(request: request);
 
-      Navigator.of(context).pop();
+      if(context.mounted) Navigator.of(context).pop();
 
       if (result.success && result.data != null) {
         final user = result.data!;
-
         final accessToken = user.accessToken;
         final refreshToken = user.refreshToken;
 
