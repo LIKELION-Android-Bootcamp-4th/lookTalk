@@ -77,7 +77,7 @@ class MyPageScreenCustomer extends StatelessWidget {
             gap16,
             GestureDetector(
               onTap: ()=> {
-                Navigator.push(context, MaterialPageRoute(builder: (_)=> Notice())),
+                Navigator.push(context, MaterialPageRoute(builder: (_)=> NoticeScreen())),
               },
               child:  _MyPageMenu(title: '공지사항'),
             ),

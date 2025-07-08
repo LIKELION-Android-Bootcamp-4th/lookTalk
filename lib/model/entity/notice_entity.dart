@@ -1,5 +1,5 @@
 class NoticeEntity {
-  final int id;
+  final String id;
   final String title;
   final String currentAt;
   final String content;

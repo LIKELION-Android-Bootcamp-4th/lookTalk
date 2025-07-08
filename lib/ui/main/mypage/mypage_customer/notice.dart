@@ -1,63 +1,58 @@
 import 'package:flutter/material.dart';
-import 'package:look_talk/core/extension/text_style_extension.dart';
-import 'package:look_talk/model/entity/notice_entity.dart';
-import 'package:look_talk/model/notice_dummy.dart';
+import 'package:provider/provider.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
+import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/notice_detail_screen.dart';
+import 'package:look_talk/view_model/mypage_view_model/notice_viewmodel.dart';
 
-class Notice extends StatelessWidget{
+class NoticeScreen extends StatelessWidget {
+  const NoticeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final List<NoticeEntity> noticeList = noticeEntity;
+    final vm = context.watch<NoticeViewModel>();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('공지사항'),
+        title: const Text('공지사항'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric( vertical: 24),
-      child:
-      ListView.builder(
-        itemCount: noticeList.length,
+      body: vm.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.separated(
+        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+        itemCount: vm.notices.length,
+        separatorBuilder: (_, __) => const Divider(color: Colors.black),
         itemBuilder: (context, index) {
-          final notice = noticeList[index];
-
+          final notice = vm.notices[index];
           return GestureDetector(
             onTap: () {
-              // 인덱스 값 사용
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => NoticeDetailScreen(
-                    notice: notice,
-                  ),
+                  builder: (_) => NoticeDetailScreen(notice: notice),
                 ),
               );
             },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        notice.title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: context.bodyBold,
-                      ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      notice.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.bodyBold,
                     ),
-                    gap24,
-                    Text(notice.currentAt),
-                  ],
-                ),
-                gap8,
-                const Divider(color: Colors.black, thickness: 1),
-              ],
+                  ),
+                  gap16,
+                  Text(notice.currentAt),
+                ],
+              ),
             ),
           );
         },
       ),
-          ),
     );
   }
 }

@@ -14,6 +14,7 @@ import 'package:look_talk/ui/main/community/community_my_tab.dart';
 import 'package:look_talk/view_model/auth/nickname_check_view_model.dart';
 import 'package:look_talk/view_model/community/community_tab_view_model.dart';
 import 'package:look_talk/view_model/community/community_view_model.dart';
+import 'package:look_talk/view_model/mypage_view_model/notice_viewmodel.dart';
 import 'package:look_talk/view_model/viewmodel_provider.dart';
 import 'package:provider/provider.dart';
 import 'core/app.dart';
@@ -30,6 +31,9 @@ void main() async {
         ChangeNotifierProvider(create: (_) => CommunityTabViewModel()),
         ChangeNotifierProvider(create: (_) => CommunityViewModel(PostRepository())),
         ChangeNotifierProvider(create: (_) => provideAuthViewModel()),
+        ChangeNotifierProvider(
+          create: (_) => NoticeViewModel()..loadNotices(),
+        ),
       ],
       child: MyApp()));
 }
