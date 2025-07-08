@@ -23,6 +23,9 @@ import '../../ui/auth/login_screen.dart';
 import '../../ui/auth/seller_info_screen.dart';
 import '../../ui/auth/signup_choice_screen.dart';
 import '../../ui/auth/buyer_info_screen.dart';
+import '../../ui/main/mypage/mypage_customer/notice.dart';
+import '../../ui/main/mypage/mypage_seller/manage_product_seller_screen.dart';
+import '../../ui/main/mypage/mypage_seller/mypage_screen_product_manage.dart';
 import '../../view_model/viewmodel_provider.dart';
 
 final GoRouter router = GoRouter(
@@ -106,6 +109,18 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '/mypage',
           builder: (context, state) => const MyPageScreenCustomer(),
+        ),
+        GoRoute(
+            path: '/notice',
+            builder: (context, state) => const NoticeScreen(),
+        ),
+        GoRoute(
+          path: '/seller/products',
+          builder: (context, state) => const MyPageProductManageScreen(),
+        ),
+        GoRoute(
+          path: '/seller/orders',
+          builder: (context, state) => const ManageProductSellerScreen(),
         ),
       ],
     ),
