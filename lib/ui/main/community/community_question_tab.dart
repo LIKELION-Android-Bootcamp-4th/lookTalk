@@ -8,10 +8,11 @@ class CommunityQuestionTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final questionPosts = dummyPosts
-        .where((post) => post.category == PostCategory.question)
-        .toList();
-
-    return PostList(posts: questionPosts);
+    // final questionPosts = dummyPosts
+    //     .where((post) => post.category == PostCategory.question)
+    //     .toList();
+    //
+    // return PostList(posts: questionPosts);
+    return Scaffold();
   }
 }

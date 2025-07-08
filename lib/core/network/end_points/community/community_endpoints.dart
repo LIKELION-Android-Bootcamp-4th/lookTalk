@@ -1,7 +1,9 @@
 class CommunityEndpoints {
   static const String allPosts = '/api/posts'; //GET 카테고리를 통해 조회
 
-  static const String postManage = '/api/posts/{postId}'; //GET, PATCH, DELETE 상세 조회,수정,삭제
+  //static const String postManage = '/api/posts/{postId}'; //GET, PATCH, DELETE 상세 조회,수정,삭제
+  static const String postManageBase = '/api/posts';
+  static String postManage(String postId) => '$postManageBase/$postId';
 
   //글 작성 endpoints
   static const String writePost = '/api/posts'; // POST 포스트 글 작성.

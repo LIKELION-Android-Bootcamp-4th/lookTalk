@@ -72,7 +72,10 @@ final GoRouter router = GoRouter(
       path: '/post/:id',
       builder: (context, state) {
         final postId = state.pathParameters['id']!;
-        return PostDetailScreen(postId: postId);
+        return ChangeNotifierProvider(
+          create: (_) => providerPostDetailViewModel(postId),
+          child: const PostDetailScreen(),
+        );
       },
     ),
     GoRoute(path: '/search', builder: (context, state) => SearchScreen()),

@@ -10,13 +10,16 @@ class PostCreateApiClient {
 
   PostCreateApiClient(this._dio);
 
-  Future<ApiResult<PostCreateResponse>> createPost(
-  {  required PostCreateRequest request }) async {
+  Future<ApiResult<PostCreateResponse>> createPost({
+    required PostCreateRequest request,
+  }) async {
     final response = await _dio.post(
       CommunityEndpoints.writePost,
       data: request.toJson(),
     );
-    return ApiResult.fromResponse(response, (json) => PostCreateResponse.fromJson(json as Map<String, dynamic>));
-
+    return ApiResult.fromResponse(
+      response,
+      (json) => PostCreateResponse.fromJson(json as Map<String, dynamic>),
+    );
   }
 }

@@ -6,9 +6,13 @@ import '../../ui/common/const/text_sizes.dart';
 class AppTheme {
   static ThemeData light() {
     return ThemeData(
+      scaffoldBackgroundColor: AppColors.white,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: AppColors.primary,
+        background: AppColors.white,
+      ),
       fontFamily: 'NanumSquareRound',
       textTheme: const TextTheme(
-
         headlineLarge: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.w800, // extra bold
@@ -28,10 +32,11 @@ class AppTheme {
           fontSize: 13,
           fontWeight: FontWeight.w300, // light
         ),
-
       ),
-      colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
       useMaterial3: true,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: AppColors.white
+      )
     );
   }
 }

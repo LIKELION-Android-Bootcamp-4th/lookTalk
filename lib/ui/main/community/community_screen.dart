@@ -63,10 +63,10 @@ class CommunityScreen extends StatelessWidget {
             ),
             body: TabBarView(children: tabViews),
             floatingActionButton: FloatingActionButton(
-              shape: const CircleBorder(
-                side: BorderSide(width: 2, color: AppColors.black),
-              ),
-              backgroundColor: AppColors.white,
+              // shape: const CircleBorder(
+              //   side: BorderSide(width: 2, color: AppColors.black),
+              // ),
+              backgroundColor: AppColors.secondary,
               onPressed: () {
                 //context.push('/community/write');
                 //context.push('/login');
@@ -78,7 +78,7 @@ class CommunityScreen extends StatelessWidget {
                 );
               },
               elevation: 0,
-              child: const Icon(Icons.add),
+              child: const Icon(Icons.add, color: AppColors.white,),
             ),
           );
         },

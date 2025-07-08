@@ -18,7 +18,7 @@ class CommunityViewModel with ChangeNotifier {
     notifyListeners();
 
     try {
-      _posts = await _repository.fetchPosts(category.name);
+     // _posts = await _repository.fetchPosts(category.name);
     } catch (e) {
       print('에러: $e');
     }

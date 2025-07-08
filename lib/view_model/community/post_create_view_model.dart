@@ -11,7 +11,6 @@ class PostCreateViewModel with ChangeNotifier {
     '코디 추천': 'coord_recommend'
   };
 
-
   PostCreateViewModel(this.repository);
 
   String? _category;
