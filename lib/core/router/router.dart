@@ -28,10 +28,7 @@ import '../../view_model/viewmodel_provider.dart';
 final GoRouter router = GoRouter(
   initialLocation: '/home',
   routes: [
-    GoRoute(
-      path: '/login',
-      builder: (context, state) => const LoginScreen(),
-    ),
+    GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
     GoRoute(
       path: '/signup',
       builder: (context, state) => const SignupChoiceScreen(),
@@ -50,17 +47,20 @@ final GoRouter router = GoRouter(
               ],
               child: const BuyerInfoScreen(),
             );
-          }
+          },
         ),
         GoRoute(
           path: 'seller',
-          builder: (context, state) => const SellerInfoScreen()
+          builder: (context, state) => const SellerInfoScreen(),
         ),
       ],
     ),
     GoRoute(
       path: '/community/write',
-      builder: (context, state) => PostCreateScreen(),
+      builder: (context, state) => ChangeNotifierProvider(
+        create: (_) => providePostCreateViewModel(),
+        child: PostCreateScreen(),
+      ),
       routes: [
         GoRoute(
           path: 'product-register',
@@ -72,10 +72,7 @@ final GoRouter router = GoRouter(
       path: '/post/:id',
       builder: (context, state) {
         final postId = state.pathParameters['id']!;
-        final post = dummyPosts.firstWhere(
-          (p) => p.id == postId,
-        ); // TODO: 서버 요청시 제외하기
-        return PostDetailScreen(post: post);
+        return PostDetailScreen(postId: postId);
       },
     ),
     GoRoute(path: '/search', builder: (context, state) => SearchScreen()),

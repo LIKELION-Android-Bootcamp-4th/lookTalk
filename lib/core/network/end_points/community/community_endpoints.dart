@@ -14,5 +14,5 @@ class CommunityEndpoints {
   static const String myProductOrderDetail = '/api/mypage/orders/{orderId}'; //GET 주문 상품 세부 정보
 }
 
-// my+디자인이 초반에 내가 작성한 글 리스트 보여주기 및 수정 삭제로 기억하고 있어 이부분 디자인 수정이 필요할 것 같습니다.
-//댓글 작성은 있는데 커뮤니티에 대한 댓글 목록 조회가 보이지 않습니다.
+// my+디자인이 초반에 내가 작성한 글 리스트 보여주기 및 수정 삭제는 시간 남으면!!
+

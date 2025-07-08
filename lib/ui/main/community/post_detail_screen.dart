@@ -7,10 +7,9 @@ import '../../../model/entity/post_entity.dart';
 import '../../common/const/colors.dart';
 
 class PostDetailScreen extends StatelessWidget{
-  // final String postId; // TODO: postId 타입 맞는지 확인
-  final Post post;
+  final String postId;
 
-  const PostDetailScreen({required this.post, super.key});
+  const PostDetailScreen({required this.postId, super.key});
 
   @override
   Widget build(BuildContext context) {
