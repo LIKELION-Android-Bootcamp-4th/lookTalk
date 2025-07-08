@@ -10,31 +10,31 @@ import 'package:provider/provider.dart';
 import '../../../view_model/community/community_tab_view_model.dart';
 import '../../common/const/colors.dart';
 
+const List<Tab> _communityTabs  = const [
+  Tab(text: '코디 질문'),
+  Tab(text: '코디 추천'),
+  Tab(text: 'My+'),
+];
+
+const List<Widget> _tabViews = const [
+  CommunityQuestionTab(),
+  CommunityRecommendTab(),
+  CommunityMyTab(),
+];
+
 class CommunityScreen extends StatelessWidget {
   const CommunityScreen({super.key});
-
-  final List<Tab> tabs = const [
-    Tab(text: '코디 질문'),
-    Tab(text: '코디 추천'),
-    Tab(text: 'My+'),
-  ];
-
-  final List<Widget> tabViews = const [
-    CommunityQuestionTab(),
-    CommunityRecommendTab(),
-    CommunityMyTab(),
-  ];
 
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<CommunityTabViewModel>();
 
     return DefaultTabController(
-      length: tabs.length,
+      length: _communityTabs.length,
       initialIndex: viewModel.currentTabIndex,
       child: Builder(
         builder: (BuildContext context) {
-          final tabController = DefaultTabController.of(context)!;
+          final tabController = DefaultTabController.of(context);
           tabController.addListener(() {
             if (!tabController.indexIsChanging) {
               context.read<CommunityTabViewModel>().setTabIndex(
@@ -44,45 +44,65 @@ class CommunityScreen extends StatelessWidget {
           });
 
           return Scaffold(
-            appBar: AppBarSearchCart(
-              title: '커뮤니티',
-              bottom: TabBar(
-                tabs: tabs,
-                labelStyle: context.bodyBold,
-                labelColor: AppColors.black,
-                unselectedLabelStyle: context.bodyBold,
-                unselectedLabelColor: AppColors.textGrey,
-                indicator: const UnderlineTabIndicator(
-                  borderSide: BorderSide(color: Colors.black, width: 3),
-                  insets: EdgeInsets.symmetric(horizontal: 20),
-                ),
-                indicatorColor: AppColors.black,
-                indicatorWeight: 3.0,
-                indicatorSize: TabBarIndicatorSize.tab,
-              ),
-            ),
-            body: TabBarView(children: tabViews),
-            floatingActionButton: FloatingActionButton(
-              // shape: const CircleBorder(
-              //   side: BorderSide(width: 2, color: AppColors.black),
-              // ),
-              backgroundColor: AppColors.secondary,
-              onPressed: () {
-                //context.push('/community/write');
-                //context.push('/login');
-                //context.push('/signup');
-                navigateWithAuthCheck(
-                  context: context,
-                  destinationIfLoggedIn: '/community/write',
-                  fallbackIfNotLoggedIn: '/login',
-                );
-              },
-              elevation: 0,
-              child: const Icon(Icons.add, color: AppColors.white,),
-            ),
+            appBar: _buildAppBar(context),
+            body: const TabBarView(children: _tabViews),
+            floatingActionButton: _buildFAB(context)
           );
         },
       ),
     );
+
+
   }
+
+  PreferredSizeWidget _buildAppBar(BuildContext context){
+    return AppBarSearchCart(
+      title: '커뮤니티',
+      bottom: TabBar(
+        tabs: _communityTabs,
+        labelStyle: context.bodyBold,
+        labelColor: AppColors.black,
+        unselectedLabelStyle: context.bodyBold,
+        unselectedLabelColor: AppColors.textGrey,
+        indicator: const UnderlineTabIndicator(
+          borderSide: BorderSide(color: Colors.black, width: 3),
+          insets: EdgeInsets.symmetric(horizontal: 20),
+        ),
+        indicatorColor: AppColors.black,
+        indicatorWeight: 3.0,
+        indicatorSize: TabBarIndicatorSize.tab,
+      ),
+    );
+  }
+
+  Widget _buildFAB(BuildContext context){
+    return Transform.translate(
+      offset: const Offset(0, -15),
+      child: SizedBox(
+        width: 64,
+        height: 64,
+        child: FloatingActionButton(
+          // shape: const CircleBorder(
+          //   side: BorderSide(width: 2, color: AppColors.black),
+          // ),
+          backgroundColor: AppColors.primary,
+          onPressed: () {
+            //context.push('/community/write');
+            //context.push('/login');
+            //context.push('/signup');
+            navigateWithAuthCheck(
+              context: context,
+              destinationIfLoggedIn: '/community/write',
+              fallbackIfNotLoggedIn: '/login',
+            );
+          },
+          elevation: 3,
+          shape: const CircleBorder(),
+          child: const Icon(Icons.add, color: AppColors.white, size: 28,),
+        ),
+      ),
+    );
+  }
+
+
 }

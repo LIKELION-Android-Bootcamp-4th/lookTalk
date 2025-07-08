@@ -36,7 +36,7 @@ class AppTheme {
       useMaterial3: true,
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.white
-      )
+      ),
     );
   }
 }
