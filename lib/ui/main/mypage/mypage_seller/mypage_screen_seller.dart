@@ -7,6 +7,9 @@ import 'package:look_talk/ui/main/mypage/mypage_seller/manage_product_seller_scr
 
 import 'package:look_talk/ui/main/mypage/mypage_seller/mypage_screen_product_manage.dart';
 
+import '../../../common/component/common_modal.dart';
+import '../mypage_customer/notice.dart';
+
 class MyPageScreenSeller extends StatelessWidget {
   const MyPageScreenSeller({super.key});
 
@@ -62,11 +65,50 @@ class MyPageScreenSeller extends StatelessWidget {
             ),
 
             gap16,
-            const _MyPageMenu(title: '공지사항'),
+            GestureDetector(
+              onTap: ()=> {
+                Navigator.push(context, MaterialPageRoute(builder: (_)=> Notice())),
+              },
+              child:  _MyPageMenu(title: '공지사항'),
+            ),
             gap16,
-            const _MyPageMenu(title: '로그아웃'),
+            // GestureDetector(
+            //   onTap: () {
+            //     showDialog(
+            //       context: context,
+            //       builder: (context) => CommonModal(
+            //         title: "로그아웃",
+            //         content: "로그아웃 하시겠습니까?",
+            //         confirmText: "로그아웃 하기",
+            //         onConfirm: () {
+            //         },
+            //       ),
+            //     );
+            //   },
+            //   child: _MyPageMenu(title: '로그아웃'),
+            // ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (_)=> MyPageScreenSeller()));
+              },
+              child: _MyPageMenu(title: '로그아웃'),
+            ),
             gap16,
-            const _MyPageMenu(title: '회원 탈퇴'),
+            GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => CommonModal(
+                    title: "회원탈퇴",
+                    content: "작성하신 모든 게시글 및 리뷰도\n 사라지게 됩니다. 정말 탈퇴\n 하시겠습니까?",
+                    confirmText: "회원탈퇴 하기",
+                    onConfirm: () {
+                    },
+                  ),
+                );
+              },
+              child: _MyPageMenu(title: '회원탈퇴'),
+            ),
           ],
         ),
       ),
