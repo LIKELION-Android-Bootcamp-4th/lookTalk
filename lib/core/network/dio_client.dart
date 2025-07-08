@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:look_talk/core/network/end_points/login_manager/auth_endpoints.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'token_storage.dart';
 
@@ -21,10 +22,20 @@ class DioClient {
         ..interceptors.addAll([
           InterceptorsWrapper(
             onRequest: (options, handler) async {
-              final accessToken = await _tokenStorage.getAccessToken();
-              if (accessToken != null) {
-                options.headers['Authorization'] = 'Bearer $accessToken';
+              final excludedPaths = [
+                AuthEndpoints.socialLogin,
+                AuthEndpoints.refresh,
+              ];
+
+              final isExcluded = excludedPaths.any((excluded) => options.path.startsWith(excluded));
+
+              if (!isExcluded) {
+                final accessToken = await _tokenStorage.getAccessToken();
+                if (accessToken != null) {
+                  options.headers['Authorization'] = 'Bearer $accessToken';
+                }
               }
+
               return handler.next(options);
             },
             onError: (DioException error, handler) async {

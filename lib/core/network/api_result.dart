@@ -80,4 +80,15 @@ class ApiResult<T> {
     final data = response.data as Map<String, dynamic>;
     return ApiResult.fromJson(data, fromJsonT);
   }
+
+  static ApiResult<void> fromVoidResponse(Response response) {
+    final data = response.data as Map<String, dynamic>;
+    return ApiResult<void>(
+      success: data['success'],
+      message: data['message'],
+      data: null,
+      timestamp: DateTime.parse(data['timestamp']),
+      error: data['error'],
+    );
+  }
 }

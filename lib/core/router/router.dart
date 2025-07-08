@@ -22,7 +22,7 @@ import '../../model/post_dummy.dart';
 import '../../ui/auth/login_screen.dart';
 import '../../ui/auth/seller_info_screen.dart';
 import '../../ui/auth/signup_choice_screen.dart';
-import '../../ui/auth/user_info_screen.dart';
+import '../../ui/auth/buyer_info_screen.dart';
 import '../../view_model/viewmodel_provider.dart';
 
 final GoRouter router = GoRouter(
@@ -39,9 +39,16 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: 'user',
           builder: (context, state) {
-            return ChangeNotifierProvider(
-              create: (_) => provideNicknameCheckViewModel(),
-              child: const UserInfoScreen(),
+            return MultiProvider(
+              providers: [
+                ChangeNotifierProvider(
+                  create: (_) => provideNicknameCheckViewModel(),
+                ),
+                ChangeNotifierProvider(
+                  create: (_) => provideBuyerSignupViewModel(),
+                ),
+              ],
+              child: const BuyerInfoScreen(),
             );
           }
         ),

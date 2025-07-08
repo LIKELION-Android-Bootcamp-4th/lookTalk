@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:look_talk/core/network/token_storage.dart';
 import 'package:look_talk/ui/common/component/common_loading.dart';
 
 import '../../model/client/auth_api_client.dart';
@@ -10,8 +11,14 @@ import '../../model/repository/auth_repository.dart';
 // auth repository 를 호출 & ui 상태 관리
 class AuthViewModel with ChangeNotifier {
   final AuthRepository repository;
+  final TokenStorage _tokenStorage = TokenStorage();
 
   AuthViewModel(this.repository);
+
+  Future<bool> isLoggedIn() async{
+    final accessToken = await _tokenStorage.getAccessToken();
+    return accessToken != null && accessToken.isNotEmpty;
+  }
 
   Future<void> loginAndNavigate(
     BuildContext context,
@@ -33,14 +40,23 @@ class AuthViewModel with ChangeNotifier {
 
       final result = await repository.loginWithSocial(request: request);
 
-      Navigator.of(context).pop();
+      if(context.mounted) Navigator.of(context).pop();
 
       if (result.success && result.data != null) {
         final user = result.data!;
+        final accessToken = user.accessToken;
+        final refreshToken = user.refreshToken;
+
+        await _tokenStorage.saveTokens(accessToken: accessToken, refreshToken: refreshToken);
+
         if (user.user.isNewUser) {
           context.go('/signup');
         } else {
-          context.pop(); // TODO: 이전 화면으로 잘 가는지 확인
+          if(context.canPop()){
+            context.pop(); // TODO: 이전 화면으로 잘 가는지 확인
+          }else{
+            context.go('/home');
+          }
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
