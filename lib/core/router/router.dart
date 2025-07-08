@@ -78,7 +78,13 @@ final GoRouter router = GoRouter(
         return PostDetailScreen(post: post);
       },
     ),
-    GoRoute(path: '/search', builder: (context, state) => SearchScreen()),
+    GoRoute(path: '/search', builder: (context, state) {
+        return ChangeNotifierProvider(
+          create: (_) => provideSearchScreenViewModel(),
+          child: SearchScreen(),
+        );
+}
+    ),
     GoRoute(path: '/cart', builder: (context, state) => CartScreen()),
     ShellRoute(
       builder: (context, state, child) {
