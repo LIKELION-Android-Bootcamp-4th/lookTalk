@@ -9,12 +9,14 @@ class AppBarText extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final String text;
   final PreferredSizeWidget? bottom;
+  final VoidCallback onPressed;
 
   const AppBarText({
     Key? key,
     this.title,
     required this.text,
     this.bottom,
+    required this.onPressed
   }) : super(key: key);
 
   @override
@@ -23,7 +25,7 @@ class AppBarText extends StatelessWidget implements PreferredSizeWidget {
       title: Text(title ?? ''),
       actions: [
         TextButton(
-          onPressed: () {},
+          onPressed: onPressed,
           child: Text(
             text,
             style: context.bodyBold.copyWith(color: AppColors.black),
