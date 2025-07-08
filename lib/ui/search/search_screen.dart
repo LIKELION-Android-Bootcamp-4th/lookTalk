@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/model/repository/search_repository.dart';
+import 'package:look_talk/ui/common/const/gap.dart';
 import 'package:look_talk/view_model/search_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -75,38 +77,42 @@ class _SearchScreenState extends State<SearchScreen> {
                             : GridView.builder(
                           padding: EdgeInsets.all(8),
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
+                            crossAxisCount: 3,
                             crossAxisSpacing: 8,
                             mainAxisSpacing: 8,
-                            childAspectRatio: 1,
+                            childAspectRatio: 0.6,
                           ),
                           itemCount: viewModel.products.length,
                           itemBuilder: (context, index) {
                             final product = viewModel.products[index];
                             final imageUrl = product.images.isNotEmpty ? product.images.first : null;
 
-                            return Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                            return  Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                               crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   imageUrl != null
                                       ? Image.network(
                                     imageUrl,
-                                    width: 80,
-                                    height: 80,
+                                    width: 100,
+                                    height: 103,
                                     fit: BoxFit.cover,
                                   )
-                                      : Icon(Icons.image, size: 80, color: Colors.grey),
-                                  SizedBox(height: 8),
-                                  Text(product.name, style: TextStyle(fontWeight: FontWeight.bold)),
+                                      : Icon(Icons.image, size: 100, color: Colors.grey),
+
+                                  gap8,
+                                  Text(product.storeName ?? '', style: context.h1.copyWith(fontSize: 12),),
+                                  gap4,
+                                  Text(product.name, style: context.bodyBold.copyWith(fontSize: 10), ),
                                   SizedBox(height: 4),
-                                  Text("${product.price}원"),
+                                  Row(
+                                    children: [
+
+                                      Text("${product.price}원",style: context.h1.copyWith(fontSize: 14),),
+                                    ],
+                                  )
+
                                 ],
-                              ),
                             );
                           },
                         ),
