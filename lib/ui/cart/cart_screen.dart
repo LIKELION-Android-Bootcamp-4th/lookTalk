@@ -3,6 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:look_talk/view_model/cart/cart_view_model.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart'; // [✅ 숫자 포맷팅을 위해 import]
+import 'package:look_talk/model/entity/response/cart_response.dart'; // [✅ Discount 클래스를 위해 import]
+
 import '../common/const/colors.dart';
 import '../common/const/gap.dart';
 import '../common/const/text_sizes.dart';
@@ -18,10 +21,12 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  // 숫자를 콤마(,) 포맷으로 변경해주는 Formatter
+  final numberFormat = NumberFormat('###,###,###,###');
+
   @override
   void initState() {
     super.initState();
-    // build가 완료된 후 fetchCart를 실행하도록 변경
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<CartViewModel>().fetchCart();
     });
@@ -48,16 +53,13 @@ class _CartScreenState extends State<CartScreen> {
       ),
       body: viewModel.isLoading
           ? const Center(child: CircularProgressIndicator())
-      // [✅ cartItems가 비어있는지 확인하여 UI를 분기합니다]
           : viewModel.cartItems.isEmpty
-      // [✅ 장바구니가 비었을 때 보여줄 UI]
           ? const Center(
         child: Text(
           '장바구니에 담긴 상품이 없습니다.',
           style: TextStyle(fontSize: TextSizes.body, color: AppColors.textGrey),
         ),
       )
-      // [✅ 상품이 있을 때 보여줄 UI]
           : Column(
         children: [
           gap16,
@@ -81,6 +83,8 @@ class _CartScreenState extends State<CartScreen> {
               itemCount: viewModel.cartItems.length,
               itemBuilder: (context, i) {
                 final item = viewModel.cartItems[i];
+                final discountInfo = item.product.discount;
+
                 return Card(
                   elevation: 0,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -121,11 +125,10 @@ class _CartScreenState extends State<CartScreen> {
                             children: [
                               Row(
                                 children: [
-                                  Text(item.product.name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
+                                  Text(item.companyName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
                                   const Spacer(),
                                   InkWell(
                                     onTap: () {
-                                      // X 버튼 클릭 시 해당 아이템만 삭제하는 로직
                                       viewModel.toggleItemSelection(item.id, true);
                                       viewModel.removeSelectedItems();
                                     },
@@ -136,25 +139,19 @@ class _CartScreenState extends State<CartScreen> {
                               gap4,
                               Text(item.product.name, style: TextStyle(fontSize: TextSizes.body)),
                               gap8,
-                              Text(
-                                '${item.product.discount?.originalPrice!.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => ',')}원',
-                                style: const TextStyle(
-                                  fontSize: TextSizes.caption,
-                                  color: AppColors.textGrey,
-                                  decoration: TextDecoration.lineThrough,
-                                  fontWeight: FontWeight.bold,
+                              _buildPriceWidget(discountInfo, item.totalPrice),
+                              gap8,
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: AppColors.boxGrey,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Text(
+                                    '옵션  ${item.product.options['color'] ?? 'N/A'} / ${item.quantity}개',
+                                    style: TextStyle(fontSize: TextSizes.caption)
                                 ),
                               ),
-                              gap4,
-                              Row(
-                                children: [
-                                  Text(
-                                    '${item.totalPrice.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => ',')}원',
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                              gap8,
                             ],
                           ),
                         ),
@@ -165,6 +162,7 @@ class _CartScreenState extends State<CartScreen> {
               },
             ),
           ),
+          // 결제 정보 및 구매하기 버튼
           Container(
             decoration: BoxDecoration(
               color: Colors.white,
@@ -179,7 +177,7 @@ class _CartScreenState extends State<CartScreen> {
                     const Text('결제 예상 금액', style: TextStyle(fontSize: TextSizes.body)),
                     const Spacer(),
                     Text(
-                      '${viewModel.totalSelectedPrice.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => ',')} 원',
+                      '${numberFormat.format(viewModel.totalSelectedPrice)} 원',
                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body),
                     ),
                   ],
@@ -204,5 +202,42 @@ class _CartScreenState extends State<CartScreen> {
         ],
       ),
     );
+  }
+
+  Widget _buildPriceWidget(Discount? discountInfo, int finalPrice) {
+    if (discountInfo == null) {
+      return Text(
+        '${numberFormat.format(finalPrice)}원',
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      );
+    }
+    else {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '${numberFormat.format(discountInfo.originalPrice)}원',
+            style: const TextStyle(
+              fontSize: TextSizes.caption,
+              color: AppColors.textGrey,
+              decoration: TextDecoration.lineThrough,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          gap4,
+          Row(
+            children: [
+              if (discountInfo.amount > 0)
+                Text('${discountInfo.amount}%', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+              gapW8,
+              Text(
+                '${numberFormat.format(discountInfo.discountedPrice)}원',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ],
+      );
+    }
   }
 }

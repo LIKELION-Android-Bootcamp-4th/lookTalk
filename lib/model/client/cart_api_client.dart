@@ -15,6 +15,7 @@ class CartApiClient {
   /// 장바구니 목록 조회
   Future<ApiResult<CartResponse>> fetchCart() async {
     final response = await dioClient.get(CartEndpoints.getcartList);
+    print ('TEST ${response.data}');
     // ApiResult.fromJson의 두 번째 인자는 Object?를 받으므로, 형변환을 명시적으로 해줍니다.
     return ApiResult.fromResponse(
         response, (json) => CartResponse.fromJson(json as Map<String, dynamic>));

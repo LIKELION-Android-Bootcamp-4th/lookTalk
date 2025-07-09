@@ -1,27 +1,17 @@
 // lib/model/entity/response/cart_response.dart
 
 class CartResponse {
-  final bool success;
-  final String message;
   final List<CartItem> items;
   final CartPagination pagination;
 
-  CartResponse({
-    required this.success,
-    required this.message,
-    required this.items,
-    required this.pagination,
-  });
+  CartResponse({required this.items, required this.pagination});
 
-  // 'data' 필드를 직접 처리하는 로직 제거
+  // 서버 응답의 'data' 객체 안에서 데이터를 파싱하도록 수정
   factory CartResponse.fromJson(Map<String, dynamic> json) {
-    final data = json['data'] ?? {};
-    print('TEST items ${data['items']}');
+    final data = json['data'] as Map<String, dynamic>? ?? {};
     return CartResponse(
-      success: json['success'] ?? false,
-      message: json['message'] ?? '',
       items: (data['items'] as List<dynamic>? ?? [])
-          .map((e) => CartItem.fromJson(e))
+          .map((e) => CartItem.fromJson(e as Map<String, dynamic>))
           .toList(),
       pagination: CartPagination.fromJson(data['pagination'] ?? {}),
     );
@@ -48,7 +38,7 @@ class CartItem {
   factory CartItem.fromJson(Map<String, dynamic> json) {
     return CartItem(
       id: json['id'] ?? '',
-      companyName: json['companyName'] ?? '',
+      companyName: json['companyName'] ?? '브랜드 없음',
       product: CartProduct.fromJson(json['product'] ?? {}),
       quantity: json['quantity'] ?? 0,
       cartPrice: json['cartPrice'] ?? 0,
@@ -62,29 +52,26 @@ class CartProduct {
   final String? thumbnailImage;
   final Map<String, dynamic> options;
   final String status;
-  final int totalPrice;
   final Discount? discount;
 
   CartProduct({
     required this.name,
-    required this.thumbnailImage,
+    this.thumbnailImage,
     required this.options,
     required this.status,
-    required this.totalPrice,
     this.discount,
   });
 
   factory CartProduct.fromJson(Map<String, dynamic> json) {
     return CartProduct(
-
       name: json['name'] ?? '',
       thumbnailImage: json['thumbnailImage'],
       options: json['options'] ?? {},
       status: json['status'] ?? '',
-      totalPrice: json['totalPrice'] ?? 0,
-      discount: json['discount'] == null ? null : Discount.fromJson(
-          json['discount']),
-
+      // 서버에서 discount 필드가 null일 수 있으므로, null 체크 후 파싱
+      discount: json['discount'] != null
+          ? Discount.fromJson(json['discount'])
+          : null,
     );
   }
 }
@@ -93,21 +80,21 @@ class Discount {
   final String type;
   final int amount;
   final int originalPrice;
-  final int discountPrice;
+  final int discountedPrice;
 
   Discount({
     required this.type,
     required this.amount,
     required this.originalPrice,
-    required this.discountPrice,
+    required this.discountedPrice,
   });
 
   factory Discount.fromJson(Map<String, dynamic> json) {
     return Discount(
       type: json['type'] ?? '',
-      amount: json['amount'] ?? '',
-      originalPrice: json['originalPrice'] ?? '',
-      discountPrice: json['discountPrice'] ?? '',
+      amount: json['amount'] ?? 0,
+      originalPrice: json['originalPrice'] ?? 0,
+      discountedPrice: json['discountedPrice'] ?? 0,
     );
   }
 }
@@ -132,13 +119,16 @@ class CartPagination {
   }
 }
 
+// 삭제 응답을 위한 클래스 (API 연동 시 필요)
 class RemoveCartResult {
   final int removedCount;
   final int remainingItems;
 
-  RemoveCartResult({required this.removedCount, required this.remainingItems});
+  RemoveCartResult({
+    required this.removedCount,
+    required this.remainingItems,
+  });
 
-  // 'data' 필드를 직접 처리하는 로직 제거
   factory RemoveCartResult.fromJson(Map<String, dynamic> json) {
     return RemoveCartResult(
       removedCount: json['removedCount'] ?? 0,
