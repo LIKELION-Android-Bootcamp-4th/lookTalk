@@ -17,6 +17,10 @@ import '../model/repository/post_create_repository.dart';
 import '../model/repository/search_repository.dart';
 import 'auth/auth_view_model.dart';
 import 'auth/nickname_check_view_model.dart';
+import 'community/community_tab_view_model.dart';
+import 'community/my_post_list_view_model.dart';
+import 'community/question_post_list_view_model.dart';
+import 'community/recommend_post_list_view_model.dart';
 
 final dio = DioClient.instance;
 
@@ -24,9 +28,12 @@ final dio = DioClient.instance;
 AuthViewModel provideAuthViewModel() => AuthViewModel(AuthRepository(AuthApiClient(dio)));
 NicknameCheckViewModel provideNicknameCheckViewModel() => NicknameCheckViewModel(NicknameRepository(NicknameApiClient(dio)));
 BuyerSignupViewModel provideBuyerSignupViewModel() => BuyerSignupViewModel(BuyerSignupRepository(BuyerSignupApiClient(dio)));
-PostCreateViewModel providePostCreateViewModel() =>  PostCreateViewModel(PostCreateRepository(PostCreateApiClient(dio)));
-PostDetailViewModel providerPostDetailViewModel(String postId) => PostDetailViewModel(PostRepository(PostApiClient(dio)), postId);
-
 SearchViewModel provideSearchScreenViewModel() => SearchViewModel(repository: SearchRepository(dio));
 
-
+// 커뮤니티
+CommunityTabViewModel provideCommunityTabViewModel() => CommunityTabViewModel();
+QuestionPostListViewModel provideQuestionPostListViewModel() => QuestionPostListViewModel(PostRepository(PostApiClient(dio)));
+RecommendPostListViewModel provideRecommendPostListViewModel() => RecommendPostListViewModel(PostRepository(PostApiClient(dio)));
+MyPostListViewModel provideMyPostListViewModel(String userId) => MyPostListViewModel(PostRepository(PostApiClient(dio)), userId);
+PostCreateViewModel providePostCreateViewModel() =>  PostCreateViewModel(PostCreateRepository(PostCreateApiClient(dio)));
+PostDetailViewModel providerPostDetailViewModel(String postId) => PostDetailViewModel(PostRepository(PostApiClient(dio)), postId);

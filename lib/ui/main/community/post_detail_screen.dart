@@ -121,7 +121,6 @@
 //   );
 // }
 
-
 import 'package:flutter/material.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:provider/provider.dart';
@@ -140,75 +139,92 @@ class PostDetailScreen extends StatelessWidget {
     final post = viewModel.post;
 
     if (viewModel.isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     if (viewModel.errorMessage != null) {
-      return Scaffold(
-        body: Center(child: Text(viewModel.errorMessage!)),
-      );
+      return Scaffold(body: Center(child: Text(viewModel.errorMessage!)));
     }
 
     if (post == null) {
-      return const Scaffold(
-        body: Center(child: Text('게시글이 존재하지 않습니다.')),
-      );
+      return const Scaffold(body: Center(child: Text('게시글이 존재하지 않습니다.')));
     }
 
     return Scaffold(
       appBar: const AppBarSearchCart(),
       body: Padding(
-        padding: const EdgeInsets.all(32.0),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildUserInfo(),
+            _buildUserInfo(context),
             gap16,
-            Text(post.title, style: context.h1,),
-            Text(post.content, style: context.bodyBold),
+            _buildContents(context, post),
             gap16,
             _buildPostStats(post, context),
           ],
         ),
       ),
-      bottomSheet: const _CommentInput(),
+      bottomSheet: _buildCommentInput(),
     );
   }
 
-  Widget _buildUserInfo() {
+  Widget _buildUserInfo(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         children: [
           const CircleAvatar(
-            radius: 12,
+            radius: 21,
             backgroundImage: NetworkImage('https://via.placeholder.com/150'),
           ),
           gapW8,
-          Text(
-            '홍길동',
-            style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.textGrey),
-          ),
+          Text('홍길동', style: context.h1.copyWith(fontSize: 18)),
         ],
       ),
     );
   }
 
+  Widget _buildContents(BuildContext context, Post post) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(post.title, style: context.h1),
+        gap16,
+        Text(post.content, style: context.bodyBold),
+      ],
+    );
+  }
+
   Widget _buildPostStats(Post post, BuildContext context) {
+    String _formatDate(DateTime date) {
+      String _twoDigits(int n) => n.toString().padLeft(2, '0');
+      return '${_twoDigits(date.month)}/${_twoDigits(date.day)}  ${_twoDigits(date.hour)}:${_twoDigits(date.minute)}';
+    }
+
     return Row(
       children: [
         Expanded(
           child: Row(
             children: [
-              IconButton(onPressed: () {}, icon: const Icon(Icons.favorite_border, size: 16)),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.favorite_border, size: 24),
+              ),
               Text('${post.likeCount}', style: context.h1),
               gapW16,
-              const Icon(Icons.chat_bubble, size: 16, color: AppColors.iconGrey),
+              const Icon(
+                Icons.chat_bubble,
+                size: 16,
+                color: AppColors.iconGrey,
+              ),
+              gapW12,
               Text(
                 '${post.commentCount}',
-                style: context.bodyBold.copyWith(fontSize: 15, color: AppColors.iconGrey),
+                style: context.bodyBold.copyWith(
+                  fontSize: 15,
+                  color: AppColors.iconGrey,
+                ),
               ),
             ],
           ),
@@ -221,25 +237,12 @@ class PostDetailScreen extends StatelessWidget {
     );
   }
 
-  String _formatDate(DateTime date) {
-    return '${date.year}.${_twoDigits(date.month)}.${_twoDigits(date.day)}';
-  }
-
-  String _twoDigits(int n) {
-    return n.toString().padLeft(2, '0');
-  }
-}
-
-class _CommentInput extends StatelessWidget {
-  const _CommentInput({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildCommentInput() {
     return SafeArea(
       child: Material(
         color: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal:  20),
+          padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
             decoration: BoxDecoration(
@@ -254,14 +257,11 @@ class _CommentInput extends StatelessWidget {
                     decoration: InputDecoration(
                       hintText: '댓글을 입력해주세요.',
                       border: InputBorder.none,
-                      hintStyle: TextStyle(color: AppColors.textGrey)
+                      hintStyle: TextStyle(color: AppColors.textGrey),
                     ),
                   ),
                 ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.send),
-                ),
+                IconButton(onPressed: () {}, icon: const Icon(Icons.send)),
               ],
             ),
           ),
@@ -270,4 +270,3 @@ class _CommentInput extends StatelessWidget {
     );
   }
 }
-
