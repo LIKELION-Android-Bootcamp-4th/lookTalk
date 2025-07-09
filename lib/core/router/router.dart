@@ -6,6 +6,7 @@ import 'package:look_talk/ui/common/component/common_loading.dart';
 import 'package:look_talk/ui/main/bottom_nav_screen.dart';
 import 'package:look_talk/ui/main/category/category/category_screen.dart';
 import 'package:look_talk/ui/main/community/communication_product_registration/product_registration-screen.dart';
+import 'package:look_talk/ui/main/community/community_entry_point.dart';
 import 'package:look_talk/ui/main/community/community_screen.dart';
 import 'package:look_talk/ui/main/community/post_create_screen.dart';
 import 'package:look_talk/ui/main/community/post_detail_screen.dart';
@@ -24,7 +25,6 @@ import '../../ui/auth/login_screen.dart';
 import '../../ui/auth/seller_info_screen.dart';
 import '../../ui/auth/signup_choice_screen.dart';
 import '../../ui/auth/buyer_info_screen.dart';
-import '../../ui/main/community/community_entry_point.dart';
 import '../../ui/main/mypage/mypage_customer/notice.dart';
 import '../../ui/main/mypage/mypage_seller/manage_product_seller_screen.dart';
 import '../../ui/main/mypage/mypage_seller/mypage_screen_product_manage.dart';
@@ -115,41 +115,9 @@ final GoRouter router = GoRouter(
       },
       routes: [
         GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
-        // GoRoute(
-        //   path: '/community',
-        //   builder: (context, state) {
-        //     print('라우트!!!!!!!!!!!!! 커뮤니티 라우트임!!!');
-        //     return MultiProvider(
-        //       providers: [
-        //         ChangeNotifierProvider(
-        //           create: (_) =>
-        //               provideQuestionPostListViewModel()
-        //                 ..fetchPosts(reset: true),
-        //         ),
-        //         ChangeNotifierProvider(
-        //           create: (_) =>
-        //               provideRecommendPostListViewModel()
-        //                 ..fetchPosts(reset: true),
-        //         ),
-        //         ChangeNotifierProvider(
-        //           create: (_) => provideCommunityTabViewModel(),
-        //         ),
-        //         // ChangeNotifierProvider(
-        //         //   create: (_) => provideMyPostListViewModel(userId)..init(),
-        //         // ),
-        //       ],
-        //       child: const CommunityScreen(),
-        //     );
-        //   },
-        // ),
-        // router.dart 또는 app_router.dart
         GoRoute(
           path: '/community',
-          builder: (context, state) => const CommunityEntryPoint(),
-        ),
-        GoRoute(
-          path: '/community',
-          builder: (context, state) => const CommunityScreen(),
+          builder: (context, state) => const CommunityEntryPoint()
         ),
         GoRoute(
           path: '/wishlist',
