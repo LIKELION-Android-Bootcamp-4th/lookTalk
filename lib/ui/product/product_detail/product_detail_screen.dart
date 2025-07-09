@@ -1,201 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:look_talk/ui/common/const/colors.dart';
-import 'package:look_talk/ui/common/const/text_sizes.dart';
-import 'package:look_talk/view_model/product/product_detail_viewmodel.dart';
-import 'package:look_talk/ui/product/product_detail//product_detail_bottom_sheet.dart';
+import '../../../view_model/product/product_detail_viewmodel.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   const ProductDetailScreen({super.key});
 
-  Widget _buildTabContent(int index) {
-    switch (index) {
-      case 0:
-        return const Text(
-          '상품 설명 페이지 이미지로 대체 예정',
-          style: TextStyle(fontSize: TextSizes.body),
-        );
-      case 1:
-        return const Text(
-          '리뷰 페이지',
-          style: TextStyle(fontSize: TextSizes.body),
-        );
-      case 2:
-        return const Text(
-          '커뮤니티 페이지',
-          style: TextStyle(fontSize: TextSizes.body),
-        );
-      case 3:
-        return const Text(
-          '문의 페이지',
-          style: TextStyle(fontSize: TextSizes.body),
-        );
-      default:
-        return const SizedBox.shrink();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => ProductDetailViewModel(),
-      child: Consumer<ProductDetailViewModel>(
-        builder: (context, vm, _) {
-          return Scaffold(
-            backgroundColor: AppColors.white,
-            appBar: AppBar(
-              backgroundColor: AppColors.white,
-              elevation: 1,
-              iconTheme: const IconThemeData(color: AppColors.primary),
-              actions: [
-                IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-                IconButton(onPressed: () {}, icon: const Icon(Icons.home_outlined)),
-                IconButton(onPressed: () {}, icon: const Icon(Icons.shopping_cart_outlined)),
-              ],
-            ),
-            body: Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // 상품 이미지
-                        Image.network(
-                          vm.imageUrl,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        ),
-                        const SizedBox(height: 16),
-                        // 상품명
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text(
-                            vm.productName,
-                            style: const TextStyle(
-                              fontSize: TextSizes.headline,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.black,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        // 할인율, 원가
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Row(
-                            children: [
-                              Text(
-                                '${vm.discountPercent}%',
-                                style: const TextStyle(
-                                  fontSize: TextSizes.body,
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                '${vm.originalPrice.toString().replaceAllMapped(RegExp(r"(\d)(?=(\d{3})+(?!\d))"), (match) => "${match[1]},")}원',
-                                style: const TextStyle(
-                                  fontSize: TextSizes.body,
-                                  color: AppColors.black,
-                                  decoration: TextDecoration.lineThrough,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        // 최종 가격
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text(
-                            '${vm.finalPrice.toString().replaceAllMapped(RegExp(r"(\d)(?=(\d{3})+(?!\d))"), (match) => "${match[1]},")}원~',
-                            style: const TextStyle(
-                              fontSize: TextSizes.body,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.red,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        // 탭바
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: List.generate(vm.tabs.length, (index) {
-                              final isSelected = index == vm.selectedIndex;
-                              return GestureDetector(
-                                onTap: () => vm.selectTab(index),
-                                child: Text(
-                                  vm.tabs[index],
-                                  style: TextStyle(
-                                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                                    color: isSelected ? AppColors.black : Colors.grey,
-                                    fontSize: TextSizes.body,
-                                  ),
-                                ),
-                              );
-                            }),
-                          ),
-                        ),
-                        const Divider(height: 20),
-                        // 탭 내용
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: _buildTabContent(vm.selectedIndex),
-                        ),
-                        const SizedBox(height: 80),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            bottomNavigationBar: Container(
-              height: 60,
-              decoration: const BoxDecoration(
-                border: Border(top: BorderSide(color: Color(0xFFBDBDBD), width: 0.5)),
-                color: AppColors.white,
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: Icon(
-                      vm.isWishlist ? Icons.favorite : Icons.favorite_border,
-                      color: AppColors.black,
-                    ),
-                    onPressed: vm.toggleWishlist,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        showOptionBottomSheet(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.btnPrimary,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: const Text(
-                        '구매하기',
-                        style: TextStyle(
-                          fontSize: TextSizes.body,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
+    final vm = context.watch<ProductDetailViewModel>();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(vm.product?.name ?? '상품 상세 정보'),
+      ),
+      body: _buildBody(vm),
+    );
+  }
+
+  Widget _buildBody(ProductDetailViewModel vm) {
+    if (vm.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (vm.product == null) {
+      return const Center(child: Text('상품 정보를 불러올 수 없습니다.'));
+    }
+
+    final product = vm.product!;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 상품 이미지
+          Container(
+            height: 300,
+            width: double.infinity,
+            color: Colors.grey[200],
+            // child: Image.network(product.imageUrl),
+          ),
+          const SizedBox(height: 24),
+
+          Text(
+            product.name,
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+
+          Text(
+            '상품 코드: ${product.code}',
+            style: const TextStyle(fontSize: 16, color: Colors.grey),
+          ),
+          const Divider(height: 48),
+
+        ],
       ),
     );
   }

@@ -11,8 +11,9 @@ import 'package:look_talk/ui/main/community/post_create_screen.dart';
 import 'package:look_talk/ui/main/community/post_detail_screen.dart';
 import 'package:look_talk/ui/main/home/home_screen.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/mypage_screen.dart';
+import 'package:look_talk/ui/main/mypage/mypage_seller/mypage_screen_seller.dart';
 //import 'package:look_talk/ui/main/mypage/mypage_product/mypage_screen_seller.dart';
-
+import 'package:look_talk/ui/product/product_detail/product_detail_screen.dart';
 import 'package:look_talk/ui/main/wishlist/wishlist_screen.dart';
 import 'package:look_talk/ui/search/search_screen.dart';
 import 'package:look_talk/view_model/auth/auth_view_model.dart';
@@ -102,10 +103,10 @@ final GoRouter router = GoRouter(
       },
       routes: [
         GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
-        // GoRoute(
-        //   path: '/category',
-        //   builder: (context, state) => CategoryScreen(),
-        // ),
+        GoRoute(
+          path: '/category',
+          builder: (context, state) => CategoryScreen(),
+        ),
         // GoRoute(
         //   path: '/community',
         //   builder: (context, state) {
@@ -160,6 +161,18 @@ final GoRouter router = GoRouter(
         ),
 
         GoRoute(
+          path: '/product/:id',
+          builder: (context, state) {
+            final productId = state.pathParameters['id']!;
+
+            return ChangeNotifierProvider(
+              create: (_) => provideProductDetailViewModel(productId),
+              child: const ProductDetailScreen(),
+            );
+          },
+        ),
+
+        GoRoute(
           path: '/community',
           builder: (context, state) => const CommunityScreen(),
         ),
@@ -169,7 +182,7 @@ final GoRouter router = GoRouter(
         ),
         GoRoute(
           path: '/mypage',
-          builder: (context, state) => const MyPageScreenCustomer(),
+          builder: (context, state) => const MyPageScreenSeller(),
         ),
         GoRoute(
             path: '/notice',

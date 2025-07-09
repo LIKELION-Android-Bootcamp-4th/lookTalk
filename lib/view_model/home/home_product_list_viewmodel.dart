@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:dio/dio.dart';
 import '../../model/entity/product_entity.dart';
 
-class ProductViewModel extends ChangeNotifier {
+class HomeProductListViewModel extends ChangeNotifier {
   final Dio _dio;
-  ProductViewModel(this._dio);
+  HomeProductListViewModel(this._dio);
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -16,16 +16,16 @@ class ProductViewModel extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    const path = '/api/admin/products';
+    const path = '/api/products';
 
-    debugPrint('--- 상품 목록 조회 요청 (Admin API) ---');
+    debugPrint('--- 홈 상품 목록 조회 요청 (DioClient) ---');
     debugPrint('Path: $path');
     debugPrint('------------------');
 
     try {
       final response = await _dio.get(path);
 
-      debugPrint('상품 목록 응답 코드: ${response.statusCode}');
+      debugPrint('홈 상품 목록 응답 코드: ${response.statusCode}');
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> dataMap = response.data['data'] as Map<String, dynamic>? ?? {};
@@ -36,16 +36,11 @@ class ProductViewModel extends ChangeNotifier {
         _products = [];
       }
     } on DioException catch (e) {
-      debugPrint('상품 목록 조회 중 dio 오류: ${e.response?.data}');
+      debugPrint('홈 상품 목록 조회 중 dio 오류: ${e.response?.data}');
       _products = [];
     } finally {
       _isLoading = false;
       notifyListeners();
     }
-  }
-
-  void addProduct(Product product) {
-    _products.insert(0, product);
-    notifyListeners();
   }
 }
