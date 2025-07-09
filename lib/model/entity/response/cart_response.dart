@@ -28,12 +28,14 @@ class CartResponse {
 
 class CartItem {
   final String id;
+  final String companyName;
   final CartProduct product;
   final int quantity;
   final int cartPrice;
   final int totalPrice;
 
   CartItem({
+    required this.companyName,
     required this.id,
     required this.product,
     required this.quantity,
@@ -44,6 +46,7 @@ class CartItem {
   factory CartItem.fromJson(Map<String, dynamic> json) {
     return CartItem(
       id: json['id'] ?? '',
+      companyName: json['companyName'] ?? '',
       product: CartProduct.fromJson(json['product'] ?? {}),
       quantity: json['quantity'] ?? 0,
       cartPrice: json['cartPrice'] ?? 0,
@@ -53,45 +56,61 @@ class CartItem {
 }
 
 class CartProduct {
-  final String id;
+
   final String name;
   final String? thumbnailImage;
-  final int unitPrice;
-  final bool priceChanged;
   final Map<String, dynamic> options;
   final String status;
-  final String stockType;
-  final int stock;
-  final bool isAvailable;
+  final int totalPrice;
+  final Discount? discount;
 
   CartProduct({
-    required this.id,
+
     required this.name,
-    this.thumbnailImage,
-    required this.unitPrice,
-    required this.priceChanged,
+    required this.thumbnailImage,
     required this.options,
+    this.discount,
+    required this.totalPrice,
     required this.status,
-    required this.stockType,
-    required this.stock,
-    required this.isAvailable,
   });
 
   factory CartProduct.fromJson(Map<String, dynamic> json) {
     return CartProduct(
-      id: json['id'] ?? '',
+
       name: json['name'] ?? '',
       thumbnailImage: json['thumbnailImage'],
-      unitPrice: json['unitPrice'] ?? 0,
-      priceChanged: json['priceChanged'] ?? false,
       options: json['options'] ?? {},
       status: json['status'] ?? '',
-      stockType: json['stockType'] ?? '',
-      stock: json['stock'] ?? 0,
-      isAvailable: json['isAvailable'] ?? true,
+      totalPrice: json['totalPrice'] ?? 0,
+      discount: Discount.fromJson(json['discount'] ?? {})
+
     );
   }
 }
+
+class Discount {
+  final String type;
+  final int amount;
+  final int originalPrice;
+  final int discountPrice;
+
+  Discount({
+    required this.type,
+    required this.amount,
+    required this.originalPrice,
+    required this.discountPrice,
+  });
+
+  factory Discount.fromJson(Map<String, dynamic> json){
+    return Discount(
+      type: json['type'] ?? '',
+      amount: json['amount'] ?? '',
+      originalPrice: json['originalPrice'] ?? '',
+      discountPrice: json['discountPrice'] ?? '',
+    );
+  }
+}
+
 
 class CartPagination {
   final int currentPage;

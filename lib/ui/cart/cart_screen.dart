@@ -137,7 +137,7 @@ class _CartScreenState extends State<CartScreen> {
                               Text(item.product.name, style: TextStyle(fontSize: TextSizes.body)),
                               gap8,
                               Text(
-                                '${item.product.unitPrice.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => ',')}원',
+                                '${item.product.discount?.originalPrice!.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => ',')}원',
                                 style: const TextStyle(
                                   fontSize: TextSizes.caption,
                                   color: AppColors.textGrey,
