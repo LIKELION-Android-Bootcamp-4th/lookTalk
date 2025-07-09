@@ -102,10 +102,10 @@ final GoRouter router = GoRouter(
       },
       routes: [
         GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
-        // GoRoute(
-        //   path: '/category',
-        //   builder: (context, state) => CategoryScreen(),
-        // ),
+        GoRoute(
+          path: '/category',
+          builder: (context, state) => CategoryScreen(),
+        ),
         // GoRoute(
         //   path: '/community',
         //   builder: (context, state) {
