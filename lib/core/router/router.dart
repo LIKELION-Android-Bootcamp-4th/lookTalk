@@ -24,6 +24,7 @@ import '../../ui/auth/login_screen.dart';
 import '../../ui/auth/seller_info_screen.dart';
 import '../../ui/auth/signup_choice_screen.dart';
 import '../../ui/auth/buyer_info_screen.dart';
+import '../../ui/main/community/community_entry_point.dart';
 import '../../ui/main/mypage/mypage_customer/notice.dart';
 import '../../ui/main/mypage/mypage_seller/manage_product_seller_screen.dart';
 import '../../ui/main/mypage/mypage_seller/mypage_screen_product_manage.dart';
@@ -115,66 +116,37 @@ final GoRouter router = GoRouter(
       routes: [
         GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
         // GoRoute(
-        //   path: '/category',
-        //   builder: (context, state) => CategoryScreen(),
-        // ),
-        // GoRoute(
         //   path: '/community',
         //   builder: (context, state) {
-        //     print('라우트!!!!!!!!!!!!! 커뮤니티 라우트임!!! ');
-        //     return FutureBuilder<String?>(
-        //       future: TokenStorage().getUserId(),
-        //       builder: (context, snapshot) {
-        //         print("snapshot.connectionState: ${snapshot.connectionState}");
-        //         print("snapshot.hasData: ${snapshot.hasData}");
-        //         print("snapshot.data: ${snapshot.data}");
-        //
-        //         if (!snapshot.hasData) {return const Center(child: CommonLoading());}
-        //
-        //         final userId = snapshot.data!;
-        //
-        //         return MultiProvider(
-        //           providers: [
-        //             ChangeNotifierProvider(create: (_) => provideQuestionPostListViewModel()..fetchPosts(reset: true)),
-        //             ChangeNotifierProvider(create: (_) => provideRecommendPostListViewModel()..fetchPosts(reset: true)),
-        //             ChangeNotifierProvider(create: (_) => provideMyPostListViewModel(userId)..init()),
-        //             ChangeNotifierProvider(create: (_) => provideCommunityTabViewModel()),
-        //           ],
-        //           child: const CommunityScreen(),
-        //         );
-        //       },
+        //     print('라우트!!!!!!!!!!!!! 커뮤니티 라우트임!!!');
+        //     return MultiProvider(
+        //       providers: [
+        //         ChangeNotifierProvider(
+        //           create: (_) =>
+        //               provideQuestionPostListViewModel()
+        //                 ..fetchPosts(reset: true),
+        //         ),
+        //         ChangeNotifierProvider(
+        //           create: (_) =>
+        //               provideRecommendPostListViewModel()
+        //                 ..fetchPosts(reset: true),
+        //         ),
+        //         ChangeNotifierProvider(
+        //           create: (_) => provideCommunityTabViewModel(),
+        //         ),
+        //         // ChangeNotifierProvider(
+        //         //   create: (_) => provideMyPostListViewModel(userId)..init(),
+        //         // ),
+        //       ],
+        //       child: const CommunityScreen(),
         //     );
         //   },
         // ),
+        // router.dart 또는 app_router.dart
         GoRoute(
           path: '/community',
-          builder: (context, state) {
-            print('라우트!!!!!!!!!!!!! 커뮤니티 라우트임!!!');
-            return MultiProvider(
-              providers: [
-                ChangeNotifierProvider(
-                  create: (_) =>
-                      provideQuestionPostListViewModel()
-                        ..fetchPosts(reset: true),
-                ),
-                ChangeNotifierProvider(
-                  create: (_) =>
-                      provideRecommendPostListViewModel()
-                        ..fetchPosts(reset: true),
-                ),
-                ChangeNotifierProvider(
-                  create: (_) => provideCommunityTabViewModel(),
-                ),
-                // 👇 MyPostListViewModel 주입은 잠시 생략
-                // ChangeNotifierProvider(
-                //   create: (_) => provideMyPostListViewModel(userId)..init(),
-                // ),
-              ],
-              child: const CommunityScreen(),
-            );
-          },
+          builder: (context, state) => const CommunityEntryPoint(),
         ),
-
         GoRoute(
           path: '/community',
           builder: (context, state) => const CommunityScreen(),
