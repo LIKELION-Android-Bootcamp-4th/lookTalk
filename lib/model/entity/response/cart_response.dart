@@ -15,13 +15,15 @@ class CartResponse {
 
   // 'data' 필드를 직접 처리하는 로직 제거
   factory CartResponse.fromJson(Map<String, dynamic> json) {
+    final data = json['data'] ?? {};
+    print('TEST items ${data['items']}');
     return CartResponse(
       success: json['success'] ?? false,
       message: json['message'] ?? '',
-      items: (json['items'] as List<dynamic>? ?? [])
+      items: (data['items'] as List<dynamic>? ?? [])
           .map((e) => CartItem.fromJson(e))
           .toList(),
-      pagination: CartPagination.fromJson(json['pagination'] ?? {}),
+      pagination: CartPagination.fromJson(data['pagination'] ?? {}),
     );
   }
 }
@@ -35,8 +37,8 @@ class CartItem {
   final int totalPrice;
 
   CartItem({
-    required this.companyName,
     required this.id,
+    required this.companyName,
     required this.product,
     required this.quantity,
     required this.cartPrice,
@@ -56,7 +58,6 @@ class CartItem {
 }
 
 class CartProduct {
-
   final String name;
   final String? thumbnailImage;
   final Map<String, dynamic> options;
@@ -65,13 +66,12 @@ class CartProduct {
   final Discount? discount;
 
   CartProduct({
-
     required this.name,
     required this.thumbnailImage,
     required this.options,
-    this.discount,
-    required this.totalPrice,
     required this.status,
+    required this.totalPrice,
+    this.discount,
   });
 
   factory CartProduct.fromJson(Map<String, dynamic> json) {
@@ -82,7 +82,8 @@ class CartProduct {
       options: json['options'] ?? {},
       status: json['status'] ?? '',
       totalPrice: json['totalPrice'] ?? 0,
-      discount: Discount.fromJson(json['discount'] ?? {})
+      discount: json['discount'] == null ? null : Discount.fromJson(
+          json['discount']),
 
     );
   }
@@ -101,7 +102,7 @@ class Discount {
     required this.discountPrice,
   });
 
-  factory Discount.fromJson(Map<String, dynamic> json){
+  factory Discount.fromJson(Map<String, dynamic> json) {
     return Discount(
       type: json['type'] ?? '',
       amount: json['amount'] ?? '',
@@ -110,7 +111,6 @@ class Discount {
     );
   }
 }
-
 
 class CartPagination {
   final int currentPage;
@@ -136,10 +136,7 @@ class RemoveCartResult {
   final int removedCount;
   final int remainingItems;
 
-  RemoveCartResult({
-    required this.removedCount,
-    required this.remainingItems,
-  });
+  RemoveCartResult({required this.removedCount, required this.remainingItems});
 
   // 'data' 필드를 직접 처리하는 로직 제거
   factory RemoveCartResult.fromJson(Map<String, dynamic> json) {
