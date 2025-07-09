@@ -20,7 +20,7 @@ import 'package:look_talk/view_model/mypage_view_model/notice_viewmodel.dart';
 import 'package:look_talk/view_model/viewmodel_provider.dart';
 import 'package:provider/provider.dart';
 import 'core/app.dart';
-
+import 'ui/main/home/home_screen.dart';
 // [✅ viewmodel_provider.dart 임포트 추가]
 import 'view_model/viewmodel_provider.dart';
 
@@ -42,7 +42,7 @@ void main() {
         // [✅ CartViewModel Provider를 함수 호출로 변경]
         ChangeNotifierProvider(create: (_) => provideCartViewModel()),
         ChangeNotifierProvider(
-          create: (_) => NoticeViewModel()..loadNotices(),
+          create: (_) => NoticeViewModel(),
         ),
       ],
       child: const MyApp(),
