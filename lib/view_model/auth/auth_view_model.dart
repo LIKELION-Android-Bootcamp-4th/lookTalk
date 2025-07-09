@@ -46,8 +46,14 @@ class AuthViewModel with ChangeNotifier {
         final user = result.data!;
         final accessToken = user.accessToken;
         final refreshToken = user.refreshToken;
+        final userId = user.user.id;
 
-        await _tokenStorage.saveTokens(accessToken: accessToken, refreshToken: refreshToken);
+        print('로그인 성공 → userId: $userId');
+        print('accessToken: $accessToken');
+        print('refreshToken: $refreshToken');
+        print('userId: $userId');
+
+        await _tokenStorage.saveTokens(accessToken: accessToken, refreshToken: refreshToken, userId: userId);
 
         if (user.user.isNewUser) {
           context.go('/signup');

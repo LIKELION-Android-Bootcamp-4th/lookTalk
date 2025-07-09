@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
+import 'package:look_talk/model/entity/response/post_response.dart';
 
 import '../../../../model/entity/post_entity.dart';
 import '../../const/colors.dart';
 import '../../const/gap.dart';
 
 class PostItem extends StatelessWidget {
-  final Post post;
+  final PostResponse post;
 
   const PostItem({super.key, required this.post});
 
@@ -84,7 +85,7 @@ class PostItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   // TODO: 서버에서 불러온 이미지로 바꾸기
-                  if (post.productId != null)
+                  if (post.id != null)
                     Container(
                       width: 80,
                       height: 80,
@@ -104,7 +105,7 @@ class PostItem extends StatelessWidget {
 
                   // 날짜 표시
                   Text(
-                    _formatDate(post.createAt),
+                    _formatDate(post.createdAt),
                     style: TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                 ],

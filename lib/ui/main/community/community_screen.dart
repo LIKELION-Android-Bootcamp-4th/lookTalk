@@ -16,7 +16,7 @@ const List<Tab> _communityTabs  = const [
   Tab(text: 'My+'),
 ];
 
-const List<Widget> _tabViews = const [
+const List<Widget> _tabViews = [
   CommunityQuestionTab(),
   CommunityRecommendTab(),
   CommunityMyTab(),
@@ -97,7 +97,7 @@ class CommunityScreen extends StatelessWidget {
             );
           },
           elevation: 3,
-          shape: const CircleBorder(),
+          //shape: const CircleBorder(),
           child: const Icon(Icons.add, color: AppColors.white, size: 28,),
         ),
       ),

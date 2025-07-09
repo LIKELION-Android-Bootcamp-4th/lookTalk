@@ -18,8 +18,10 @@ class PostResponse {
   });
 
   factory PostResponse.fromJson(Map<String, dynamic> json) {
+    print("PostResponse.fromJson 호출됨: ${json['title']}");
+
     return PostResponse(
-      id: json['id'],
+      id: json['id']?.toString() ?? '',
       title: json['title'] ?? '',
       content: json['content'] ?? '',
       category: json['category'],
