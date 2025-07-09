@@ -1,14 +1,25 @@
+import 'package:look_talk/model/entity/response/post_response.dart';
+
 enum PostCategory { question, recommend, my }
+
+PostCategory fromServerValue(String value) {
+  switch (value) {
+    case 'coord_question': return PostCategory.question;
+    case 'coord_recommend': return PostCategory.recommend;
+    case 'my': return PostCategory.my;
+    default: throw ArgumentError('Unknown category: $value');
+  }
+}
 
 class Post {
   final String id;
   final String title;
   final String content;
   final PostCategory category;
-  final int? productId; // TODO: 타입 확인 필요
+  final String? productId;
   final int likeCount;
   final int commentCount;
-  final DateTime createAt; // TODO: json -> post 변환할때 parse해야함
+  final DateTime createAt;
 
   Post({
     required this.id,
@@ -21,28 +32,30 @@ class Post {
     required this.createAt,
   });
 
-  factory Post.fromJson(Map<String, dynamic> json) {
-    return Post(
-      id: json['_id'],
-      title: json['title'],
-      content: json['content'],
-      category: _mapCategory(json['category']),
-      productId: json['productId'] is int ? json['productId'] : null,
-      likeCount: json['likeCount'] ?? 0,
-      commentCount: json['commentCount'] ?? 0,
-      createAt: DateTime.parse(json['createdAt']),
-    );
-  }
+  // factory Post.fromJson(Map<String, dynamic> json) {
+  //   return Post(
+  //     id: json['id'],
+  //     title: json['title'],
+  //     content: json['content'],
+  //     category: _mapCategory(json['category']),
+  //     productId: json['productId']?.toString(),
+  //     likeCount: json['likeCount'] ?? 0,
+  //     commentCount: json['commentCount'] ?? 0,
+  //     createAt: DateTime.parse(json['createdAt']),
+  //   );
+  // }
 
-  static PostCategory _mapCategory(String value) {
-    switch (value) {
-      case 'question':
-        return PostCategory.question;
-      case 'recommend':
-        return PostCategory.recommend;
-      default:
-        return PostCategory.my;
-    }
+  factory Post.fromResponse(PostResponse response) {
+    return Post(
+      id: response.id,
+      title: response.title,
+      content: response.content,
+      category: fromServerValue(response.category),
+      likeCount: response.likeCount,
+      commentCount: response.commentCount,
+      productId: null, // 필요시 수정
+      createAt: DateTime.now(), // 서버 응답에 없다면 임시 처리
+    );
   }
 
 }

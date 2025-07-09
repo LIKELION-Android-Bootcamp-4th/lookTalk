@@ -1,21 +1,17 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:look_talk/core/network/api_result.dart';
+import 'package:look_talk/model/client/post_api_client.dart';
+import 'package:look_talk/model/entity/response/post_response.dart';
 
 import '../entity/post_entity.dart';
 
 class PostRepository {
-  Future<List<Post>> fetchPosts(String category) async {
-    final response = await http.get(
-      Uri.parse('https://your.api/posts?category=$category'), // TODO: 수정
-    );
+  final PostApiClient apiClient;
 
-    if (response.statusCode == 200) {
-      final List<dynamic> items = jsonDecode(response.body)['data']['items'];
+  PostRepository(this.apiClient);
 
-      return items.map((json) => Post.fromJson(json)).toList();
-    } else {
-      throw Exception('게시글 불러오기 실패');
-    }
+  Future<ApiResult<PostResponse>> fetchPosts(String id) async {
+    return apiClient.fetchPost(id: id);
   }
 }
-

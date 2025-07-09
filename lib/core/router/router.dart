@@ -61,7 +61,10 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       path: '/community/write',
-      builder: (context, state) => PostCreateScreen(),
+      builder: (context, state) => ChangeNotifierProvider(
+        create: (_) => providePostCreateViewModel(),
+        child: PostCreateScreen(),
+      ),
       routes: [
         GoRoute(
           path: 'product-register',
@@ -73,10 +76,10 @@ final GoRouter router = GoRouter(
       path: '/post/:id',
       builder: (context, state) {
         final postId = state.pathParameters['id']!;
-        final post = dummyPosts.firstWhere(
-          (p) => p.id == postId,
-        ); // TODO: 서버 요청시 제외하기
-        return PostDetailScreen(post: post);
+        return ChangeNotifierProvider(
+          create: (_) => providerPostDetailViewModel(postId),
+          child: const PostDetailScreen(),
+        );
       },
     ),
     GoRoute(path: '/search', builder: (context, state) {
