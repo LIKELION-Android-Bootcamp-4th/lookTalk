@@ -157,8 +157,8 @@ class PostDetailScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildUserInfo(context),
-            gap16,
+            _buildUserInfo(context, post),
+            gap32,
             _buildContents(context, post),
             gap16,
             _buildPostStats(post, context),
@@ -169,17 +169,21 @@ class PostDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildUserInfo(BuildContext context) {
+  Widget _buildUserInfo(BuildContext context, Post post) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         children: [
-          const CircleAvatar(
+          CircleAvatar(
             radius: 21,
-            backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+            backgroundImage: NetworkImage(
+              post.user.profileImageUrl?.isNotEmpty == true
+                  ? post.user.profileImageUrl!
+                  : 'https://via.placeholder.com/150',
+            ),
           ),
           gapW8,
-          Text('홍길동', style: context.h1.copyWith(fontSize: 18)),
+          Text(post.user.nickName, style: context.h1.copyWith(fontSize: 15)),
         ],
       ),
     );
@@ -190,7 +194,7 @@ class PostDetailScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(post.title, style: context.h1),
-        gap16,
+        gap8,
         Text(post.content, style: context.bodyBold),
       ],
     );
