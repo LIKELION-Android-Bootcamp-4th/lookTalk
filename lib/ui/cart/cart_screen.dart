@@ -1,29 +1,14 @@
+// lib/ui/main/cart/cart_screen.dart
+
 import 'package:flutter/material.dart';
+import 'package:look_talk/view_model/cart/cart_view_model.dart';
+import 'package:provider/provider.dart';
 import '../common/const/colors.dart';
 import '../common/const/gap.dart';
 import '../common/const/text_sizes.dart';
 import '../common/component/primary_button.dart';
 import 'order_screen.dart';
 
-class CartItem {
-  final String id;
-  final String brand;
-  final String name;
-  final String option;
-  final int originPrice;
-  final int salePrice;
-  bool selected;
-
-  CartItem({
-    required this.id,
-    required this.brand,
-    required this.name,
-    required this.option,
-    required this.originPrice,
-    required this.salePrice,
-    this.selected = false,
-  });
-}
 
 class CartScreen extends StatefulWidget {
   const CartScreen({Key? key}) : super(key: key);
@@ -33,25 +18,19 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  List<CartItem> cartItems = [
-    CartItem(
-      id: '1',
-      brand: 'Auralee',
-      name: '남자 코튼 니트 폴로',
-      option: '그린 / L / 1개',
-      originPrice: 450500,
-      salePrice: 225250,
-    ),
-    // 더미 상품 추가 가능
-  ];
-
-  bool get isAllSelected => cartItems.every((e) => e.selected);
-  int get selectedCount => cartItems.where((e) => e.selected).length;
-  int get totalSelectedPrice =>
-      cartItems.where((e) => e.selected).fold(0, (sum, e) => sum + e.salePrice);
+  @override
+  void initState() {
+    super.initState();
+    // build가 완료된 후 fetchCart를 실행하도록 변경
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CartViewModel>().fetchCart();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<CartViewModel>();
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -59,21 +38,27 @@ class _CartScreenState extends State<CartScreen> {
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: BackButton(color: AppColors.black),
+        leading: const BackButton(color: AppColors.black),
         actions: [
           TextButton(
-            onPressed: () {
-              setState(() {
-                for (final e in cartItems) {
-                  e.selected = false;
-                }
-              });
-            },
+            onPressed: viewModel.removeSelectedItems,
             child: Text('선택 삭제', style: TextStyle(color: AppColors.black, fontSize: TextSizes.body)),
           ),
         ],
       ),
-      body: Column(
+      body: viewModel.isLoading
+          ? const Center(child: CircularProgressIndicator())
+      // [✅ cartItems가 비어있는지 확인하여 UI를 분기합니다]
+          : viewModel.cartItems.isEmpty
+      // [✅ 장바구니가 비었을 때 보여줄 UI]
+          ? const Center(
+        child: Text(
+          '장바구니에 담긴 상품이 없습니다.',
+          style: TextStyle(fontSize: TextSizes.body, color: AppColors.textGrey),
+        ),
+      )
+      // [✅ 상품이 있을 때 보여줄 UI]
+          : Column(
         children: [
           gap16,
           Padding(
@@ -81,42 +66,34 @@ class _CartScreenState extends State<CartScreen> {
             child: Row(
               children: [
                 Checkbox(
-                  value: isAllSelected,
-                  onChanged: (v) {
-                    setState(() {
-                      for (final e in cartItems) {
-                        e.selected = v ?? false;
-                      }
-                    });
-                  },
+                  value: viewModel.isAllSelected,
+                  onChanged: (v) => viewModel.toggleSelectAll(v ?? false),
                   activeColor: AppColors.primary,
                 ),
-                Text('전체 선택(${selectedCount}/${cartItems.length})', style: TextStyle(fontSize: TextSizes.body)),
-                Spacer(),
-                // 선택 삭제 버튼은 AppBar에도 있음
+                Text('전체 선택(${viewModel.selectedItemIds.length}/${viewModel.cartItems.length})', style: TextStyle(fontSize: TextSizes.body)),
               ],
             ),
           ),
           gap16,
           Expanded(
             child: ListView.builder(
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              itemCount: cartItems.length,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              itemCount: viewModel.cartItems.length,
               itemBuilder: (context, i) {
-                final item = cartItems[i];
+                final item = viewModel.cartItems[i];
                 return Card(
                   elevation: 0,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   color: AppColors.white,
-                  margin: EdgeInsets.only(bottom: 16),
+                  margin: const EdgeInsets.only(bottom: 16),
                   child: Padding(
                     padding: const EdgeInsets.all(12),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Checkbox(
-                          value: item.selected,
-                          onChanged: (v) => setState(() => item.selected = v ?? false),
+                          value: viewModel.selectedItemIds.contains(item.id),
+                          onChanged: (v) => viewModel.toggleItemSelection(item.id, v ?? false),
                           activeColor: AppColors.primary,
                         ),
                         gapW8,
@@ -126,8 +103,16 @@ class _CartScreenState extends State<CartScreen> {
                           decoration: BoxDecoration(
                             color: AppColors.boxGrey,
                             borderRadius: BorderRadius.circular(8),
+                            image: item.product.thumbnailImage != null
+                                ? DecorationImage(
+                              image: NetworkImage(item.product.thumbnailImage!),
+                              fit: BoxFit.cover,
+                            )
+                                : null,
                           ),
-                          child: Icon(Icons.image, color: AppColors.textGrey, size: 36),
+                          child: item.product.thumbnailImage == null
+                              ? Icon(Icons.image, color: AppColors.textGrey, size: 36)
+                              : null,
                         ),
                         gapW16,
                         Expanded(
@@ -136,24 +121,24 @@ class _CartScreenState extends State<CartScreen> {
                             children: [
                               Row(
                                 children: [
-                                  Text(item.brand, style: TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
-                                  Spacer(),
+                                  Text(item.product.name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
+                                  const Spacer(),
                                   InkWell(
                                     onTap: () {
-                                      setState(() {
-                                        cartItems.removeAt(i);
-                                      });
+                                      // X 버튼 클릭 시 해당 아이템만 삭제하는 로직
+                                      viewModel.toggleItemSelection(item.id, true);
+                                      viewModel.removeSelectedItems();
                                     },
                                     child: Icon(Icons.close, color: AppColors.textGrey, size: 22),
                                   ),
                                 ],
                               ),
                               gap4,
-                              Text(item.name, style: TextStyle(fontSize: TextSizes.body)),
+                              Text(item.product.name, style: TextStyle(fontSize: TextSizes.body)),
                               gap8,
                               Text(
-                                '${item.originPrice.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => ',')}원',
-                                style: TextStyle(
+                                '${item.product.unitPrice.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => ',')}원',
+                                style: const TextStyle(
                                   fontSize: TextSizes.caption,
                                   color: AppColors.textGrey,
                                   decoration: TextDecoration.lineThrough,
@@ -163,29 +148,13 @@ class _CartScreenState extends State<CartScreen> {
                               gap4,
                               Row(
                                 children: [
-                                  Text('50%', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
-                                  gapW8,
                                   Text(
-                                    '${item.salePrice.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => ',')}원',
-                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                    '${item.totalPrice.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => ',')}원',
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                 ],
                               ),
                               gap8,
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: AppColors.boxGrey,
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Text('옵션', style: TextStyle(color: AppColors.textGrey, fontSize: TextSizes.caption)),
-                                    gapW8,
-                                    Text(item.option, style: TextStyle(fontSize: TextSizes.caption)),
-                                  ],
-                                ),
-                              ),
                             ],
                           ),
                         ),
@@ -201,33 +170,29 @@ class _CartScreenState extends State<CartScreen> {
               color: Colors.white,
               boxShadow: [BoxShadow(blurRadius: 16, color: Colors.black.withOpacity(0.04))],
             ),
-            padding: EdgeInsets.fromLTRB(16, 16, 16, 24),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Row(
                   children: [
-                    Text('결제 예상 금액', style: TextStyle(fontSize: TextSizes.body)),
-                    Spacer(),
+                    const Text('결제 예상 금액', style: TextStyle(fontSize: TextSizes.body)),
+                    const Spacer(),
                     Text(
-                      '${totalSelectedPrice.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => ',')} 원',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body),
+                      '${viewModel.totalSelectedPrice.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => ',')} 원',
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body),
                     ),
                   ],
                 ),
                 gap16,
                 PrimaryButton(
                   text: '구매하기',
-                  onPressed: selectedCount > 0
+                  onPressed: viewModel.selectedItemIds.isNotEmpty
                       ? () {
-                    final selectedIds = cartItems
-                        .where((e) => e.selected)
-                        .map((e) => e.id)
-                        .toList();
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => OrderScreen(selectedIds: selectedIds),
+                        builder: (_) => OrderScreen(selectedIds: viewModel.selectedItemIds.toList()),
                       ),
                     );
                   }

@@ -1,13 +1,14 @@
 // lib/model/client/cart_api_client.dart
 
 // 'end_points' 뒤에 '/cart' 경로를 추가하여 수정했습니다.
+import 'package:dio/dio.dart';
 import 'package:look_talk/core/network/end_points/cart/cart_endpoints.dart';
 import '../../core/network/dio_client.dart';
 import '../../core/network/api_result.dart';
 import 'package:look_talk/model/entity/response/cart_response.dart';
 
 class CartApiClient {
-  final DioClient dioClient;
+  final Dio dioClient;
 
   CartApiClient(this.dioClient);
 

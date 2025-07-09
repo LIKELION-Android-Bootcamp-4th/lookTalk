@@ -49,19 +49,3 @@ void main() {
     ),
   );
 }
-
-// 기존 MyApp 코드 예시 (프로젝트 상황에 따라 다를 수 있음)
-class MyApp extends StatelessWidget {
-  const MyApp({super.key}); // [✅ key 파라미터 추가 권장]
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'LookTalk',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const Scaffold(), // 예시 홈 화면 위젯
-    );
-  }
-}

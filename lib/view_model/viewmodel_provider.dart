@@ -28,4 +28,4 @@ BuyerSignupViewModel provideBuyerSignupViewModel() => BuyerSignupViewModel(Buyer
 
 // [✅ CartViewModel 생성 로직을 올바르게 수정]
 // CartRepository는 CartApiClient를 필요로 하고, CartViewModel은 이 Repository를 받습니다.
-CartViewModel provideCartViewModel() => CartViewModel(CartRepository(CartApiClient(DioClient())));
+CartViewModel provideCartViewModel() => CartViewModel(CartRepository(CartApiClient(dio)));
