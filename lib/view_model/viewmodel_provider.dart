@@ -1,8 +1,11 @@
 import 'package:look_talk/model/client/buyer_signup_api_client.dart';
 import 'package:look_talk/model/client/post_create_api_client.dart';
+import 'package:look_talk/model/client/seller_signup_api_client.dart';
 import 'package:look_talk/model/repository/buyer_signup_repository.dart';
 import 'package:look_talk/model/repository/post_repository.dart';
+import 'package:look_talk/model/repository/seller_signup_repository.dart';
 import 'package:look_talk/view_model/auth/buyer_signup_view_model.dart';
+import 'package:look_talk/view_model/auth/seller_signup_view_model.dart';
 import 'package:look_talk/view_model/community/post_create_view_model.dart';
 import 'package:look_talk/view_model/community/post_detail_view_model.dart';
 import 'package:look_talk/view_model/search_view_model.dart';
@@ -24,10 +27,12 @@ import 'community/recommend_post_list_view_model.dart';
 
 final dio = DioClient.instance;
 
-
+// 로그인 & 회원가입
 AuthViewModel provideAuthViewModel() => AuthViewModel(AuthRepository(AuthApiClient(dio)));
 NicknameCheckViewModel provideNicknameCheckViewModel() => NicknameCheckViewModel(NicknameRepository(NicknameApiClient(dio)));
 BuyerSignupViewModel provideBuyerSignupViewModel() => BuyerSignupViewModel(BuyerSignupRepository(BuyerSignupApiClient(dio)));
+SellerSignupViewmodel provideSellerSignupViewModel() => SellerSignupViewmodel(SellerSignupRepository(SellerSignupApiClient(dio)));
+
 SearchViewModel provideSearchScreenViewModel() => SearchViewModel(repository: SearchRepository(dio));
 
 // 커뮤니티
