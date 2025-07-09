@@ -56,7 +56,17 @@ final GoRouter router = GoRouter(
         ),
         GoRoute(
           path: 'seller',
-          builder: (context, state) => const SellerInfoScreen(),
+          builder: (context, state) {
+            return MultiProvider(
+              providers: [
+                // TODO : 회사명 중복 체크 추가
+                ChangeNotifierProvider(
+                  create: (_) => provideSellerSignupViewModel(),
+                ),
+              ],
+              child: const SellerInfoScreen(),
+            );
+          },
         ),
       ],
     ),
@@ -83,12 +93,14 @@ final GoRouter router = GoRouter(
         );
       },
     ),
-    GoRoute(path: '/search', builder: (context, state) {
+    GoRoute(
+      path: '/search',
+      builder: (context, state) {
         return ChangeNotifierProvider(
           create: (_) => provideSearchScreenViewModel(),
           child: SearchScreen(),
         );
-}
+      },
     ),
     GoRoute(path: '/cart', builder: (context, state) => CartScreen()),
     ShellRoute(
@@ -141,10 +153,14 @@ final GoRouter router = GoRouter(
             return MultiProvider(
               providers: [
                 ChangeNotifierProvider(
-                  create: (_) => provideQuestionPostListViewModel()..fetchPosts(reset: true),
+                  create: (_) =>
+                      provideQuestionPostListViewModel()
+                        ..fetchPosts(reset: true),
                 ),
                 ChangeNotifierProvider(
-                  create: (_) => provideRecommendPostListViewModel()..fetchPosts(reset: true),
+                  create: (_) =>
+                      provideRecommendPostListViewModel()
+                        ..fetchPosts(reset: true),
                 ),
                 ChangeNotifierProvider(
                   create: (_) => provideCommunityTabViewModel(),
@@ -172,8 +188,8 @@ final GoRouter router = GoRouter(
           builder: (context, state) => const MyPageScreenCustomer(),
         ),
         GoRoute(
-            path: '/notice',
-            builder: (context, state) => const NoticeScreen(),
+          path: '/notice',
+          builder: (context, state) => const NoticeScreen(),
         ),
         GoRoute(
           path: '/seller/products',
