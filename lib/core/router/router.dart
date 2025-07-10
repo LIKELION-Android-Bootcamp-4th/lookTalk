@@ -117,7 +117,7 @@ final GoRouter router = GoRouter(
         GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
         GoRoute(
           path: '/community',
-          builder: (context, state) => const CommunityEntryPoint()
+          builder: (context, state) => const CommunityEntryPoint(),
         ),
         GoRoute(
           path: '/wishlist',
