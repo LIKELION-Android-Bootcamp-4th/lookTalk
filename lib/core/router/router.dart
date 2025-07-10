@@ -18,6 +18,7 @@ import 'package:look_talk/ui/main/wishlist/wishlist_screen.dart';
 import 'package:look_talk/ui/search/search_screen.dart';
 import 'package:look_talk/view_model/auth/auth_view_model.dart';
 import 'package:look_talk/view_model/auth/nickname_check_view_model.dart';
+import 'package:look_talk/view_model/cart/cart_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/post_dummy.dart';
@@ -103,7 +104,15 @@ final GoRouter router = GoRouter(
         );
       },
     ),
-    GoRoute(path: '/cart', builder: (context, state) => CartScreen()),
+    GoRoute(
+      path: '/cart',
+      builder: (context, state) {
+        return ChangeNotifierProvider(
+          create: (_) => provideCartViewModel(),
+          child: CartScreen(),
+        );
+      },
+    ),
     ShellRoute(
       builder: (context, state, child) {
         return BottomNavScreen(

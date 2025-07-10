@@ -8,5 +8,6 @@ class HomeDetailEndpoints {
 }
 
 
-//커뮤니티 관련 api 없음.
+// 커뮤니티 관련 api 없음.
 // 제품에 대한 모든 정보 api는 한번 확인이 필요.
+

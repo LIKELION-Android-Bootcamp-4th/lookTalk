@@ -12,18 +12,24 @@ import 'package:look_talk/view_model/search_view_model.dart';
 
 import '../core/network/dio_client.dart';
 import '../model/client/auth_api_client.dart';
+import '../model/client/cart_api_client.dart';
 import '../model/client/nickname_api_client.dart';
+import '../model/client/order_api_client.dart';
 import '../model/client/post_api_client.dart';
 import '../model/repository/auth_repository.dart';
+import '../model/repository/cart_repository.dart';
 import '../model/repository/nickname_respository.dart';
+import '../model/repository/order_repository.dart';
 import '../model/repository/post_create_repository.dart';
 import '../model/repository/search_repository.dart';
 import 'auth/auth_view_model.dart';
 import 'auth/nickname_check_view_model.dart';
+import 'cart/cart_view_model.dart';
 import 'community/community_tab_view_model.dart';
 import 'community/my_post_list_view_model.dart';
 import 'community/question_post_list_view_model.dart';
 import 'community/recommend_post_list_view_model.dart';
+import 'order/order_view_model.dart';
 
 final dio = DioClient.instance;
 
@@ -34,7 +40,10 @@ BuyerSignupViewModel provideBuyerSignupViewModel() => BuyerSignupViewModel(Buyer
 SellerSignupViewmodel provideSellerSignupViewModel() => SellerSignupViewmodel(SellerSignupRepository(SellerSignupApiClient(dio)));
 
 SearchViewModel provideSearchScreenViewModel() => SearchViewModel(repository: SearchRepository(dio));
+CartViewModel provideCartViewModel() => CartViewModel(CartRepository(CartApiClient(dio)));
 
+// [✅ 추가] OrderViewModel을 생성하는 함수를 추가합니다.
+OrderViewModel provideOrderViewModel() => OrderViewModel(OrderRepository(OrderApiClient(DioClient())));
 // 커뮤니티
 CommunityTabViewModel provideCommunityTabViewModel() => CommunityTabViewModel();
 QuestionPostListViewModel provideQuestionPostListViewModel() => QuestionPostListViewModel(PostRepository(PostApiClient(dio)));
