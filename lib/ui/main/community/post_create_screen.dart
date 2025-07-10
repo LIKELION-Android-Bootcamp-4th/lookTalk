@@ -51,14 +51,15 @@ class PostCreateScreen extends StatelessWidget {
 
         try {
           final postId = await vm.submitPost();
-          print('게시글 프스트 아이디!!! : $postId');
+          //print('게시글 프스트 아이디!!! : $postId');
           if (postId != null) {
+            context.pop();
             context.push('/post/$postId');
           }else{
-            print('post id가 null 입니다.');
+            //print('post id가 null 입니다.');
           }
         } catch (e) {
-          print('예외 발생!!!! $e');
+          //print('예외 발생!!!! $e');
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(e.toString())));

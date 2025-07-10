@@ -63,10 +63,12 @@ class BottomNavScreen extends StatelessWidget {
         currentIndex: selectedIndex,
         onTap: (index) => _onTap(context, index),
         type: BottomNavigationBarType.fixed,
+        backgroundColor: AppColors.white,
         selectedItemColor: AppColors.primary,
         unselectedItemColor: Colors.grey,
         selectedIconTheme: IconThemeData(size: 32),
         unselectedIconTheme: IconThemeData(size: 26),
+        unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w700),
         iconSize: 30,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home, ), label: '홈'),

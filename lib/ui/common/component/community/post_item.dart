@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
+import 'package:look_talk/model/entity/response/post_response.dart';
 
 import '../../../../model/entity/post_entity.dart';
 import '../../const/colors.dart';
 import '../../const/gap.dart';
 
 class PostItem extends StatelessWidget {
-  final Post post;
+  final PostResponse post;
 
   const PostItem({super.key, required this.post});
 
   @override
   Widget build(BuildContext context) {
+    final hasProfileImage = post.user.profileImageUrl?.isNotEmpty == true;
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         print('/post/${post.id}');
         context.push('/post/${post.id}');
       },
@@ -34,26 +36,45 @@ class PostItem extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 12,
-                        backgroundImage: NetworkImage(
-                          'https://via.placeholder.com/150', // 유저 프로필 사진
-                        ),
+                        // backgroundImage: NetworkImage(
+                        //   post.user.profileImageUrl?.isNotEmpty == true
+                        //       ? post.user.profileImageUrl!
+                        //       : 'https://via.placeholder.com/150',
+                        // ),
+                        backgroundImage: hasProfileImage
+                            ? NetworkImage(post.user.profileImageUrl!)
+                            : const AssetImage('assets/images/profile.png') as ImageProvider,
                       ),
                       SizedBox(width: 8),
-                      Text('홍길동', style: TextStyle(fontWeight: FontWeight.bold)),
+                      SizedBox(
+                        width: 200.0,
+                        child: Text(
+                          post.user.nickName,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                          softWrap: false,
+                          overflow: hasProfileImage ? TextOverflow.visible : TextOverflow.ellipsis,
+                        ),
+                      ),
                     ],
                   ),
                   gap8,
 
                   // 제목
-                  Text(post.title, style: context.bodyBold),
+                  Text(
+                    post.title,
+                    style: context.bodyBold,
+                    softWrap: false,
+                    overflow: hasProfileImage ? TextOverflow.visible : TextOverflow.ellipsis,
+                  ),
 
-                  // 본문 1줄
                   gap4,
 
+                  // 본문
                   Text(
                     post.content,
                     maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
+                    overflow:  hasProfileImage ? TextOverflow.visible : TextOverflow.ellipsis,
                   ),
 
                   // 좋아요/댓글
@@ -61,16 +82,31 @@ class PostItem extends StatelessWidget {
 
                   Row(
                     children: [
-                      Icon(Icons.favorite, size: 16, color: AppColors.iconGrey,),
+                      Icon(Icons.favorite, size: 16, color: AppColors.iconGrey),
                       gapW4,
-                      Text('${post.likeCount}', style: context.bodyBold?.copyWith(fontSize: 15, color: AppColors.iconGrey),),
+                      Text(
+                        '${post.likeCount}',
+                        style: context.bodyBold.copyWith(
+                          fontSize: 15,
+                          color: AppColors.iconGrey,
+                        ),
+                      ),
                       gapW12,
-                      Icon(Icons.chat_bubble, size: 16, color: AppColors.iconGrey,),
+                      Icon(
+                        Icons.chat_bubble,
+                        size: 16,
+                        color: AppColors.iconGrey,
+                      ),
                       gapW4,
-                      Text('${post.commentCount}', style: context.bodyBold?.copyWith(fontSize: 15, color: AppColors.iconGrey)),
+                      Text(
+                        '${post.commentCount}',
+                        style: context.bodyBold?.copyWith(
+                          fontSize: 15,
+                          color: AppColors.iconGrey,
+                        ),
+                      ),
                     ],
                   ),
-
                 ],
               ),
             ),
@@ -81,16 +117,16 @@ class PostItem extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Column(
+                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  // TODO: 서버에서 불러온 이미지로 바꾸기
-                  if (post.productId != null)
+                  if (post.images?.main != null && post.images!.main!.isNotEmpty)
                     Container(
                       width: 80,
                       height: 80,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: NetworkImage('https://via.placeholder.com/80'),
+                          image: NetworkImage(post.images!.main!),
                           fit: BoxFit.cover,
                         ),
                         borderRadius: BorderRadius.circular(8),
@@ -98,16 +134,16 @@ class PostItem extends StatelessWidget {
                       ),
                     )
                   else
-                    SizedBox(height: 80), // 이미지 없을 경우 빈 공간 유지
+                    const SizedBox(height: 80),
 
-                  gap8,
+                  gap16,
 
-                  // 날짜 표시
                   Text(
-                    _formatDate(post.createAt),
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                    _formatDate(post.createdAt),
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                 ],
+
               ),
             ),
           ],
@@ -129,4 +165,3 @@ class PostItem extends StatelessWidget {
     }
   }
 }
-

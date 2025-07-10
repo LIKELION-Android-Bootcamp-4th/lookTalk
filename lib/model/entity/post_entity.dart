@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:look_talk/model/entity/response/post_response.dart';
+import 'package:look_talk/model/entity/response/post_user_response.dart';
 
 enum PostCategory { question, recommend, my }
 
@@ -20,6 +23,7 @@ class Post {
   final int likeCount;
   final int commentCount;
   final DateTime createAt;
+  final PostUserResponse user;
 
   Post({
     required this.id,
@@ -30,6 +34,7 @@ class Post {
     required this.likeCount,
     required this.commentCount,
     required this.createAt,
+    required this.user,
   });
 
   // factory Post.fromJson(Map<String, dynamic> json) {
@@ -53,8 +58,9 @@ class Post {
       category: fromServerValue(response.category),
       likeCount: response.likeCount,
       commentCount: response.commentCount,
-      productId: null, // 필요시 수정
-      createAt: DateTime.now(), // 서버 응답에 없다면 임시 처리
+      productId: null, // TODO : 수정
+      createAt: DateTime.now(),
+      user: response.user
     );
   }
 

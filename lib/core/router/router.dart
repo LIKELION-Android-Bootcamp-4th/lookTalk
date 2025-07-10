@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:look_talk/model/client/auth_api_client.dart';
 import 'package:look_talk/ui/cart/cart_screen.dart';
+import 'package:look_talk/ui/common/component/common_loading.dart';
 import 'package:look_talk/ui/main/bottom_nav_screen.dart';
 import 'package:look_talk/ui/main/category/category/category_screen.dart';
 import 'package:look_talk/ui/main/community/communication_product_registration/product_registration-screen.dart';
+import 'package:look_talk/ui/main/community/community_entry_point.dart';
 import 'package:look_talk/ui/main/community/community_screen.dart';
 import 'package:look_talk/ui/main/community/post_create_screen.dart';
 import 'package:look_talk/ui/main/community/post_detail_screen.dart';
@@ -28,6 +30,7 @@ import '../../ui/main/mypage/mypage_customer/notice.dart';
 import '../../ui/main/mypage/mypage_seller/manage_product_seller_screen.dart';
 import '../../ui/main/mypage/mypage_seller/mypage_screen_product_manage.dart';
 import '../../view_model/viewmodel_provider.dart';
+import '../network/token_storage.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/home',
@@ -55,7 +58,17 @@ final GoRouter router = GoRouter(
         ),
         GoRoute(
           path: 'seller',
-          builder: (context, state) => const SellerInfoScreen(),
+          builder: (context, state) {
+            return MultiProvider(
+              providers: [
+                // TODO : 회사명 중복 체크 추가
+                ChangeNotifierProvider(
+                  create: (_) => provideSellerSignupViewModel(),
+                ),
+              ],
+              child: const SellerInfoScreen(),
+            );
+          },
         ),
       ],
     ),
@@ -82,12 +95,14 @@ final GoRouter router = GoRouter(
         );
       },
     ),
-    GoRoute(path: '/search', builder: (context, state) {
+    GoRoute(
+      path: '/search',
+      builder: (context, state) {
         return ChangeNotifierProvider(
           create: (_) => provideSearchScreenViewModel(),
           child: SearchScreen(),
         );
-}
+      },
     ),
     GoRoute(
       path: '/cart',
@@ -110,12 +125,8 @@ final GoRouter router = GoRouter(
       routes: [
         GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
         GoRoute(
-          path: '/category',
-          builder: (context, state) => CategoryScreen(),
-        ),
-        GoRoute(
           path: '/community',
-          builder: (context, state) => const CommunityScreen(),
+          builder: (context, state) => const CommunityEntryPoint()
         ),
         GoRoute(
           path: '/wishlist',
@@ -126,8 +137,8 @@ final GoRouter router = GoRouter(
           builder: (context, state) => const MyPageScreenCustomer(),
         ),
         GoRoute(
-            path: '/notice',
-            builder: (context, state) => const NoticeScreen(),
+          path: '/notice',
+          builder: (context, state) => const NoticeScreen(),
         ),
         GoRoute(
           path: '/seller/products',

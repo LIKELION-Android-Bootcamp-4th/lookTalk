@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:look_talk/view_model/community/my_post_list_view_model.dart';
+import 'package:provider/provider.dart';
 
 import '../../../model/entity/post_entity.dart';
 import '../../../model/post_dummy.dart';
+import '../../common/component/common_loading.dart';
 import '../../common/component/community/post_list.dart';
 
 class CommunityMyTab extends StatelessWidget {
@@ -10,11 +13,12 @@ class CommunityMyTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final myPosts = dummyPosts
-    //     .where((post) => post.category == PostCategory.my)
-    //     .toList();
-    //
-    // return PostList(posts: myPosts);
-    return Scaffold();
+    final vm = context.watch<MyPostListViewModel>();
+
+    if (vm.isLoading && vm.posts.isEmpty) {
+      return const Center(child: CommonLoading());
+    }
+
+    return PostList(posts: vm.posts);
   }
 }

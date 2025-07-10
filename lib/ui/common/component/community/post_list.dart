@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:look_talk/model/entity/response/post_response.dart';
 import '../../../../model/entity/post_entity.dart';
 import 'post_item.dart';
 
 class PostList extends StatelessWidget {
-  final List<Post> posts;
+  final List<PostResponse> posts;
 
   const PostList({required this.posts, super.key});
 

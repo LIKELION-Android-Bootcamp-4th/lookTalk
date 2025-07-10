@@ -18,13 +18,18 @@ class User {
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
+    print('유저 구조!!!! $json');
     return User(
-      id: json['id'] as String,
-      email: json['email'] as String,
-      nickName: json['nickName'] as String,
-      loginRoles: List<String>.from(json['loginRoles']),
-      platformRoles: List<String>.from(json['platformRoles']),
-      isNewUser: json['isNewUser'] as bool,
+      id: json['id'] ?? '',
+      email: json['email'] ?? '',
+      nickName: json['nickName'] ?? '',
+      loginRoles: (json['loginRoles'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList() ?? [],
+      platformRoles: (json['platformRoles'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList() ?? [],
+      isNewUser: json['isNewUser'] ?? false,
     );
   }
 }

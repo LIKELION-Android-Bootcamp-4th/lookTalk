@@ -85,18 +85,22 @@ class _SearchScreenState extends State<SearchScreen> {
                           itemCount: viewModel.products.length,
                           itemBuilder: (context, index) {
                             final product = viewModel.products[index];
-                            final imageUrl = product.images.isNotEmpty ? product.images.first : null;
+                            final imageUrl = product.thumbnailImage;
+                            final isValidImage = imageUrl != null && imageUrl.trim().isNotEmpty;
+
 
                             return  Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  imageUrl != null
+                                  isValidImage
                                       ? Image.network(
-                                    imageUrl,
+                                    imageUrl!,
                                     width: 100,
                                     height: 103,
                                     fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) =>
+                                        Icon(Icons.broken_image, size: 100, color: Colors.grey),
                                   )
                                       : Icon(Icons.image, size: 100, color: Colors.grey),
 
@@ -107,8 +111,23 @@ class _SearchScreenState extends State<SearchScreen> {
                                   SizedBox(height: 4),
                                   Row(
                                     children: [
-
-                                      Text("${product.price}원",style: context.h1.copyWith(fontSize: 14),),
+                                      if (product.discount != null) ...[
+                                      // if (product.discount?.isActive == true) ...[
+                                        Text(
+                                          "${product.discount!.value}% ",
+                                          style: context.bodyBold.copyWith(fontSize: 12, color: Colors.red),
+                                        ),
+                                        gapW4,
+                                        Text(
+                                          "${(product.price * (100 - product.discount!.value) ~/ 100)}원",
+                                          style: context.h1.copyWith(fontSize: 14),
+                                        ),
+                                      ] else ...[
+                                        Text(
+                                          "${product.price}원",
+                                          style: context.h1.copyWith(fontSize: 14),
+                                        ),
+                                      ],
                                     ],
                                   )
 
@@ -139,11 +158,11 @@ class _SearchScreenState extends State<SearchScreen> {
                                     children: [
                                       Icon(Icons.visibility, size: 16),
                                       SizedBox(width: 4),
-                                      Text("${community.viewCount}"),
+
                                       SizedBox(width: 16),
                                       Icon(Icons.favorite, size: 16),
                                       SizedBox(width: 4),
-                                      Text("${community.likeCount}"),
+
                                     ],
                                   ),
                                 ],

@@ -52,12 +52,16 @@ class DioClient {
                     final newAccessToken = refreshResponse.data['accessToken'];
                     final newRefreshToken =
                         refreshResponse.data['refreshToken'];
+                    final userId = refreshResponse.data['id'];
 
                     // 새 토큰 저장
                     await _tokenStorage.saveTokens(
                       accessToken: newAccessToken,
                       refreshToken: newRefreshToken,
+                      userId: userId
                     );
+
+
 
                     // 실패한 요청 복구 후 재시도
                     final opts = error.requestOptions;
