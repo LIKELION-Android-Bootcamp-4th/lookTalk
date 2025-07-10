@@ -30,7 +30,7 @@ class DioClient {
               final isExcluded = excludedPaths.any((excluded) => options.path.startsWith(excluded));
 
               if (!isExcluded) {
-                final accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODYyM2ZlMWFlODMzYzZmZTk4OGZiZmIiLCJjb21wYW55SWQiOiI2ODVmNjlmYzQzOTkyMmMwOWMyMWFlZjAiLCJpc0FkbWluIjpmYWxzZSwiaXNTdXBlckFkbWluIjpmYWxzZSwiaWF0IjoxNzUyMDM4NTkxLCJleHAiOjE3NTIxMjQ5OTF9.sezNbYYHlO8IWCA6fS9IBV5ZEMCMTu46M0Y-bEcjPAs";
+                final accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODYyM2ZlMWFlODMzYzZmZTk4OGZiZmIiLCJjb21wYW55SWQiOiI2ODVmNjlmYzQzOTkyMmMwOWMyMWFlZjAiLCJpc0FkbWluIjpmYWxzZSwiaXNTdXBlckFkbWluIjpmYWxzZSwiaWF0IjoxNzUyMTI1NzQzLCJleHAiOjE3NTIyMTIxNDN9.mQWfRcq-PNALWiIs6JOeoCGxA6xC1S1sxUmlWIDeULY";
                 if (accessToken != null) {
                   options.headers['Authorization'] = 'Bearer $accessToken';
                 }

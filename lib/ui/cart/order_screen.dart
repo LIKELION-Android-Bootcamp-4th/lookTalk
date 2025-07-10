@@ -4,21 +4,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:look_talk/model/entity/response/cart_response.dart';
+import 'package:look_talk/model/entity/request/create_order_request.dart';
+import 'package:look_talk/view_model/cart/cart_view_model.dart';
+import 'package:look_talk/view_model/order/order_view_model.dart';
+import 'package:look_talk/view_model/viewmodel_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../common/component/primary_button.dart';
 import '../common/const/colors.dart';
 import '../common/const/gap.dart';
 import '../common/const/text_sizes.dart';
 
-class OrderScreen extends StatefulWidget {
+class OrderScreen extends StatelessWidget {
   final List<CartItem> productsToOrder;
   const OrderScreen({required this.productsToOrder, Key? key}) : super(key: key);
 
   @override
-  State<OrderScreen> createState() => _OrderScreenState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => provideOrderViewModel(),
+      child: _OrderScreenContent(productsToOrder: productsToOrder),
+    );
+  }
 }
 
-class _OrderScreenState extends State<OrderScreen> {
+class _OrderScreenContent extends StatefulWidget {
+  final List<CartItem> productsToOrder;
+  const _OrderScreenContent({required this.productsToOrder, Key? key}) : super(key: key);
+
+  @override
+  State<_OrderScreenContent> createState() => _OrderScreenContentState();
+}
+
+class _OrderScreenContentState extends State<_OrderScreenContent> {
   final nameController = TextEditingController();
   final phoneController = TextEditingController();
   final addressController = TextEditingController();
@@ -32,7 +50,6 @@ class _OrderScreenState extends State<OrderScreen> {
           addressController.text.trim().isNotEmpty;
 
   bool get isPaymentButtonEnabled => isShippingInfoFilled && agree;
-
 
   @override
   void initState() {
@@ -50,9 +67,54 @@ class _OrderScreenState extends State<OrderScreen> {
     super.dispose();
   }
 
+  void _onPaymentPressed() async {
+    final orderViewModel = context.read<OrderViewModel>();
+    final cartViewModel = context.read<CartViewModel>();
+
+    final orderItems = widget.productsToOrder.map((cartItem) {
+      return OrderItemRequest(
+        productId: cartItem.product.id,
+        quantity: cartItem.quantity,
+        options: cartItem.product.options,
+        unitPrice: cartItem.cartPrice,
+      );
+    }).toList();
+
+    final shippingInfo = ShippingInfoRequest(
+      recipient: nameController.text,
+      phone: phoneController.text,
+      address: addressController.text,
+    );
+
+    final orderResponse = await orderViewModel.createOrder(
+      items: orderItems,
+      shippingInfo: shippingInfo,
+    );
+
+    if (mounted) {
+      if (orderResponse != null) {
+        // [✅ 추가] 주문 성공 시, 디버그 콘솔에 주문 ID 출력
+        print('주문 성공! Swagger 테스트용 Order ID: ${orderResponse.orderId}');
+
+        // [✅ 추가] 장바구니 목록을 새로고침합니다.
+        await cartViewModel.fetchCart();
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('주문이 완료되었습니다. (주문번호: ${orderResponse.orderNumber})')),
+        );
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('주문 생성에 실패했습니다: ${orderViewModel.error ?? '알 수 없는 오류'}')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final totalPrice = widget.productsToOrder.fold<int>(0, (sum, e) => sum + e.totalPrice);
+    final isLoading = context.watch<OrderViewModel>().isLoading;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -63,54 +125,58 @@ class _OrderScreenState extends State<OrderScreen> {
         elevation: 0,
         leading: BackButton(color: AppColors.black),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Text('주문상품', style: TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: GestureDetector(
+              onTap: () => FocusScope.of(context).unfocus(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Text('주문상품', style: TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
+                  ),
+                  gap8,
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: widget.productsToOrder.length,
+                    itemBuilder: (context, index) {
+                      final item = widget.productsToOrder[index];
+                      return _buildProductCard(item);
+                    },
+                  ),
+                  Divider(thickness: 1, height: 32, color: AppColors.boxGrey),
+                  _buildShippingInfoSection(),
+                ],
               ),
-              gap8,
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: widget.productsToOrder.length,
-                itemBuilder: (context, index) {
-                  final item = widget.productsToOrder[index];
-                  return _buildProductCard(item);
-                },
-              ),
-              Divider(thickness: 1, height: 32, color: AppColors.boxGrey),
-              _buildShippingInfoSection(),
-            ],
+            ),
           ),
-        ),
+          if (isLoading)
+            Container(
+              color: Colors.black.withOpacity(0.3),
+              child: const Center(child: CircularProgressIndicator()),
+            ),
+        ],
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: PrimaryButton(
             text: '${numberFormat.format(totalPrice)}원 결제하기',
-            onPressed: isPaymentButtonEnabled ? () {
-              // 결제 진행 로직
-            } : null,
+            onPressed: isPaymentButtonEnabled && !isLoading ? _onPaymentPressed : null,
           ),
         ),
       ),
     );
   }
 
-  // [✅ UI를 더 컴팩트하게 수정한 상품 카드 위젯]
   Widget _buildProductCard(CartItem item) {
     final discountInfo = item.product.discount;
     return Container(
-      // 카드 간 간격 조절
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      // 내부 여백 조절
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -120,7 +186,6 @@ class _OrderScreenState extends State<OrderScreen> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // 이미지 크기 조절
           Container(
             width: 70,
             height: 70,
@@ -145,7 +210,7 @@ class _OrderScreenState extends State<OrderScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(item.companyName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
-                gap4, // [✅ gap2를 gap4로 수정]
+                gap4,
                 Text(item.product.name, style: TextStyle(fontSize: TextSizes.body), maxLines: 1, overflow: TextOverflow.ellipsis),
                 gap4,
                 _buildPriceWidget(discountInfo, item.totalPrice),
@@ -168,7 +233,6 @@ class _OrderScreenState extends State<OrderScreen> {
     );
   }
 
-  // 배송 정보 입력 위젯 (이전과 동일)
   Widget _buildShippingInfoSection() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -215,7 +279,6 @@ class _OrderScreenState extends State<OrderScreen> {
     );
   }
 
-  // 가격 표시 위젯 (이전과 동일)
   Widget _buildPriceWidget(Discount? discountInfo, int finalPrice) {
     if (discountInfo == null) {
       return Text(
@@ -234,7 +297,7 @@ class _OrderScreenState extends State<OrderScreen> {
               decoration: TextDecoration.lineThrough,
             ),
           ),
-          gap4, // [✅ gap2를 gap4로 수정]
+          gap4,
           Row(
             children: [
               if (discountInfo.amount > 0)

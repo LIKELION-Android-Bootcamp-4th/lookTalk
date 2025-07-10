@@ -48,6 +48,7 @@ class CartItem {
 }
 
 class CartProduct {
+  final String id;
   final String name;
   final String? thumbnailImage;
   final Map<String, dynamic> options;
@@ -55,6 +56,7 @@ class CartProduct {
   final Discount? discount;
 
   CartProduct({
+    required this.id,
     required this.name,
     this.thumbnailImage,
     required this.options,
@@ -64,6 +66,7 @@ class CartProduct {
 
   factory CartProduct.fromJson(Map<String, dynamic> json) {
     return CartProduct(
+      id: json['id'] ?? '',
       name: json['name'] ?? '',
       thumbnailImage: json['thumbnailImage'],
       options: json['options'] ?? {},

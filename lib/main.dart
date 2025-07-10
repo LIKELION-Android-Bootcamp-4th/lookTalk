@@ -14,7 +14,6 @@ import 'view_model/viewmodel_provider.dart';
 
 // 기존 Provider import들
 import 'view_model/community/community_tab_view_model.dart';
-import 'view_model/community/community_view_model.dart';
 import 'model/repository/post_repository.dart';
 
 

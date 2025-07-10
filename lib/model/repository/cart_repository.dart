@@ -3,7 +3,7 @@
 import '../client/cart_api_client.dart';
 import '../../core/network/api_result.dart';
 import 'package:look_talk/model/entity/response/cart_response.dart';
-
+import '../entity/response/checkout_response.dart';
 class CartRepository {
   final CartApiClient apiClient;
   CartRepository(this.apiClient);
@@ -22,4 +22,7 @@ class CartRepository {
 
   /// 장바구니 전체 삭제 기능 추가
   Future<ApiResult<void>> clearCart() => apiClient.clearCart();
+  /// [✅ 추가] 장바구니 상품으로 주문 생성 (체크아웃)
+  Future<ApiResult<CheckoutResponse>> checkout(List<String> cartIds) =>
+      apiClient.checkout(cartIds);
 }
