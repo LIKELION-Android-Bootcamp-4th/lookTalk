@@ -8,6 +8,7 @@ import 'package:look_talk/ui/main/bottom_nav_screen.dart';
 import 'package:look_talk/ui/main/category/category/category_screen.dart';
 import 'package:look_talk/ui/main/category/categorydetail/category_detail_screen.dart';
 import 'package:look_talk/ui/main/community/communication_product_registration/product_registration-screen.dart';
+import 'package:look_talk/ui/main/community/community_entry_point.dart';
 import 'package:look_talk/ui/main/community/community_screen.dart';
 import 'package:look_talk/ui/main/community/post_create_screen.dart';
 import 'package:look_talk/ui/main/community/post_detail_screen.dart';
@@ -19,6 +20,7 @@ import 'package:look_talk/ui/main/wishlist/wishlist_screen.dart';
 import 'package:look_talk/ui/search/search_screen.dart';
 import 'package:look_talk/view_model/auth/auth_view_model.dart';
 import 'package:look_talk/view_model/auth/nickname_check_view_model.dart';
+import 'package:look_talk/view_model/cart/cart_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/post_dummy.dart';
@@ -58,7 +60,17 @@ final GoRouter router = GoRouter(
         ),
         GoRoute(
           path: 'seller',
-          builder: (context, state) => const SellerInfoScreen(),
+          builder: (context, state) {
+            return MultiProvider(
+              providers: [
+                // TODO : 회사명 중복 체크 추가
+                ChangeNotifierProvider(
+                  create: (_) => provideSellerSignupViewModel(),
+                ),
+              ],
+              child: const SellerInfoScreen(),
+            );
+          },
         ),
       ],
     ),
@@ -85,14 +97,24 @@ final GoRouter router = GoRouter(
         );
       },
     ),
-    GoRoute(path: '/search', builder: (context, state) {
+    GoRoute(
+      path: '/search',
+      builder: (context, state) {
         return ChangeNotifierProvider(
           create: (_) => provideSearchScreenViewModel(),
           child: SearchScreen(),
         );
-}
+      },
     ),
-    GoRoute(path: '/cart', builder: (context, state) => CartScreen()),
+    GoRoute(
+      path: '/cart',
+      builder: (context, state) {
+        return ChangeNotifierProvider(
+          create: (_) => provideCartViewModel(),
+          child: CartScreen(),
+        );
+      },
+    ),
     ShellRoute(
       builder: (context, state, child) {
         return BottomNavScreen(
@@ -189,7 +211,7 @@ final GoRouter router = GoRouter(
 
         GoRoute(
           path: '/community',
-          builder: (context, state) => const CommunityScreen(),
+          builder: (context, state) => const CommunityEntryPoint(),
         ),
         GoRoute(
           path: '/wishlist',
@@ -200,8 +222,8 @@ final GoRouter router = GoRouter(
           builder: (context, state) => const MyPageScreenCustomer(),
         ),
         GoRoute(
-            path: '/notice',
-            builder: (context, state) => const NoticeScreen(),
+          path: '/notice',
+          builder: (context, state) => const NoticeScreen(),
         ),
         GoRoute(
           path: '/seller/products',

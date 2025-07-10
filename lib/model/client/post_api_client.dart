@@ -3,7 +3,6 @@ import 'package:look_talk/core/network/api_result.dart';
 import 'package:look_talk/core/network/end_points/community/community_endpoints.dart';
 import 'package:look_talk/model/entity/request/post_list_request.dart';
 import 'package:look_talk/model/entity/response/post_response.dart';
-import 'package:look_talk/ui/common/component/community/post_list.dart';
 
 import '../entity/response/post_list_response.dart';
 
@@ -30,5 +29,12 @@ class PostApiClient {
       response,
       (json) => PostListResponse.fromJson(json as Map<String, dynamic>),
     );
+  }
+
+  Future<ApiResult<void>> toggleLike({required String postId}) async {
+    final response = await _dio.post(
+      CommunityEndpoints.postLike(postId),
+    );
+    return ApiResult.fromVoidResponse(response);
   }
 }

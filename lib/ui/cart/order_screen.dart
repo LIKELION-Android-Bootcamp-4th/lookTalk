@@ -1,35 +1,63 @@
+// lib/ui/main/cart/order_screen.dart
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+import 'package:look_talk/model/entity/response/cart_response.dart';
+import 'package:look_talk/model/entity/request/create_order_request.dart';
+import 'package:look_talk/view_model/cart/cart_view_model.dart';
+import 'package:look_talk/view_model/order/order_view_model.dart';
+import 'package:look_talk/view_model/viewmodel_provider.dart';
+import 'package:provider/provider.dart';
+
+import '../common/component/primary_button.dart';
 import '../common/const/colors.dart';
 import '../common/const/gap.dart';
 import '../common/const/text_sizes.dart';
-import '../common/component/primary_button.dart';
 
-// 더미 데이터(실제 서비스에서는 서버 연동)
-final dummyProducts = [
-  {
-    'id': '1',
-    'brand': 'Auralee',
-    'name': '남자 코튼 니트 폴로',
-    'option': '그린 / L / 1개',
-    'originPrice': 450500,
-    'salePrice': 225250,
-  }
-];
-
-class OrderScreen extends StatefulWidget {
-  final List<String> selectedIds;
-  const OrderScreen({required this.selectedIds, Key? key}) : super(key: key);
+class OrderScreen extends StatelessWidget {
+  final List<CartItem> productsToOrder;
+  const OrderScreen({required this.productsToOrder, Key? key}) : super(key: key);
 
   @override
-  State<OrderScreen> createState() => _OrderScreenState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => provideOrderViewModel(),
+      child: _OrderScreenContent(productsToOrder: productsToOrder),
+    );
+  }
 }
 
-class _OrderScreenState extends State<OrderScreen> {
-  // 상태값
+class _OrderScreenContent extends StatefulWidget {
+  final List<CartItem> productsToOrder;
+  const _OrderScreenContent({required this.productsToOrder, Key? key}) : super(key: key);
+
+  @override
+  State<_OrderScreenContent> createState() => _OrderScreenContentState();
+}
+
+class _OrderScreenContentState extends State<_OrderScreenContent> {
   final nameController = TextEditingController();
   final phoneController = TextEditingController();
   final addressController = TextEditingController();
   bool agree = false;
+
+  final numberFormat = NumberFormat('###,###,###,###');
+
+  bool get isShippingInfoFilled =>
+      nameController.text.trim().isNotEmpty &&
+          phoneController.text.trim().isNotEmpty &&
+          addressController.text.trim().isNotEmpty;
+
+  bool get isPaymentButtonEnabled => isShippingInfoFilled && agree;
+
+  @override
+  void initState() {
+    super.initState();
+    nameController.addListener(() => setState(() {}));
+    phoneController.addListener(() => setState(() {}));
+    addressController.addListener(() => setState(() {}));
+  }
 
   @override
   void dispose() {
@@ -39,16 +67,54 @@ class _OrderScreenState extends State<OrderScreen> {
     super.dispose();
   }
 
-  bool get isFormValid =>
-      nameController.text.trim().isNotEmpty &&
-          phoneController.text.trim().isNotEmpty &&
-          addressController.text.trim().isNotEmpty &&
-          agree;
+  void _onPaymentPressed() async {
+    final orderViewModel = context.read<OrderViewModel>();
+    final cartViewModel = context.read<CartViewModel>();
+
+    final orderItems = widget.productsToOrder.map((cartItem) {
+      return OrderItemRequest(
+        productId: cartItem.product.id,
+        quantity: cartItem.quantity,
+        options: cartItem.product.options,
+        unitPrice: cartItem.cartPrice,
+      );
+    }).toList();
+
+    final shippingInfo = ShippingInfoRequest(
+      recipient: nameController.text,
+      phone: phoneController.text,
+      address: addressController.text,
+    );
+
+    final orderResponse = await orderViewModel.createOrder(
+      items: orderItems,
+      shippingInfo: shippingInfo,
+    );
+
+    if (mounted) {
+      if (orderResponse != null) {
+        // [✅ 추가] 주문 성공 시, 디버그 콘솔에 주문 ID 출력
+        print('주문 성공! Swagger 테스트용 Order ID: ${orderResponse.orderId}');
+
+        // [✅ 추가] 장바구니 목록을 새로고침합니다.
+        await cartViewModel.fetchCart();
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('주문이 완료되었습니다. (주문번호: ${orderResponse.orderNumber})')),
+        );
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('주문 생성에 실패했습니다: ${orderViewModel.error ?? '알 수 없는 오류'}')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final products = dummyProducts.where((p) => widget.selectedIds.contains(p['id'])).toList();
-    final totalPrice = products.fold<int>(0, (sum, e) => sum + (e['salePrice'] as int));
+    final totalPrice = widget.productsToOrder.fold<int>(0, (sum, e) => sum + e.totalPrice);
+    final isLoading = context.watch<OrderViewModel>().isLoading;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -59,146 +125,196 @@ class _OrderScreenState extends State<OrderScreen> {
         elevation: 0,
         leading: BackButton(color: AppColors.black),
       ),
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            gap16,
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Text('주문상품', style: TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
-            ),
-            gap8,
-            ...products.map((item) => Container(
-              margin: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 6)],
-              ),
-              child: Row(
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: GestureDetector(
+              onTap: () => FocusScope.of(context).unfocus(),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 80, height: 96,
-                    decoration: BoxDecoration(
-                      color: AppColors.boxGrey,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Icon(Icons.image, color: AppColors.textGrey, size: 36),
-                  ),
-                  gapW16,
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(item['brand'] as String, style: TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
-                        gap4,
-                        Text(item['name'] as String, style: TextStyle(fontSize: TextSizes.body)),
-                        gap8,
-                        Text(
-                          '${item['originPrice'].toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => ',')}원',
-                          style: TextStyle(
-                            fontSize: TextSizes.caption,
-                            color: AppColors.textGrey,
-                            decoration: TextDecoration.lineThrough,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        gap4,
-                        Row(
-                          children: [
-                            Text('50%', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
-                            gapW8,
-                            Text(
-                              '${item['salePrice'].toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => ',')}원',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        gap8,
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: AppColors.boxGrey,
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Row(
-                            children: [
-                              Text('옵션', style: TextStyle(color: AppColors.textGrey, fontSize: TextSizes.caption)),
-                              gapW8,
-                              Text(item['option'] as String, style: TextStyle(fontSize: TextSizes.caption)),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            )),
-            Divider(thickness: 1, height: 32, color: AppColors.boxGrey),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Text('배송 정보', style: TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
-            ),
-            gap8,
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Column(
-                children: [
-                  TextField(
-                    controller: nameController,
-                    decoration: InputDecoration(labelText: '이름 *'),
-                    onChanged: (_) => setState(() {}),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Text('주문상품', style: TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
                   ),
                   gap8,
-                  TextField(
-                    controller: phoneController,
-                    decoration: InputDecoration(labelText: '휴대폰 *'),
-                    keyboardType: TextInputType.phone,
-                    onChanged: (_) => setState(() {}),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: widget.productsToOrder.length,
+                    itemBuilder: (context, index) {
+                      final item = widget.productsToOrder[index];
+                      return _buildProductCard(item);
+                    },
                   ),
-                  gap8,
-                  TextField(
-                    controller: addressController,
-                    decoration: InputDecoration(labelText: '주소 *'),
-                    onChanged: (_) => setState(() {}),
-                  ),
+                  Divider(thickness: 1, height: 32, color: AppColors.boxGrey),
+                  _buildShippingInfoSection(),
                 ],
               ),
             ),
-            gap16,
-            Row(
-              children: [
-                gapW16,
-                Checkbox(
-                  value: agree,
-                  onChanged: (v) => setState(() => agree = v ?? false),
-                  activeColor: AppColors.primary,
-                ),
-                Text('구매동의 (필수)', style: TextStyle(fontSize: TextSizes.caption)),
-              ],
+          ),
+          if (isLoading)
+            Container(
+              color: Colors.black.withOpacity(0.3),
+              child: const Center(child: CircularProgressIndicator()),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Text('위 주문내용을 확인하였으며 결제에 동의합니다.', style: TextStyle(fontSize: TextSizes.caption)),
-            ),
-            Spacer(),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: PrimaryButton(
-                text: '${totalPrice.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => ',')}원 결제하기',
-                onPressed: isFormValid ? () {
-                  // 결제 진행
-                } : null,
-              ),
-            ),
-          ],
+        ],
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: PrimaryButton(
+            text: '${numberFormat.format(totalPrice)}원 결제하기',
+            onPressed: isPaymentButtonEnabled && !isLoading ? _onPaymentPressed : null,
+          ),
         ),
       ),
     );
+  }
+
+  Widget _buildProductCard(CartItem item) {
+    final discountInfo = item.product.discount;
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey[200]!),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: 70,
+            height: 70,
+            decoration: BoxDecoration(
+              color: AppColors.boxGrey,
+              borderRadius: BorderRadius.circular(8),
+              image: item.product.thumbnailImage != null
+                  ? DecorationImage(
+                  image: NetworkImage(item.product.thumbnailImage!),
+                  fit: BoxFit.cover)
+                  : null,
+            ),
+            child: item.product.thumbnailImage == null
+                ? Icon(Icons.image_not_supported_outlined,
+                color: AppColors.textGrey, size: 30)
+                : null,
+          ),
+          gapW12,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(item.companyName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
+                gap4,
+                Text(item.product.name, style: TextStyle(fontSize: TextSizes.body), maxLines: 1, overflow: TextOverflow.ellipsis),
+                gap4,
+                _buildPriceWidget(discountInfo, item.totalPrice),
+                gap4,
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppColors.boxGrey,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                      '옵션  ${item.product.options['color'] ?? 'N/A'} / ${item.quantity}개',
+                      style: TextStyle(fontSize: TextSizes.caption, color: Colors.grey[600])),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildShippingInfoSection() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('배송 정보', style: TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
+          gap8,
+          TextField(
+            controller: nameController,
+            decoration: InputDecoration(labelText: '이름 *'),
+          ),
+          gap8,
+          TextField(
+            controller: phoneController,
+            decoration: InputDecoration(labelText: '휴대폰 *'),
+            keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          ),
+          gap8,
+          TextField(
+            controller: addressController,
+            decoration: InputDecoration(labelText: '주소 *'),
+          ),
+          gap16,
+          Row(
+            children: [
+              Checkbox(
+                value: agree,
+                activeColor: AppColors.primary,
+                onChanged: isShippingInfoFilled
+                    ? (v) => setState(() => agree = v ?? false)
+                    : null,
+              ),
+              Text('구매동의 (필수)', style: TextStyle(fontSize: TextSizes.caption, color: isShippingInfoFilled ? AppColors.black : Colors.grey)),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 4.0),
+            child: Text('위 주문내용을 확인하였으며 결제에 동의합니다.', style: TextStyle(fontSize: TextSizes.caption)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPriceWidget(Discount? discountInfo, int finalPrice) {
+    if (discountInfo == null) {
+      return Text(
+        '${numberFormat.format(finalPrice)}원',
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      );
+    } else {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '${numberFormat.format(discountInfo.originalPrice)}원',
+            style: const TextStyle(
+              fontSize: TextSizes.caption,
+              color: AppColors.textGrey,
+              decoration: TextDecoration.lineThrough,
+            ),
+          ),
+          gap4,
+          Row(
+            children: [
+              if (discountInfo.amount > 0)
+                Text('${discountInfo.amount}%',
+                    style: TextStyle(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: TextSizes.body)),
+              gapW8,
+              Text(
+                '${numberFormat.format(discountInfo.discountedPrice)}원',
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body),
+              ),
+            ],
+          ),
+        ],
+      );
+    }
   }
 }

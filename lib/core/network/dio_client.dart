@@ -15,8 +15,8 @@ class DioClient {
             receiveTimeout: const Duration(seconds: 10),
             headers: {
               'Content-Type': 'application/json',
-              'X-Company-Code': '6866fcea5b230f5dc709bdeb',
-              'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODZkZjI0ODlkNjI4ODdmNGIxYWZhMDAiLCJjb21wYW55SWQiOiI2ODY2ZmNlYTViMjMwZjVkYzcwOWJkZWIiLCJpc0FkbWluIjpmYWxzZSwiaXNTdXBlckFkbWluIjpmYWxzZSwiaWF0IjoxNzUyMTYyNzU4LCJleHAiOjE3NTIyNDkxNTh9.1VvrM3m4vSZv8IM3u7mDhGUCDvRKHOxPVosMGiNOR_4',
+              'X-Company-Code': '685f69fc439922c09c21aef0',
+
             },
           ),
         )
@@ -31,7 +31,7 @@ class DioClient {
               final isExcluded = excludedPaths.any((excluded) => options.path.startsWith(excluded));
 
               if (!isExcluded) {
-                final accessToken = await _tokenStorage.getAccessToken();
+                final accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODYyM2ZlMWFlODMzYzZmZTk4OGZiZmIiLCJjb21wYW55SWQiOiI2ODVmNjlmYzQzOTkyMmMwOWMyMWFlZjAiLCJpc0FkbWluIjpmYWxzZSwiaXNTdXBlckFkbWluIjpmYWxzZSwiaWF0IjoxNzUyMTI1NzQzLCJleHAiOjE3NTIyMTIxNDN9.mQWfRcq-PNALWiIs6JOeoCGxA6xC1S1sxUmlWIDeULY";
                 if (accessToken != null) {
                   options.headers['Authorization'] = 'Bearer $accessToken';
                 }
