@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:look_talk/view_model/cart/cart_view_model.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart'; // [✅ 숫자 포맷팅을 위해 import]
-import 'package:look_talk/model/entity/response/cart_response.dart'; // [✅ Discount 클래스를 위해 import]
+import 'package:intl/intl.dart';
+import 'package:look_talk/model/entity/response/cart_response.dart';
 
 import '../common/const/colors.dart';
 import '../common/const/gap.dart';
@@ -21,7 +21,6 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  // 숫자를 콤마(,) 포맷으로 변경해주는 Formatter
   final numberFormat = NumberFormat('###,###,###,###');
 
   @override
@@ -64,7 +63,7 @@ class _CartScreenState extends State<CartScreen> {
         children: [
           gap16,
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
                 Checkbox(
@@ -79,7 +78,7 @@ class _CartScreenState extends State<CartScreen> {
           gap16,
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               itemCount: viewModel.cartItems.length,
               itemBuilder: (context, i) {
                 final item = viewModel.cartItems[i];
@@ -87,13 +86,16 @@ class _CartScreenState extends State<CartScreen> {
 
                 return Card(
                   elevation: 0,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(color: Colors.grey[200]!, width: 1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                   color: AppColors.white,
-                  margin: const EdgeInsets.only(bottom: 16),
+                  margin: const EdgeInsets.only(bottom: 12),
                   child: Padding(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(8.0),
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Checkbox(
                           value: viewModel.selectedItemIds.contains(item.id),
@@ -102,8 +104,8 @@ class _CartScreenState extends State<CartScreen> {
                         ),
                         gapW8,
                         Container(
-                          width: 70,
-                          height: 90,
+                          width: 60,
+                          height: 80,
                           decoration: BoxDecoration(
                             color: AppColors.boxGrey,
                             borderRadius: BorderRadius.circular(8),
@@ -115,41 +117,41 @@ class _CartScreenState extends State<CartScreen> {
                                 : null,
                           ),
                           child: item.product.thumbnailImage == null
-                              ? Icon(Icons.image, color: AppColors.textGrey, size: 36)
+                              ? Icon(Icons.image_not_supported_outlined, color: AppColors.textGrey, size: 30)
                               : null,
                         ),
-                        gapW16,
+                        gapW12,
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(item.companyName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
-                                  const Spacer(),
                                   InkWell(
                                     onTap: () {
                                       viewModel.toggleItemSelection(item.id, true);
                                       viewModel.removeSelectedItems();
                                     },
-                                    child: Icon(Icons.close, color: AppColors.textGrey, size: 22),
+                                    child: Icon(Icons.close, color: AppColors.textGrey, size: 20),
                                   ),
                                 ],
                               ),
                               gap4,
-                              Text(item.product.name, style: TextStyle(fontSize: TextSizes.body)),
-                              gap8,
+                              Text(item.product.name, style: TextStyle(fontSize: TextSizes.body), maxLines: 1, overflow: TextOverflow.ellipsis,),
+                              gap4,
                               _buildPriceWidget(discountInfo, item.totalPrice),
-                              gap8,
+                              gap4,
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
                                   color: AppColors.boxGrey,
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: Text(
                                     '옵션  ${item.product.options['color'] ?? 'N/A'} / ${item.quantity}개',
-                                    style: TextStyle(fontSize: TextSizes.caption)
+                                    style: TextStyle(fontSize: TextSizes.caption, color: Colors.grey[600])
                                 ),
                               ),
                             ],
@@ -162,7 +164,6 @@ class _CartScreenState extends State<CartScreen> {
               },
             ),
           ),
-          // 결제 정보 및 구매하기 버튼
           Container(
             decoration: BoxDecoration(
               color: Colors.white,
@@ -187,10 +188,16 @@ class _CartScreenState extends State<CartScreen> {
                   text: '구매하기',
                   onPressed: viewModel.selectedItemIds.isNotEmpty
                       ? () {
+                    // [✅ 선택된 상품 목록을 여기서 필터링]
+                    final productsToOrder = viewModel.cartItems
+                        .where((item) => viewModel.selectedItemIds.contains(item.id))
+                        .toList();
+
+                    // [✅ 필터링된 목록을 OrderScreen에 직접 전달]
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => OrderScreen(selectedIds: viewModel.selectedItemIds.toList()),
+                        builder: (_) => OrderScreen(productsToOrder: productsToOrder),
                       ),
                     );
                   }
@@ -221,18 +228,17 @@ class _CartScreenState extends State<CartScreen> {
               fontSize: TextSizes.caption,
               color: AppColors.textGrey,
               decoration: TextDecoration.lineThrough,
-              fontWeight: FontWeight.bold,
             ),
           ),
           gap4,
           Row(
             children: [
               if (discountInfo.amount > 0)
-                Text('${discountInfo.amount}%', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                Text('${discountInfo.amount}%', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
               gapW8,
               Text(
                 '${numberFormat.format(discountInfo.discountedPrice)}원',
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body),
               ),
             ],
           ),

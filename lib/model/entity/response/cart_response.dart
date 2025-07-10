@@ -6,14 +6,14 @@ class CartResponse {
 
   CartResponse({required this.items, required this.pagination});
 
-  // 서버 응답의 'data' 객체 안에서 데이터를 파싱하도록 수정
+  // [✅ 수정된 부분]
+  // ApiResult에서 이미 'data' 객체를 넘겨주므로, 여기서는 바로 'items'와 'pagination'을 파싱합니다.
   factory CartResponse.fromJson(Map<String, dynamic> json) {
-    final data = json['data'] as Map<String, dynamic>? ?? {};
     return CartResponse(
-      items: (data['items'] as List<dynamic>? ?? [])
+      items: (json['items'] as List<dynamic>? ?? [])
           .map((e) => CartItem.fromJson(e as Map<String, dynamic>))
           .toList(),
-      pagination: CartPagination.fromJson(data['pagination'] ?? {}),
+      pagination: CartPagination.fromJson(json['pagination'] ?? {}),
     );
   }
 }
