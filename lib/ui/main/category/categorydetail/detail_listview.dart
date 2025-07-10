@@ -1,41 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:look_talk/model/entity/response/bring_sub_category_response.dart';
 import 'package:look_talk/view_model/category/category_detail/detail_listview_viewmodel.dart';
-import 'package:provider/provider.dart';
 
 class DetailListview extends StatelessWidget {
+  final DetailListviewViewmodel viewModel;
+
+  const DetailListview({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
-   final viewmodel = Provider.of<DetailListviewViewmodel>(context);
+    if (viewModel.subCategories.isEmpty) {
+      return const Center(child: Text("설정이 잘못되었습니다."));
+    }
 
-   if(viewmodel.subCategories.isEmpty){
-     return Center(child: Text("설정이 잘못되었습니다."));
-   }
-
-   return SingleChildScrollView(
-     scrollDirection: Axis.horizontal,
-     child: Row(
-       children: viewmodel.subCategories.map((category){
-
-         return GestureDetector(
-           onTap: () => viewmodel.changeSubCategory(category),
-           child: Container(
-             padding: EdgeInsets.only(right: 12),
-             child: Text(
-               category
-               ,
-               style: TextStyle(
-                 fontSize: 30,
-                 color: viewmodel.isSelected(category) ? Colors.blue : Colors.grey
-             ),
-             ),
-           ),
-         );
-       }
-       ).toList()
-     ),
-   );
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: viewModel.subCategories.map((category) {
+          return GestureDetector(
+            onTap: () => viewModel.changeSubCategory(category),
+            child: Container(
+              padding: const EdgeInsets.only(right: 12),
+              child: Text(
+                category.name,
+                style: TextStyle(
+                  fontSize: 30,
+                  color: viewModel.isSelected(category) ? Colors.blue : Colors.grey,
+                ),
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
   }
-
-
 }

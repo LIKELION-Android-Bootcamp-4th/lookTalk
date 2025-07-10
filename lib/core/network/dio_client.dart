@@ -16,6 +16,7 @@ class DioClient {
             headers: {
               'Content-Type': 'application/json',
               'X-Company-Code': '685f69fc439922c09c21aef0',
+
             },
           ),
         )

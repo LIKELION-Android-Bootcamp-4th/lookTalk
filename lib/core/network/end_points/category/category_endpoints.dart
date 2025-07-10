@@ -1,5 +1,6 @@
 class CategoryEndpoints {
-  static const String categoryDetailList = "/api/categories/{categoryId}"; //GET 카테고리별 조회.
+  static const String categoryDetailList = "/api/categories"; //GET 카테고리별 조회.
+  static const String categoryProduct = '/api/products';
 }
 
 

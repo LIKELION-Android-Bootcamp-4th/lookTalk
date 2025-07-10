@@ -1,10 +1,15 @@
 import 'package:look_talk/model/client/buyer_signup_api_client.dart';
 import 'package:look_talk/model/client/post_create_api_client.dart';
+import 'package:look_talk/model/entity/response/bring_sub_category_response.dart';
 import 'package:look_talk/model/client/seller_signup_api_client.dart';
 import 'package:look_talk/model/repository/buyer_signup_repository.dart';
+import 'package:look_talk/model/repository/category_detail_repository.dart';
+import 'package:look_talk/model/repository/category_repository.dart';
 import 'package:look_talk/model/repository/post_repository.dart';
 import 'package:look_talk/model/repository/seller_signup_repository.dart';
 import 'package:look_talk/view_model/auth/buyer_signup_view_model.dart';
+import 'package:look_talk/view_model/category/category_data_select_viewmodel.dart';
+import 'package:look_talk/view_model/category/category_detail/detail_listview_viewmodel.dart';
 import 'package:look_talk/view_model/auth/seller_signup_view_model.dart';
 import 'package:look_talk/view_model/community/post_create_view_model.dart';
 import 'package:look_talk/view_model/community/post_detail_view_model.dart';
@@ -39,7 +44,19 @@ NicknameCheckViewModel provideNicknameCheckViewModel() => NicknameCheckViewModel
 BuyerSignupViewModel provideBuyerSignupViewModel() => BuyerSignupViewModel(BuyerSignupRepository(BuyerSignupApiClient(dio)));
 SellerSignupViewmodel provideSellerSignupViewModel() => SellerSignupViewmodel(SellerSignupRepository(SellerSignupApiClient(dio)));
 
-SearchViewModel provideSearchScreenViewModel() => SearchViewModel(repository: SearchRepository(dio));
+SearchViewModel provideSearchScreenViewModel() => SearchViewModel(repository: SearchRepository(dio));i
+CategoryDataSelectViewmodel provideCategoryDataSelectViewmodel() => CategoryDataSelectViewmodel(repository: CategoryRepository(dio));
+DetailListviewViewmodel provideCategoryDetailViewModel({
+  required List<BringSubCategoryResponse> subCategories,
+  required BringSubCategoryResponse initialSubCategory,
+  required BringSubCategoryResponse mainCategory,
+}) =>
+    DetailListviewViewmodel(
+      repository: CategoryDetailRepository(dio),
+      subCategories: subCategories,
+      initialSubCategory: initialSubCategory,
+      mainCategory: mainCategory
+    );
 CartViewModel provideCartViewModel() => CartViewModel(CartRepository(CartApiClient(dio)));
 
 // [✅ 추가] OrderViewModel을 생성하는 함수를 추가합니다.
