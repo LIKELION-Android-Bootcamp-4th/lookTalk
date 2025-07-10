@@ -10,6 +10,7 @@ class PostResponse {
   final DateTime createdAt;
   final PostUserResponse user;
   final PostImageUrls? images;
+  final bool isLiked;
 
   PostResponse({
     required this.id,
@@ -21,6 +22,7 @@ class PostResponse {
     required this.createdAt,
     required this.user,
     this.images,
+    required this.isLiked,
   });
 
   factory PostResponse.fromJson(Map<String, dynamic> json) {
@@ -36,6 +38,7 @@ class PostResponse {
       createdAt: DateTime.parse(json['createdAt']),
       user: PostUserResponse.fromJson(json['user']),
       images: json['images'] != null ? PostImageUrls.fromJson(json['images']) : null,
+      isLiked: json['isLiked'] ?? false
     );
   }
 }

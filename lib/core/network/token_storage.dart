@@ -40,4 +40,10 @@ class TokenStorage {
   Future<void> deleteTokens() async {
     await _storage.deleteAll();
   }
+
+  Future<bool> hasToken() async {
+    final token = await getAccessToken();
+    return token != null && token.isNotEmpty;
+  }
+
 }
