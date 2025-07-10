@@ -1,126 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'package:look_talk/core/extension/text_style_extension.dart';
-// import 'package:look_talk/ui/common/component/app_bar/app_bar_search_cart.dart';
-// import 'package:look_talk/ui/common/const/gap.dart';
-// import 'package:look_talk/view_model/community/post_detail_view_model.dart';
-// import 'package:provider/provider.dart';
-//
-// import '../../../model/entity/post_entity.dart';
-// import '../../common/const/colors.dart';
-//
-// class PostDetailScreen extends StatefulWidget{
-//   final String postId;
-//
-//   const PostDetailScreen({required this.postId, super.key});
-//
-//   @override
-//   State<PostDetailScreen> createState() => _PostDetailScreenState();
-// }
-//
-// class _PostDetailScreenState extends State<PostDetailScreen> {
-//   @override
-//   void initState() {
-//     super.initState();
-//     final viewModel = context.read<PostDetailViewModel>();
-//     viewModel.fetchPost(widget.postId);
-//   }
-//
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final viewModel = context.watch<PostDetailViewModel>();
-//
-//     if (viewModel.isLoading) return CircularProgressIndicator();
-//     if (viewModel.errorMessage != null) return Text(viewModel.errorMessage!);
-//     if (viewModel.post == null) return Text('데이터 없음');
-//
-//     return Scaffold(
-//       appBar: AppBarSearchCart(),
-//       body: Padding(
-//         padding: const EdgeInsets.all(32.0),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Padding(padding: EdgeInsets.symmetric(vertical: 12),
-//             child: Row(
-//               children: [
-//                 CircleAvatar(
-//                   radius: 12,
-//                   backgroundImage: NetworkImage(
-//                     'https://via.placeholder.com/150',
-//                   ),
-//                 ),
-//                 gapW8,
-//                 Text('홍길동', style: TextStyle(fontWeight: FontWeight.bold,
-//                 color: AppColors.textGrey)),
-//               ],
-//             ),
-//             ),
-//             Text(post.content, style: context.bodyBold,),
-//             gap16,
-//             Row(
-//               children: [
-//                 Expanded(child: Row(
-//                   children: [
-//                     IconButton(onPressed: (){}, icon: Icon(Icons.favorite_border, size: 16)),
-//                     Text('${post.likeCount}', style: context.h1),
-//                     gapW16,
-//                     Icon(Icons.chat_bubble, size: 16, color: AppColors.iconGrey,),
-//                     Text('${post.commentCount}', style: context.bodyBold?.copyWith(fontSize: 15, color: AppColors.iconGrey)),
-//                   ],
-//                 )),
-//                 Text(
-//                   _formatDate(post.createAt),
-//                   style: context.bodyBold.copyWith(color: AppColors.iconGrey),)
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//       bottomSheet: //bottomSheetNavigater를 사용해봤는데, 하단에 아에 고정이 되어 키보드에 가려져 수정.
-//       SafeArea(child: _commentInput()),
-//
-//     );
-//   }
-//
-//   String _formatDate(DateTime date){
-//     return '${date.year}.${_twoDigits(date.month)}.${_twoDigits(date.day)}';
-//   }
-//
-//   String _twoDigits(int n){
-//     return n.toString().padLeft(2,'0');
-//   }
-// }
-//
-// Widget _commentInput() {
-//   return Padding(padding:EdgeInsets.only(bottom: 20),
-//   child:
-//     Container(
-//     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-//     decoration: BoxDecoration(
-//       color: AppColors.blueButton,
-//       borderRadius: BorderRadius.circular(20),
-//     ),
-//     child: Row(
-//       children: [
-//         Expanded(
-//           child: TextField(
-//             decoration: const InputDecoration(
-//               hintText: '댓글을 입력해주세요.',
-//               border: InputBorder.none,
-//             ),
-//           ),
-//         ),
-//         IconButton(
-//           onPressed: () {},
-//           icon: const Icon(Icons.send),
-//         ),
-//       ],
-//     ),
-//     ),
-//   );
-// }
-
 import 'package:flutter/material.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:provider/provider.dart';
@@ -161,7 +38,7 @@ class PostDetailScreen extends StatelessWidget {
             gap32,
             _buildContents(context, post),
             gap16,
-            _buildPostStats(post, context),
+            _buildPostStats(post, viewModel, context),
           ],
         ),
       ),
@@ -170,17 +47,17 @@ class PostDetailScreen extends StatelessWidget {
   }
 
   Widget _buildUserInfo(BuildContext context, Post post) {
+    final hasProfileImage = post.user.profileImageUrl?.isNotEmpty == true;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         children: [
           CircleAvatar(
             radius: 21,
-            backgroundImage: NetworkImage(
-              post.user.profileImageUrl?.isNotEmpty == true
-                  ? post.user.profileImageUrl!
-                  : 'https://via.placeholder.com/150',
-            ),
+            backgroundImage: hasProfileImage
+                ? NetworkImage(post.user.profileImageUrl!)
+                : const AssetImage('assets/images/profile.png')
+                      as ImageProvider,
           ),
           gapW8,
           Text(post.user.nickName, style: context.h1.copyWith(fontSize: 15)),
@@ -200,11 +77,33 @@ class PostDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPostStats(Post post, BuildContext context) {
+
+  Widget _buildPhoto(){
+    return Container(
+      width: 80,
+      height: 80,
+      decoration: BoxDecoration(
+        // image: DecorationImage(
+        //   image: NetworkImage(post.images!.main!),
+        //   fit: BoxFit.cover,
+        // ),
+        borderRadius: BorderRadius.circular(8),
+        color: Colors.grey[300],
+      ),
+    );
+  }
+
+  Widget _buildPostStats(
+    Post post,
+    PostDetailViewModel viewModel,
+    BuildContext context,
+  ) {
     String _formatDate(DateTime date) {
       String _twoDigits(int n) => n.toString().padLeft(2, '0');
       return '${_twoDigits(date.month)}/${_twoDigits(date.day)}  ${_twoDigits(date.hour)}:${_twoDigits(date.minute)}';
     }
+
+    final isLiked = viewModel.isLiked;
 
     return Row(
       children: [
@@ -212,11 +111,17 @@ class PostDetailScreen extends StatelessWidget {
           child: Row(
             children: [
               IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.favorite_border, size: 24),
+                icon: Icon(
+                  isLiked ? Icons.favorite : Icons.favorite_border,
+                  color: isLiked ? Colors.red : Colors.black,
+                  size: 24,
+                ),
+                onPressed: () {
+                  viewModel.toggleLike();
+                },
               ),
               Text('${post.likeCount}', style: context.h1),
-              gapW16,
+              gapW24,
               const Icon(
                 Icons.chat_bubble,
                 size: 16,

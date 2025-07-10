@@ -7,15 +7,19 @@ import 'package:look_talk/model/entity/response/post_list_response.dart';
 import 'package:look_talk/model/entity/response/post_response.dart';
 
 class PostRepository {
-  final PostApiClient apiClient;
+  final PostApiClient _apiClient;
 
-  PostRepository(this.apiClient);
+  PostRepository(this._apiClient);
 
   Future<ApiResult<PostResponse>> fetchPosts(String id) async {
-    return apiClient.fetchPost(id: id);
+    return _apiClient.fetchPost(id: id);
   }
 
   Future<ApiResult<PostListResponse>> fetchPostList(PostListRequest request) async {
-    return apiClient.fetchPostsList(request);
+    return _apiClient.fetchPostsList(request);
+  }
+
+  Future<void> toggleLike(String postId) async {
+    await _apiClient.toggleLike(postId: postId);
   }
 }
