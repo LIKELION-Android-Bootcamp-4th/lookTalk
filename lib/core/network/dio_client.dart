@@ -15,7 +15,7 @@ class DioClient {
             receiveTimeout: const Duration(seconds: 10),
             headers: {
               'Content-Type': 'application/json',
-              'X-Company-Code': '685f69fc439922c09c21aef0',
+              'X-Company-Code': '6866fcea5b230f5dc709bdeb',
 
             },
           ),
@@ -31,7 +31,7 @@ class DioClient {
               final isExcluded = excludedPaths.any((excluded) => options.path.startsWith(excluded));
 
               if (!isExcluded) {
-                final accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODYyM2ZlMWFlODMzYzZmZTk4OGZiZmIiLCJjb21wYW55SWQiOiI2ODVmNjlmYzQzOTkyMmMwOWMyMWFlZjAiLCJpc0FkbWluIjpmYWxzZSwiaXNTdXBlckFkbWluIjpmYWxzZSwiaWF0IjoxNzUyMTI1NzQzLCJleHAiOjE3NTIyMTIxNDN9.mQWfRcq-PNALWiIs6JOeoCGxA6xC1S1sxUmlWIDeULY";
+                final accessToken = await _tokenStorage.getAccessToken();
                 if (accessToken != null) {
                   options.headers['Authorization'] = 'Bearer $accessToken';
                 }

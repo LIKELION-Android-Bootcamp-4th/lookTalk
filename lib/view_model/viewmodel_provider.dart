@@ -11,6 +11,7 @@ import 'package:look_talk/view_model/auth/buyer_signup_view_model.dart';
 import 'package:look_talk/view_model/category/category_data_select_viewmodel.dart';
 import 'package:look_talk/view_model/category/category_detail/detail_listview_viewmodel.dart';
 import 'package:look_talk/view_model/auth/seller_signup_view_model.dart';
+import 'package:look_talk/view_model/community/community_product_tab_view_model.dart';
 import 'package:look_talk/view_model/community/post_create_view_model.dart';
 import 'package:look_talk/view_model/community/post_detail_view_model.dart';
 import 'package:look_talk/view_model/search_view_model.dart';
@@ -44,7 +45,7 @@ NicknameCheckViewModel provideNicknameCheckViewModel() => NicknameCheckViewModel
 BuyerSignupViewModel provideBuyerSignupViewModel() => BuyerSignupViewModel(BuyerSignupRepository(BuyerSignupApiClient(dio)));
 SellerSignupViewmodel provideSellerSignupViewModel() => SellerSignupViewmodel(SellerSignupRepository(SellerSignupApiClient(dio)));
 
-SearchViewModel provideSearchScreenViewModel() => SearchViewModel(repository: SearchRepository(dio));i
+SearchViewModel provideSearchScreenViewModel() => SearchViewModel(repository: SearchRepository(dio));
 CategoryDataSelectViewmodel provideCategoryDataSelectViewmodel() => CategoryDataSelectViewmodel(repository: CategoryRepository(dio));
 DetailListviewViewmodel provideCategoryDetailViewModel({
   required List<BringSubCategoryResponse> subCategories,
@@ -68,3 +69,4 @@ RecommendPostListViewModel provideRecommendPostListViewModel() => RecommendPostL
 MyPostListViewModel provideMyPostListViewModel(String userId) => MyPostListViewModel(PostRepository(PostApiClient(dio)), userId);
 PostCreateViewModel providePostCreateViewModel() =>  PostCreateViewModel(PostCreateRepository(PostCreateApiClient(dio)));
 PostDetailViewModel providerPostDetailViewModel(String postId) => PostDetailViewModel(PostRepository(PostApiClient(dio)), postId);
+CommunityProductTabViewModel provideCommunityProductTabViewModel() => CommunityProductTabViewModel();

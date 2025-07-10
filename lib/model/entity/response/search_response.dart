@@ -34,7 +34,7 @@ class ProductSearch {
       }
     }
     return ProductSearch(
-      id: json['_id'] ?? '',
+      id: json['id'] ?? '',
       name: json['name'] ?? '',
       description: json['description'] ?? '',
       price: json['price'] ?? 0,

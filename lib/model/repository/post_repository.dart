@@ -6,6 +6,9 @@ import 'package:look_talk/model/entity/request/post_list_request.dart';
 import 'package:look_talk/model/entity/response/post_list_response.dart';
 import 'package:look_talk/model/entity/response/post_response.dart';
 
+import '../entity/request/comment_request.dart';
+import '../entity/response/comment_response.dart';
+
 class PostRepository {
   final PostApiClient _apiClient;
 
@@ -21,5 +24,12 @@ class PostRepository {
 
   Future<void> toggleLike(String postId) async {
     await _apiClient.toggleLike(postId: postId);
+  }
+
+  Future<ApiResult<CommentResponse>> addComment({
+    required String postId,
+    required CommentRequest request,
+}) {
+    return _apiClient.addComment(postId: postId, request: request);
   }
 }

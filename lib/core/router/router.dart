@@ -7,7 +7,6 @@ import 'package:look_talk/ui/common/component/common_loading.dart';
 import 'package:look_talk/ui/main/bottom_nav_screen.dart';
 import 'package:look_talk/ui/main/category/category/category_screen.dart';
 import 'package:look_talk/ui/main/category/categorydetail/category_detail_screen.dart';
-import 'package:look_talk/ui/main/community/communication_product_registration/product_registration-screen.dart';
 import 'package:look_talk/ui/main/community/community_entry_point.dart';
 import 'package:look_talk/ui/main/community/community_screen.dart';
 import 'package:look_talk/ui/main/community/post_create_screen.dart';
@@ -28,6 +27,7 @@ import '../../ui/auth/login_screen.dart';
 import '../../ui/auth/seller_info_screen.dart';
 import '../../ui/auth/signup_choice_screen.dart';
 import '../../ui/auth/buyer_info_screen.dart';
+import '../../ui/main/community/communication_product_registration/product_registration_screen.dart';
 import '../../ui/main/mypage/mypage_customer/notice.dart';
 import '../../ui/main/mypage/mypage_seller/manage_product_seller_screen.dart';
 import '../../ui/main/mypage/mypage_seller/mypage_screen_product_manage.dart';
@@ -76,17 +76,21 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       path: '/community/write',
-      builder: (context, state) => ChangeNotifierProvider(
-        create: (_) => providePostCreateViewModel(),
-        child: PostCreateScreen(),
-      ),
+      builder: (context, state) =>  PostCreateScreen(),
       routes: [
         GoRoute(
           path: 'product-register',
-          builder: (context, state) => ProductRegistrationScreen(),
+          builder: (context, state) => MultiProvider(
+            providers: [
+              ChangeNotifierProvider(create: (_) => provideCommunityProductTabViewModel()),
+              ChangeNotifierProvider(create: (_) => provideSearchScreenViewModel()),
+            ],
+            child: const ProductRegistrationScreen(),
+          ),
         ),
       ],
     ),
+
     GoRoute(
       path: '/post/:id',
       builder: (context, state) {
