@@ -6,6 +6,7 @@ import 'package:look_talk/model/repository/post_repository.dart';
 import 'package:look_talk/model/repository/seller_signup_repository.dart';
 import 'package:look_talk/view_model/auth/buyer_signup_view_model.dart';
 import 'package:look_talk/view_model/auth/seller_signup_view_model.dart';
+import 'package:look_talk/view_model/community/community_product_tab_view_model.dart';
 import 'package:look_talk/view_model/community/post_create_view_model.dart';
 import 'package:look_talk/view_model/community/post_detail_view_model.dart';
 import 'package:look_talk/view_model/search_view_model.dart';
@@ -42,3 +43,4 @@ RecommendPostListViewModel provideRecommendPostListViewModel() => RecommendPostL
 MyPostListViewModel provideMyPostListViewModel(String userId) => MyPostListViewModel(PostRepository(PostApiClient(dio)), userId);
 PostCreateViewModel providePostCreateViewModel() =>  PostCreateViewModel(PostCreateRepository(PostCreateApiClient(dio)));
 PostDetailViewModel providerPostDetailViewModel(String postId) => PostDetailViewModel(PostRepository(PostApiClient(dio)), postId);
+CommunityProductTabViewModel provideCommunityProductTabViewModel() => CommunityProductTabViewModel();

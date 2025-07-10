@@ -85,4 +85,6 @@ class PostDetailViewModel with ChangeNotifier {
       print('댓글 작성 실패: ${result.message}');
     }
   }
+
+
 }

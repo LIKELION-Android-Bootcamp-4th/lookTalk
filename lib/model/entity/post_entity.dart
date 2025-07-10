@@ -64,7 +64,7 @@ class Post {
       productId: null, // TODO : 수정
       createAt: response.createdAt,
       isLiked: response.isLiked,
-      user: response.user
+      user: response.user ?? PostUserResponse.empty()
     );
   }
 

@@ -14,10 +14,13 @@ class CommentResponse {
   });
 
   factory CommentResponse.fromJson(Map<String, dynamic> json) {
+    final user = json['userId'] as Map<String, dynamic>;
+    final profile = user['profile'] as Map<String, dynamic>?;
+
     return CommentResponse(
       id: json['id'] as String,
-      nickname: json['nickname'] as String,
-      profileImageUrl: json['profileImageUrl'] as String?,
+      nickname: user['nickname'] as String,
+      profileImageUrl: profile?['profileImageUrl'] as String?,
       content: json['content'] as String,
       createdAt: DateTime.parse(json['createdAt']),
     );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ProductTabViewModel extends ChangeNotifier {
+class CommunityProductTabViewModel extends ChangeNotifier {
   int _currentTabIndex = 0;
   int get currentTabIndex => _currentTabIndex;
 

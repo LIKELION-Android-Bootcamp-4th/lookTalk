@@ -14,7 +14,9 @@ class PostItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasProfileImage = post.user.profileImageUrl?.isNotEmpty == true;
+    final user = post.user;
+    final hasUser = user != null;
+    final hasProfileImage = post.user?.profileImageUrl?.isNotEmpty == true;
     return GestureDetector(
       onTap: () {
         print('/post/${post.id}');
@@ -37,14 +39,14 @@ class PostItem extends StatelessWidget {
                       CircleAvatar(
                         radius: 12,
                         backgroundImage: hasProfileImage
-                            ? NetworkImage(post.user.profileImageUrl!)
+                            ? NetworkImage(user!.profileImageUrl!)
                             : const AssetImage('assets/images/profile.png') as ImageProvider,
                       ),
                       SizedBox(width: 8),
                       SizedBox(
                         width: 200.0,
                         child: Text(
-                          post.user.nickName,
+                            hasUser ? user!.nickName : '알 수 없음',
                           style: TextStyle(fontWeight: FontWeight.bold),
                           softWrap: false,
                           overflow: hasProfileImage ? TextOverflow.visible : TextOverflow.ellipsis,
