@@ -16,6 +16,7 @@ class DioClient {
             headers: {
               'Content-Type': 'application/json',
               'X-Company-Code': '6866fcea5b230f5dc709bdeb',
+              'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODZkZjI0ODlkNjI4ODdmNGIxYWZhMDAiLCJjb21wYW55SWQiOiI2ODY2ZmNlYTViMjMwZjVkYzcwOWJkZWIiLCJpc0FkbWluIjpmYWxzZSwiaXNTdXBlckFkbWluIjpmYWxzZSwiaWF0IjoxNzUyMTYyNzU4LCJleHAiOjE3NTIyNDkxNTh9.1VvrM3m4vSZv8IM3u7mDhGUCDvRKHOxPVosMGiNOR_4',
             },
           ),
         )

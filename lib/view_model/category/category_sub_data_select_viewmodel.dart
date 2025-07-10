@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+// api 연동하면서 필요 없어 사용 안함.
 class CategorySubDataSelectViewModel with ChangeNotifier {
   String _selectedMainCategory = '';
   String _selectedSubCategory = '';
