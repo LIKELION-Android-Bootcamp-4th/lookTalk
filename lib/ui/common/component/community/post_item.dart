@@ -36,11 +36,6 @@ class PostItem extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 12,
-                        // backgroundImage: NetworkImage(
-                        //   post.user.profileImageUrl?.isNotEmpty == true
-                        //       ? post.user.profileImageUrl!
-                        //       : 'https://via.placeholder.com/150',
-                        // ),
                         backgroundImage: hasProfileImage
                             ? NetworkImage(post.user.profileImageUrl!)
                             : const AssetImage('assets/images/profile.png') as ImageProvider,

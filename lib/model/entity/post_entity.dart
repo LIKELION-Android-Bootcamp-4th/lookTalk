@@ -24,7 +24,6 @@ class Post {
   final int commentCount;
   final DateTime createAt;
   final bool isLiked;
-  final PostImageUrls? images;
   final PostUserResponse user;
 
 
@@ -38,7 +37,6 @@ class Post {
     required this.commentCount,
     required this.createAt,
     required this.isLiked,
-    this.images,
     required this.user,
   });
 
@@ -66,7 +64,6 @@ class Post {
       productId: null, // TODO : 수정
       createAt: response.createdAt,
       isLiked: response.isLiked,
-
       user: response.user
     );
   }
@@ -81,7 +78,6 @@ class Post {
     int? commentCount,
     DateTime? createAt,
     bool? isLiked,
-
     PostUserResponse? user,
   }) {
     return Post(
