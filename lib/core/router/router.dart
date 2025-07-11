@@ -9,6 +9,7 @@ import 'package:look_talk/ui/main/community/community_entry_point.dart';
 import 'package:look_talk/ui/main/community/post_create_screen.dart';
 import 'package:look_talk/ui/main/community/post_detail_screen.dart';
 import 'package:look_talk/ui/main/home/home_screen.dart';
+import 'package:look_talk/ui/main/mypage/mypage_customer/alter_member.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/mypage_screen.dart';
 //import 'package:look_talk/ui/main/mypage/mypage_product/mypage_screen_seller.dart';
 
@@ -169,6 +170,13 @@ final GoRouter router = GoRouter(
           path: '/mypage',
           builder: (context, state) => const MyPageScreenCustomer(),
         ),
+
+        GoRoute(path: '/alterMember',
+        builder: (context,state) {
+          return ChangeNotifierProvider(create: (_) =>
+              provideAlterMemberViewmodel(),
+            child: AlterMember(), );
+        }),
         GoRoute(
           path: '/notice',
           builder: (context, state) => const NoticeScreen(),

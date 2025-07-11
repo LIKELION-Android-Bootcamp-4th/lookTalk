@@ -33,7 +33,7 @@ class DioClient {
               if (!isExcluded) {
                 final accessToken = await _tokenStorage.getAccessToken();
                 if (accessToken != null) {
-                  options.headers['Authorization'] = 'Bearer $accessToken';
+                  options.headers['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODcxM2ZlZDU1NThmNjRiNzI0Yjg5YzQiLCJjb21wYW55SWQiOiI2ODY2ZmNlYTViMjMwZjVkYzcwOWJkZWIiLCJpc0FkbWluIjpmYWxzZSwiaXNTdXBlckFkbWluIjpmYWxzZSwiaWF0IjoxNzUyMjU4MDQ3LCJleHAiOjE3NTIzNDQ0NDd9.4kTj5EehImWv5qHiX12_dbNPl7OS3sh8uA7PRGroEtk';
                 }
               }
 

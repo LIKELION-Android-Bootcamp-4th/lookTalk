@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/core/theme/app_theme.dart';
@@ -8,6 +10,8 @@ import 'package:look_talk/ui/common/component/app_bar/app_bar_search_cart.dart';
 import 'package:look_talk/ui/common/component/common_text_field.dart';
 import 'package:look_talk/ui/common/const/colors.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
+import 'package:look_talk/view_model/mypage_view_model/alter_member_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 class AlterMember extends StatefulWidget {
 @override
@@ -20,10 +24,18 @@ class AlterMemberState extends State<AlterMember> {
 
   String? profileImagePath;
   ImagePicker picker = ImagePicker();
+  late TextEditingController _nicknameController;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _nicknameController = TextEditingController();
+  }
   @override
   Widget build(BuildContext context) {
     final thema = AppTheme.light();
-
+    final viewModel = context.watch<AlterMemberViewmodel>();
+    final member = viewModel.alterMember?.member;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(onPressed: (){
@@ -36,7 +48,12 @@ class AlterMemberState extends State<AlterMember> {
         centerTitle: true,
         actions: [
           TextButton(
-              onPressed: (){},
+              onPressed: (){
+
+                final nickName = _nicknameController.text.trim();
+                viewModel.updateMemberFetch(nickName,profileImagePath ?? '');
+                context.push('/home');
+              },
               child:
               Text("완료",
                 style: context.bodyBold,
@@ -48,20 +65,7 @@ class AlterMemberState extends State<AlterMember> {
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Align(
-            alignment: Alignment.center,
-            child:
-            CircleAvatar(
-              radius: 60,
-              backgroundColor: Colors.grey[400],
-              backgroundImage: profileImagePath != null && profileImagePath!.isNotEmpty
-                  ? FileImage(File(profileImagePath!))
-                  : null,
-              child: profileImagePath != null && profileImagePath!.isNotEmpty 
-                  ? null 
-                  : Icon(Icons.person , size:  60, color: AppColors.white,)
-            ),
-          ),
+          _buildProfileImage(context),
           gap16,
           Align(
             child:
@@ -99,7 +103,7 @@ class AlterMemberState extends State<AlterMember> {
           Padding(
             padding: EdgeInsets.only(left: 12),
             child: Text(
-              "abc@naver.com",
+              member?.email ?? '',
               style: context.bodyBold,
             ),
           ),
@@ -107,7 +111,18 @@ class AlterMemberState extends State<AlterMember> {
           Text("닉네임",
             style: context.bodyBold,),
           gap8,
-          _buildNicknameField(),
+          CommonTextField(hintText: member?.nickName?.isNotEmpty == true
+              ? member?.nickName
+              : '닉네임을 입력하세요.',
+          controller: _nicknameController),
+          ElevatedButton(onPressed: () {
+            final nickname = _nicknameController.text.trim();
+            if (nickname.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('닉네임을 입력해주세요.')));
+              return;
+            }
+            viewModel.checkNickname(nickname);
+          }, child: Text('중복체크'))
 
 
         ],
@@ -157,10 +172,27 @@ class AlterMemberState extends State<AlterMember> {
       print("$e");
     }
   }
-}
 
+  Widget _buildProfileImage(BuildContext context) {
+    final viewModel = context.watch<AlterMemberViewmodel>();
+    final savedImagePath = viewModel.alterMember?.member.profileImage;
 
+    final imagePathToUse = profileImagePath?.isNotEmpty == true
+        ? profileImagePath
+        : (savedImagePath?.isNotEmpty == true ? savedImagePath : null);
 
-Widget _buildNicknameField() {
-  return CommonTextField(hintText: '닉네임을 입력하세요.',);
+    return Align(
+      alignment: Alignment.center,
+      child: CircleAvatar(
+        radius: 60,
+        backgroundColor: Colors.grey[400],
+        backgroundImage: imagePathToUse != null
+            ? FileImage(File(imagePathToUse))
+            : null,
+        child: imagePathToUse == null
+            ? Icon(Icons.person, size: 60, color: AppColors.white)
+            : null,
+      ),
+    );
+  }
 }
