@@ -4,6 +4,7 @@ import 'package:look_talk/model/repository/search_repository.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
 import 'package:look_talk/view_model/search_view_model.dart';
 import 'package:provider/provider.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -21,6 +22,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    timeago.setLocaleMessages('ko', timeago.KoMessages());
+
+
     return DefaultTabController(
         length: 2,
         child: Scaffold(
@@ -70,6 +74,18 @@ class _SearchScreenState extends State<SearchScreen> {
               Expanded(
                 child: Consumer<SearchViewModel>(
                   builder: (context, viewModel, _) {
+                    final question = viewModel.questionCommunities.isNotEmpty
+                        ? viewModel.questionCommunities.first
+                        : null;
+                    final recommend = viewModel.recommendCommunities.isNotEmpty
+                    ? viewModel.recommendCommunities.first
+                        : null;
+
+
+
+                    final questionImageUrl = question?.images;
+                    final isValidImage = questionImageUrl != null && questionImageUrl.isNotEmpty;
+
                     return TabBarView(
                       children: [
                         viewModel.products.isEmpty
@@ -135,41 +151,46 @@ class _SearchScreenState extends State<SearchScreen> {
                             );
                           },
                         ),
+
                         viewModel.communities.isEmpty
                             ? Center(child: Text("찾으시는 커뮤니티 글이 없습니다."))
-                            : ListView.builder(
-                          padding: EdgeInsets.all(8),
-                          itemCount: viewModel.communities.length,
-                          itemBuilder: (context, index) {
-                            final community = viewModel.communities[index];
-                            return Container(
-                              padding: EdgeInsets.all(12),
-                              margin: EdgeInsets.only(bottom: 8),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(community.title, style: TextStyle(fontWeight: FontWeight.bold)),
-                                  SizedBox(height: 8),
-                                  Row(
-                                    children: [
-                                      Icon(Icons.visibility, size: 16),
-                                      SizedBox(width: 4),
+                            : Expanded(
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
 
-                                      SizedBox(width: 16),
-                                      Icon(Icons.favorite, size: 16),
-                                      SizedBox(width: 4),
+                                    Text('코디 질문',style: context.h1,),
+                                    Icon(Icons.chevron_right)
+                                  ],
+                                ),
+                                if(question != null)...{
+                                  communityCard(
+                                      title: question.title,
+                                      timeAgo: timeago.format(DateTime.parse(question.createdAt),locale: 'ko'),
+                                    thumbnailUrl: question.images
+                                  )
+                                },
 
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+
+                                    Text('코디 추천',style: context.h1,),
+                                    Icon(Icons.chevron_right)
+                                  ],
+                                ),
+                                if(recommend != null)...{
+                                  communityCard(
+                                      title: recommend.title,
+                                      timeAgo: timeago.format(DateTime.parse(recommend.createdAt),locale: 'ko'),
+                                      thumbnailUrl: recommend.images
+                                  )
+                                },
+
+                              ],
+                            ))
                       ],
                     );
                   },
@@ -179,5 +200,81 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
       );
+  }
+
+  Widget communityCard({
+    String nickname = "kim",
+    required String title,
+    required String timeAgo,
+    String? thumbnailUrl,
+    int likes = 0,
+    int comments = 0
+}) {
+    return Padding(padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
+    child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children : [
+            CircleAvatar(
+              radius: 30,
+              backgroundColor: Colors.lightBlueAccent,
+            ),
+            gapW8,
+            Text(nickname, style: context.bodyBold,),
+          ]
+            ),
+            gap8,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+             children: [
+               Text(title,
+                 style: context.bodyBold,
+               maxLines: 1,
+               overflow: TextOverflow.ellipsis,),
+               if (thumbnailUrl?.isNotEmpty == true)
+                 Image.network(
+                   thumbnailUrl!,
+                   width: 100,
+                   height: 100,
+                   fit: BoxFit.cover,
+                   errorBuilder: (_, __, ___) =>
+                       Icon(Icons.image, size: 60, color: Colors.grey),
+                 ),
+
+             ],
+            ),
+            gap16,
+            Row(
+              children: [
+                gapW8,
+                Icon(Icons.favorite_border),
+                gapW8,
+                Text("${likes}",style: context.caption, ),
+                gapW8,
+                Icon(Icons.mode_comment_outlined),
+                gapW8,
+                Text('${comments}', style: context.caption,),
+
+                Spacer(),
+                Padding(padding: EdgeInsets.only(right: 12),
+                    child:
+                    Text(timeAgo),
+                )
+
+
+
+              ],
+            ),
+          ],
+        ),
+        )
+      ],
+    ),
+    );
   }
 }
