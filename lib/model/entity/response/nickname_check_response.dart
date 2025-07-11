@@ -1,6 +1,6 @@
 class NicknameCheckResponse {
   final bool available;
-  final String nickname;
+  final String? nickname;
   final String message;
 
   NicknameCheckResponse({
@@ -12,7 +12,7 @@ class NicknameCheckResponse {
   factory NicknameCheckResponse.fromJson(Map<String, dynamic> json) {
     return NicknameCheckResponse(
       available: json['available'] as bool,
-      nickname: json['nickname'] as String,
+      nickname: json['nickname'] as String?,
       message: json['message'] as String,
     );
   }

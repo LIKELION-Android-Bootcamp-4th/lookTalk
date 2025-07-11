@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:look_talk/model/entity/category_entity.dart';
+import 'package:look_talk/model/entity/response/bring_sub_category_response.dart';
+import 'package:look_talk/model/repository/category_repository.dart';
 import 'package:look_talk/view_model/category/category_sub_data_select_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class SubCategory extends StatelessWidget {
-  final String selectedSubCategory;
-  final List<String> subCategories;
-  final Function(String) onSelect;
+  final BringSubCategoryResponse selectedSubCategory;
+  final List<BringSubCategoryResponse> subCategories;
+  final Function(BringSubCategoryResponse) onSelect;
 
   const SubCategory({
     required this.selectedSubCategory,
@@ -35,7 +37,7 @@ class SubCategory extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 53),
                     child: Text(
-                      sub,
+                      sub.name,
                       style: TextStyle(color: Colors.black),
                     ),
                   ),

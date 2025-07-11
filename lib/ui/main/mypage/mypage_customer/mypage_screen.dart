@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:look_talk/core/network/token_storage.dart';
 import 'package:look_talk/ui/common/component/app_bar/app_bar_search_cart.dart';
 import 'package:look_talk/ui/common/component/common_modal.dart';
 import 'package:look_talk/ui/common/const/colors.dart';
@@ -8,14 +9,31 @@ import 'package:look_talk/ui/main/mypage/mypage_customer/alter_member.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/manage_product/manage_product_screen.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/notice.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/recent_product.dart';
-
 import 'package:look_talk/ui/main/mypage/mypage_seller/mypage_screen_seller.dart';
 
-import 'package:look_talk/ui/main/mypage/mypage_seller/mypage_screen_product_manage.dart';
-
-
-class MyPageScreenCustomer extends StatelessWidget {
+class MyPageScreenCustomer extends StatefulWidget {
   const MyPageScreenCustomer({super.key});
+
+  @override
+  State<MyPageScreenCustomer> createState() => _MyPageScreenCustomerState();
+}
+
+class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
+  bool _hasAccessToken = false;
+  final TokenStorage _tokenStorage = TokenStorage();
+
+  @override
+  void initState() {
+    super.initState();
+    _checkAccessToken();
+  }
+
+  Future<void> _checkAccessToken() async {
+    final token = await _tokenStorage.getAccessToken();
+    setState(() {
+      _hasAccessToken = token != null && token.isNotEmpty;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,59 +84,81 @@ class MyPageScreenCustomer extends StatelessWidget {
               },
               child: _MyPageMenu(title: '최근 본 상품'),
             ),
+            if(_hasAccessToken) ...{
 
-            gap16,
-            GestureDetector(
-              onTap: ()=> {
-                Navigator.push(context, MaterialPageRoute(builder: (_)=> ManageProductScreen())),
-              },
-              child:  _MyPageMenu(title: '주문/교환/반품/취소'),
-            ),
-            gap16,
-            GestureDetector(
-              onTap: ()=> {
-                Navigator.push(context, MaterialPageRoute(builder: (_)=> NoticeScreen())),
-              },
-              child:  _MyPageMenu(title: '공지사항'),
-            ),
-            gap16,
-            // GestureDetector(
-            //   onTap: () {
-            //     showDialog(
-            //       context: context,
-            //       builder: (context) => CommonModal(
-            //         title: "로그아웃",
-            //         content: "로그아웃 하시겠습니까?",
-            //         confirmText: "로그아웃 하기",
-            //         onConfirm: () {
-            //         },
-            //       ),
-            //     );
-            //   },
-            //   child: _MyPageMenu(title: '로그아웃'),
-            // ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_)=> MyPageScreenSeller()));
-              },
-              child: _MyPageMenu(title: '로그아웃'),
-            ),
-            gap16,
-            GestureDetector(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => CommonModal(
-                    title: "회원탈퇴",
-                    content: "작성하신 모든 게시글 및 리뷰도\n 사라지게 됩니다. 정말 탈퇴\n 하시겠습니까?",
-                    confirmText: "회원탈퇴 하기",
-                    onConfirm: () {
-                    },
-                  ),
-                );
-              },
-              child: _MyPageMenu(title: '회원탈퇴'),
-            ),
+              gap16,
+              GestureDetector(
+                onTap: () =>
+                {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => ManageProductScreen())),
+                },
+                child: _MyPageMenu(title: '주문/교환/반품/취소'),
+              ),
+              gap16,
+              GestureDetector(
+                onTap: () =>
+                {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => NoticeScreen())),
+                },
+                child: _MyPageMenu(title: '공지사항'),
+              ),
+              gap16,
+              // GestureDetector(
+              //   onTap: () {
+              //     showDialog(
+              //       context: context,
+              //       builder: (context) => CommonModal(
+              //         title: "로그아웃",
+              //         content: "로그아웃 하시겠습니까?",
+              //         confirmText: "로그아웃 하기",
+              //         onConfirm: () {
+              //         },
+              //       ),
+              //     );
+              //   },
+              //   child: _MyPageMenu(title: '로그아웃'),
+              // ),
+              GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) =>
+                        CommonModal(
+                          title: "로그아웃",
+                          content: "정말 로그아웃 하시겠습니까?",
+                          confirmText: "로그아웃",
+                          onConfirm: () async{
+                            await TokenStorage().saveTokens(accessToken: '', refreshToken: '', userId: '');
+                            if(mounted){
+                              Navigator.pop(context);
+                            }setState(() {
+                              _hasAccessToken = false;
+                            });
+                          },
+                        ),
+                  );
+                },
+                child: _MyPageMenu(title: '로그아웃'),
+              ),
+              gap16,
+              GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) =>
+                        CommonModal(
+                          title: "회원탈퇴",
+                          content: "작성하신 모든 게시글 및 리뷰도\n 사라지게 됩니다. 정말 탈퇴\n 하시겠습니까?",
+                          confirmText: "회원탈퇴 하기",
+                          onConfirm: () {},
+                        ),
+                  );
+                },
+                child: _MyPageMenu(title: '회원탈퇴'),
+              ),
+            }
           ],
         ),
       ),

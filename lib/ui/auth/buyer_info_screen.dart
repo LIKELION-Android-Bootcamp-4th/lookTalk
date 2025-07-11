@@ -24,7 +24,7 @@ class BuyerInfoScreen extends StatelessWidget {
           children: [
             _buildWelcomeText(context),
             gap48,
-            Text('닉네임'),
+            _buildText(),
             gap8,
             _buildNicknameTextField(context),
             gap4,
@@ -53,6 +53,10 @@ class BuyerInfoScreen extends StatelessWidget {
       'LookTalk에\n오신 것을 환영해요!',
       style: context.h1.copyWith(fontSize: 25),
     );
+  }
+
+  Widget _buildText(){
+    return Text('닉네임');
   }
 
   Widget _buildNicknameTextField(BuildContext context) {

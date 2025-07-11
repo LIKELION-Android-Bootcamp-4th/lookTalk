@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
 import '../../model/entity/post_entity.dart';
+import '../../model/entity/request/comment_request.dart';
+import '../../model/entity/response/comment_response.dart';
 import '../../model/repository/post_repository.dart';
 
 class PostDetailViewModel with ChangeNotifier {
   final PostRepository _repository;
 
   Post? _post;
-  Post? get post => _post;
-
   bool _isLoading = false;
-  bool get isLoading => _isLoading;
-
   String? _error;
+
+  Post? get post => _post;
+  bool get isLoading => _isLoading;
   String? get errorMessage => _error;
+
+  bool _isLiked = false;
+  bool get isLiked => _isLiked;
+
+  final TextEditingController commentController = TextEditingController();
+  final List<CommentResponse> comments = [];
 
   PostDetailViewModel(this._repository, String postId){
     fetchPost(postId);
   }
-
 
   Future<void> fetchPost(String id) async {
     _isLoading = true;
@@ -39,4 +45,46 @@ class PostDetailViewModel with ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
+  Future<void> toggleLike() async {
+    if(_post == null ) return;
+
+    final postId = _post!.id;
+
+    _isLiked = !_isLiked;
+    _post = _post!.copyWith(
+      likeCount: _isLiked ? _post!.likeCount + 1 : _post!.likeCount - 1
+    );
+    notifyListeners();
+
+    try {
+      await _repository.toggleLike(postId); // 서버에 좋아요 요청
+    } catch (e) {
+      // 실패 시 롤백
+      _isLiked = !_isLiked;
+      _post = _post!.copyWith(
+        likeCount: _isLiked ? _post!.likeCount + 1 : _post!.likeCount - 1,
+      );
+      notifyListeners();
+    }
+  }
+
+  Future<void> submitComment(String postId) async {
+    final content = commentController.text.trim();
+    if (content.isEmpty) return;
+
+    final request = CommentRequest(content: content);
+    final result = await _repository.addComment(postId: postId, request: request);
+
+    if (result.success && result.data != null) {
+      comments.add(result.data!);  // 댓글 리스트에 추가
+      commentController.clear();
+      notifyListeners();
+    } else {
+      // 에러 처리 (예: 토스트)
+      print('댓글 작성 실패: ${result.message}');
+    }
+  }
+
+
 }
