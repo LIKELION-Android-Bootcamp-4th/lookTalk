@@ -61,7 +61,7 @@ class AuthViewModel with ChangeNotifier {
           if(context.canPop()){
             context.pop(); // TODO: 이전 화면으로 잘 가는지 확인
           }else{
-            context.go('/home');
+            context.go('/home'); // TODO : 이전에 있던 화면으로...!?
           }
         }
       } else {

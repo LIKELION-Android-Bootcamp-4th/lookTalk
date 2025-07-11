@@ -29,20 +29,29 @@ class PostDetailScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: const AppBarSearchCart(),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildUserInfo(context, post),
-            gap32,
-            _buildContents(context, post),
-            gap16,
-            _buildPostStats(post, viewModel, context),
-          ],
-        ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildUserInfo(context, post),
+                gap16,
+                _buildContents(context, post),
+                gap8,
+                _buildPhoto(post),
+                gap8,
+                _buildPostStats(post, viewModel, context),
+                gap4,
+              ],
+            ),
+          ),
+          _buildDivider(),
+        ],
       ),
-      bottomSheet: _buildCommentInput(),
+      bottomSheet: _buildCommentInput(viewModel),
     );
   }
 
@@ -77,16 +86,21 @@ class PostDetailScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildPhoto(Post post) {
+    final imageUrl = post.user.profileImageUrl;
 
-  Widget _buildPhoto(){
+    if (imageUrl == null || imageUrl.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     return Container(
       width: 80,
       height: 80,
       decoration: BoxDecoration(
-        // image: DecorationImage(
-        //   image: NetworkImage(post.images!.main!),
-        //   fit: BoxFit.cover,
-        // ),
+        image: DecorationImage(
+          image: NetworkImage(imageUrl),
+          fit: BoxFit.cover,
+        ),
         borderRadius: BorderRadius.circular(8),
         color: Colors.grey[300],
       ),
@@ -146,7 +160,15 @@ class PostDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCommentInput() {
+  Widget _buildDivider() {
+    return const Divider(
+      color: AppColors.iconGrey,
+      thickness: 1,
+      //height: 32,
+    );
+  }
+
+  Widget _buildCommentInput(PostDetailViewModel viewModel) {
     return SafeArea(
       child: Material(
         color: Colors.white,
@@ -161,8 +183,9 @@ class PostDetailScreen extends StatelessWidget {
             child: Row(
               children: [
                 gapW8,
-                const Expanded(
+                Expanded(
                   child: TextField(
+                    controller: viewModel.commentController,
                     decoration: InputDecoration(
                       hintText: '댓글을 입력해주세요.',
                       border: InputBorder.none,
@@ -170,7 +193,21 @@ class PostDetailScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                IconButton(onPressed: () {}, icon: const Icon(Icons.send)),
+                Consumer<PostDetailViewModel>(
+                  builder: (context, viewModel, _) {
+                    return IconButton(
+                      icon: const Icon(Icons.send),
+                      onPressed: () async {
+                        final postId = viewModel.post?.id;
+                        if(postId != null){
+                          await viewModel.submitComment(postId);
+                        }else{
+                          print('post id가 null!!! ');
+                        }
+                      },
+                    );
+                  },
+                ),
               ],
             ),
           ),

@@ -34,7 +34,7 @@ class ProductSearch {
       }
     }
     return ProductSearch(
-      id: json['_id'] ?? '',
+      id: json['id'] ?? '',
       name: json['name'] ?? '',
       description: json['description'] ?? '',
       price: json['price'] ?? 0,
@@ -50,17 +50,27 @@ class ProductSearch {
 
 class CommunitySearch {
   final String id;
+  final String category;
   final String title;
+  final String? images;
+  final String createdAt;
+
 
   CommunitySearch({
     required this.id,
     required this.title,
+    required this.category,
+    required this.images,
+    required this.createdAt,
   });
 
   factory CommunitySearch.fromJson(Map<String, dynamic> json) {
     return CommunitySearch(
-      id: json['_id'],
+      id: json['id'],
       title: json['title'],
+      category: json['category'],
+      images : json['images']?['main'] as String?,
+        createdAt : json['createdAt']
     );
   }
 }

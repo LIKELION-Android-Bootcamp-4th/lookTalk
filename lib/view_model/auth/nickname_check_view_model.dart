@@ -33,7 +33,7 @@ class NicknameCheckViewModel extends ChangeNotifier {
 
       final result = await _repository.checkNickname(request);
 
-      if (result.success && result.data != null) {
+      if (result.success) {
         _nicknameResult = result.data;
         _errorMessage = null;
       } else {

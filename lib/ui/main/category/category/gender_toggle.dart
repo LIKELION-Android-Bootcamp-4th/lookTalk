@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:look_talk/model/entity/response/gender_category_id.dart';
 
 class GenderToggle extends StatelessWidget{
-  final String selectedGender;
-  final Function(String) onSelectedButton;
+  final GenderType selectedGender;
+  final Function(GenderType) onSelectedButton;
 
   const GenderToggle({required this.selectedGender, required this.onSelectedButton});
 
@@ -11,18 +12,18 @@ class GenderToggle extends StatelessWidget{
     return Row(
       children: [
         Expanded(child: GestureDetector(
-          onTap: () => onSelectedButton('남자'),
+          onTap: () => onSelectedButton(GenderType.male),
           child: Container(
             width: 131,
             height: 29,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: selectedGender == '남자' ? Colors.lightBlueAccent : Colors.white,
+              color: selectedGender == GenderType.male ? Colors.lightBlueAccent : Colors.white,
               borderRadius: BorderRadius.circular(14),
             ),
             child: Text("남자",
               style: TextStyle(
-                color: selectedGender == '남자' ? Colors.black : Colors.grey[500],
+                color: selectedGender == GenderType.male ? Colors.black : Colors.grey[500],
               ),
             ),
 
@@ -30,19 +31,19 @@ class GenderToggle extends StatelessWidget{
         ),
         ),
         Expanded(child: GestureDetector(
-          onTap: () => onSelectedButton('여자'),
+          onTap: () => onSelectedButton(GenderType.female),
           child: Container(
             width: 131,
             height: 29,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: selectedGender == '여자' ? Colors.lightBlueAccent: Colors.white,
+              color: selectedGender == GenderType.female ? Colors.lightBlueAccent: Colors.white,
               borderRadius: BorderRadius.circular(14),
 
             ),
             child: Text("여자",
     style: TextStyle(
-    color: selectedGender == '여자' ? Colors.black : Colors.grey[500],
+    color: selectedGender == GenderType.female ? Colors.black : Colors.grey[500],
     ),),
           ),
         ))

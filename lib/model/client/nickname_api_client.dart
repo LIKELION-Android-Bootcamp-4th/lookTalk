@@ -16,7 +16,12 @@ class NicknameApiClient {
   ) async {
     final response = await _dio.get(
       AuthEndpoints.nicknameCheck,
-      queryParameters: request.toQuery()
+      queryParameters: request.toQuery(),
+      options: Options(
+        validateStatus: (status){
+          return status != null && status >= 200 && status < 500;
+        }
+      )
     );
 
     return ApiResult.fromResponse(response, (json) => NicknameCheckResponse.fromJson(json as Map<String, dynamic>));

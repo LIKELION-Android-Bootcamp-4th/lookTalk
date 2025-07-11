@@ -8,7 +8,7 @@ class PostResponse {
   final int likeCount;
   final int commentCount;
   final DateTime createdAt;
-  final PostUserResponse user;
+  final PostUserResponse? user;
   final PostImageUrls? images;
   final bool isLiked;
 
@@ -36,7 +36,7 @@ class PostResponse {
       likeCount: json['likeCount'] ?? 0,
       commentCount: json['commentCount'] ?? 0,
       createdAt: DateTime.parse(json['createdAt']),
-      user: PostUserResponse.fromJson(json['user']),
+      user: json['user'] != null ? PostUserResponse.fromJson(json['user']) : null,
       images: json['images'] != null ? PostImageUrls.fromJson(json['images']) : null,
       isLiked: json['isLiked'] ?? false
     );
