@@ -19,14 +19,19 @@ class _WishlistScreenState extends State<WishlistScreen> {
   @override
   void initState() {
     super.initState();
+    // [✅ 수정] 화면이 생성될 때 첫 데이터 로딩을 시작합니다.
+    // addPostFrameCallback을 사용하여 build가 완료된 후 안전하게 호출합니다.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<WishlistViewModel>().fetchWishlist();
+    });
+
+    // 스크롤 리스너는 그대로 유지합니다.
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels >
-          _scrollController.position.maxScrollExtent - 200) {
-        // [✅ 수정] ViewModel을 가져와서 로딩 중이 아닐 때만 다음 페이지를 호출하도록 변경
-        final viewModel = context.read<WishlistViewModel>();
-        if (!viewModel.isLoading) {
-          viewModel.fetchWishlist();
-        }
+      final viewModel = context.read<WishlistViewModel>();
+      if (!viewModel.isLoading &&
+          _scrollController.position.pixels >
+              _scrollController.position.maxScrollExtent - 200) {
+        viewModel.fetchWishlist();
       }
     });
   }

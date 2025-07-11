@@ -124,7 +124,10 @@ final GoRouter router = GoRouter(
       },
       routes: [
         GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
-        GoRoute(path: '/category', builder: (context, state) => CategoryScreen()),
+        GoRoute(
+          path: '/category',
+          builder: (context, state) => CategoryScreen(),
+        ),
         GoRoute(
           path: '/community',
           builder: (context, state) => const CommunityEntryPoint(),
@@ -132,8 +135,8 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '/wishlist',
           builder: (context, state) {
-            // [✅ 수정] WishlistScreen에 직접 ViewModel을 제공하여 Provider 문제를 해결합니다.
             return ChangeNotifierProvider(
+              // [✅ 수정] ..init() 호출 부분을 제거합니다.
               create: (_) => provideWishlistViewModel(),
               child: const WishlistScreen(),
             );

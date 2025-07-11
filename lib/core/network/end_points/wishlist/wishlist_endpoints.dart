@@ -1,3 +1,6 @@
+
+
+
 class WishlistEndpoints {
   // 찜 목록 가져오기 (GET)
   static const String getWishlist = '/api/wishlist';

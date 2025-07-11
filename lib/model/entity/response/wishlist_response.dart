@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'dart:convert';
-import 'pagination_entity.dart'; // [✅ 수정]
-import 'discount_dto.dart';      // [✅ 수정]
-
+import 'pagination_entity.dart';
+import 'discount_dto.dart';
 
 /// 찜 목록 API 응답 전체 모델
 class WishlistResponse {
