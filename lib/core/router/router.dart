@@ -1,14 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:look_talk/model/client/auth_api_client.dart';
 import 'package:look_talk/model/entity/response/bring_sub_category_response.dart';
 import 'package:look_talk/ui/cart/cart_screen.dart';
-import 'package:look_talk/ui/common/component/common_loading.dart';
 import 'package:look_talk/ui/main/bottom_nav_screen.dart';
 import 'package:look_talk/ui/main/category/category/category_screen.dart';
 import 'package:look_talk/ui/main/category/categorydetail/category_detail_screen.dart';
 import 'package:look_talk/ui/main/community/community_entry_point.dart';
-import 'package:look_talk/ui/main/community/community_screen.dart';
 import 'package:look_talk/ui/main/community/post_create_screen.dart';
 import 'package:look_talk/ui/main/community/post_detail_screen.dart';
 import 'package:look_talk/ui/main/home/home_screen.dart';
@@ -17,22 +14,17 @@ import 'package:look_talk/ui/main/mypage/mypage_customer/mypage_screen.dart';
 
 import 'package:look_talk/ui/main/wishlist/wishlist_screen.dart';
 import 'package:look_talk/ui/search/search_screen.dart';
-import 'package:look_talk/view_model/auth/auth_view_model.dart';
-import 'package:look_talk/view_model/auth/nickname_check_view_model.dart';
-import 'package:look_talk/view_model/cart/cart_view_model.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/post_dummy.dart';
+import '../../ui/auth/buyer_info_screen.dart';
 import '../../ui/auth/login_screen.dart';
 import '../../ui/auth/seller_info_screen.dart';
 import '../../ui/auth/signup_choice_screen.dart';
-import '../../ui/auth/buyer_info_screen.dart';
 import '../../ui/main/community/communication_product_registration/product_registration_screen.dart';
 import '../../ui/main/mypage/mypage_customer/notice.dart';
 import '../../ui/main/mypage/mypage_seller/manage_product_seller_screen.dart';
 import '../../ui/main/mypage/mypage_seller/mypage_screen_product_manage.dart';
 import '../../view_model/viewmodel_provider.dart';
-import '../network/token_storage.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/home',
@@ -160,57 +152,9 @@ final GoRouter router = GoRouter(
             );
           },
         ),
-        // GoRoute(
-        //   path: '/community',
-        //   builder: (context, state) {
-        //     print('라우트!!!!!!!!!!!!! 커뮤니티 라우트임!!! ');
-        //     return FutureBuilder<String?>(
-        //       future: TokenStorage().getUserId(),
-        //       builder: (context, snapshot) {
-        //         print("snapshot.connectionState: ${snapshot.connectionState}");
-        //         print("snapshot.hasData: ${snapshot.hasData}");
-        //         print("snapshot.data: ${snapshot.data}");
-        //
-        //         if (!snapshot.hasData) {return const Center(child: CommonLoading());}
-        //
-        //         final userId = snapshot.data!;
-        //
-        //         return MultiProvider(
-        //           providers: [
-        //             ChangeNotifierProvider(create: (_) => provideQuestionPostListViewModel()..fetchPosts(reset: true)),
-        //             ChangeNotifierProvider(create: (_) => provideRecommendPostListViewModel()..fetchPosts(reset: true)),
-        //             ChangeNotifierProvider(create: (_) => provideMyPostListViewModel(userId)..init()),
-        //             ChangeNotifierProvider(create: (_) => provideCommunityTabViewModel()),
-        //           ],
-        //           child: const CommunityScreen(),
-        //         );
-        //       },
-        //     );
-        //   },
-        // ),
         GoRoute(
           path: '/community',
-          builder: (context, state) {
-            print('라우트!!!!!!!!!!!!! 커뮤니티 라우트임!!!');
-            return MultiProvider(
-              providers: [
-                ChangeNotifierProvider(
-                  create: (_) => provideQuestionPostListViewModel()..fetchPosts(reset: true),
-                ),
-                ChangeNotifierProvider(
-                  create: (_) => provideRecommendPostListViewModel()..fetchPosts(reset: true),
-                ),
-                ChangeNotifierProvider(
-                  create: (_) => provideCommunityTabViewModel(),
-                ),
-                // 👇 MyPostListViewModel 주입은 잠시 생략
-                // ChangeNotifierProvider(
-                //   create: (_) => provideMyPostListViewModel(userId)..init(),
-                // ),
-              ],
-              child: const CommunityScreen(),
-            );
-          },
+          builder: (context, state) => const CommunityEntryPoint()
         ),
 
         GoRoute(
