@@ -1,4 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:look_talk/core/network/dio_client.dart';
+import 'package:look_talk/core/network/end_points/mypage.dart';
 import 'package:look_talk/core/network/token_storage.dart';
 import 'package:look_talk/ui/common/component/app_bar/app_bar_search_cart.dart';
 import 'package:look_talk/ui/common/component/common_modal.dart';
@@ -37,6 +40,7 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
 
   @override
   Widget build(BuildContext context) {
+    final dio = DioClient.instance;
     return Scaffold(
       appBar: AppBarSearchCart(title: "마이페이지",),
       body: SingleChildScrollView(
@@ -143,21 +147,29 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
                 child: _MyPageMenu(title: '로그아웃'),
               ),
               gap16,
-              GestureDetector(
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) =>
-                        CommonModal(
-                          title: "회원탈퇴",
-                          content: "작성하신 모든 게시글 및 리뷰도\n 사라지게 됩니다. 정말 탈퇴\n 하시겠습니까?",
-                          confirmText: "회원탈퇴 하기",
-                          onConfirm: () {},
-                        ),
-                  );
-                },
-                child: _MyPageMenu(title: '회원탈퇴'),
-              ),
+            GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => CommonModal(
+                    title: "회원탈퇴",
+                    content: "작성하신 모든 게시글 및 리뷰도\n 사라지게 됩니다. 정말 탈퇴\n 하시겠습니까?",
+                    confirmText: "회원탈퇴",
+                    onConfirm: () async{
+                      try {
+                        await dio.delete(
+                          MyPage.deleteRegister
+                        );
+                      }catch(e){
+                        print("회원탈퇴 에러 발생$e");
+                      }
+
+                    },
+                  ),
+                );
+              },
+              child: _MyPageMenu(title: '회원탈퇴'),
+            ),
             }
           ],
         ),
