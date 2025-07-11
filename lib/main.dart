@@ -9,13 +9,13 @@ import 'package:provider/provider.dart';
 
 import 'core/app.dart';
 import 'ui/main/home/home_screen.dart';
+
 // [✅ viewmodel_provider.dart 임포트 추가]
 import 'view_model/viewmodel_provider.dart';
 
 // 기존 Provider import들
 import 'view_model/community/community_tab_view_model.dart';
 import 'model/repository/post_repository.dart';
-
 
 void main() {
   runApp(
@@ -26,9 +26,9 @@ void main() {
 
         // [✅ CartViewModel Provider를 함수 호출로 변경]
         ChangeNotifierProvider(create: (_) => provideCartViewModel()),
-        ChangeNotifierProvider(
-          create: (_) => NoticeViewModel(),
-        ),
+        ChangeNotifierProvider(create: (_) => NoticeViewModel()),
+        // [✅ 추가] WishlistViewModel을 앱 전역에서 사용하도록 등록
+        ChangeNotifierProvider(create: (_) => provideWishlistViewModel()),
       ],
       child: const MyApp(),
     ),

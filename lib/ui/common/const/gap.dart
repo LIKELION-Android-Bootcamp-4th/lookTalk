@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 
 // 높이 간격
+const gap2 = SizedBox(height: 2);
 const gap4 = SizedBox(height: 4);
 const gap8 = SizedBox(height: 8);
 const gap12 = SizedBox(height: 12);

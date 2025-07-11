@@ -30,6 +30,9 @@ import 'community/my_post_list_view_model.dart';
 import 'community/question_post_list_view_model.dart';
 import 'community/recommend_post_list_view_model.dart';
 import 'order/order_view_model.dart';
+import 'package:look_talk/model/client/wishlist_api_client.dart';
+import 'package:look_talk/model/repository/wishlist_repository.dart';
+import 'wishlist/wishlist_view_model.dart';
 
 final dio = DioClient.instance;
 
@@ -41,9 +44,11 @@ SellerSignupViewmodel provideSellerSignupViewModel() => SellerSignupViewmodel(Se
 
 SearchViewModel provideSearchScreenViewModel() => SearchViewModel(repository: SearchRepository(dio));
 CartViewModel provideCartViewModel() => CartViewModel(CartRepository(CartApiClient(dio)));
-
-// [✅ 추가] OrderViewModel을 생성하는 함수를 추가합니다.
 OrderViewModel provideOrderViewModel() => OrderViewModel(OrderRepository(OrderApiClient(DioClient())));
+WishlistViewModel provideWishlistViewModel() => WishlistViewModel(WishlistRepository(WishlistApiClient(dio)));
+
+
+
 // 커뮤니티
 CommunityTabViewModel provideCommunityTabViewModel() => CommunityTabViewModel();
 QuestionPostListViewModel provideQuestionPostListViewModel() => QuestionPostListViewModel(PostRepository(PostApiClient(dio)));
