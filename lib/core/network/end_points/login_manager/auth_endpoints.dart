@@ -2,7 +2,7 @@ class AuthEndpoints {
 
   static const String socialLogin = '/api/auth/sns-login'; // 소셜 로그인
 
-  static const String sellerSignUp = '/api/auth/register/seller'; // TODO: 판매자 회원가입 api 확인
+  static const String sellerSignUp = '/api/auth/change-seller'; // 판매자 회원가입
 
   static const String buyerSignUp = '/api/mypage/profile'; // 구매자 회원가입
 

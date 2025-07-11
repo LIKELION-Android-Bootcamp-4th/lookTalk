@@ -59,6 +59,9 @@ dependencies:
 
   google_sign_in: ^7.1.0
   flutter_native_splash: ^2.4.6
+  intl: ^0.20.2
+
+  timeago: ^3.7.1
 
 
 dev_dependencies:

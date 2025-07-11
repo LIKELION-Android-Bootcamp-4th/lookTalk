@@ -15,6 +15,11 @@ class TokenStorage {
     await _storage.write(key: _accessTokenKey, value: accessToken);
     await _storage.write(key: _refreshTokenKey, value: refreshToken);
     await _storage.write(key: _userId, value: userId);
+
+    print('TokenStorage 저장 완료');
+    print('→ accessToken: $accessToken');
+    print('→ refreshToken: $refreshToken');
+    print('→ userId: $userId');
   }
 
   Future<String?> getAccessToken() async {
@@ -35,4 +40,10 @@ class TokenStorage {
   Future<void> deleteTokens() async {
     await _storage.deleteAll();
   }
+
+  Future<bool> hasToken() async {
+    final token = await getAccessToken();
+    return token != null && token.isNotEmpty;
+  }
+
 }

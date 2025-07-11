@@ -23,7 +23,7 @@ class NicknameCheckViewModel extends ChangeNotifier {
 
   void checkNickname(String nickname) {
     _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 1000), () async {
+    _debounce = Timer(const Duration(milliseconds: 700), () async {
       _isLoading = true;
       _nicknameResult = null;
       _errorMessage = null;
@@ -33,7 +33,7 @@ class NicknameCheckViewModel extends ChangeNotifier {
 
       final result = await _repository.checkNickname(request);
 
-      if (result.success && result.data != null) {
+      if (result.success) {
         _nicknameResult = result.data;
         _errorMessage = null;
       } else {
