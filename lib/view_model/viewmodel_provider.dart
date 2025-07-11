@@ -2,6 +2,7 @@ import 'package:look_talk/model/client/buyer_signup_api_client.dart';
 import 'package:look_talk/model/client/post_create_api_client.dart';
 import 'package:look_talk/model/entity/response/bring_sub_category_response.dart';
 import 'package:look_talk/model/client/seller_signup_api_client.dart';
+import 'package:look_talk/model/repository/alter_member_repository.dart';
 import 'package:look_talk/model/repository/buyer_signup_repository.dart';
 import 'package:look_talk/model/repository/category_detail_repository.dart';
 import 'package:look_talk/model/repository/category_repository.dart';
@@ -14,6 +15,7 @@ import 'package:look_talk/view_model/auth/seller_signup_view_model.dart';
 import 'package:look_talk/view_model/community/community_product_tab_view_model.dart';
 import 'package:look_talk/view_model/community/post_create_view_model.dart';
 import 'package:look_talk/view_model/community/post_detail_view_model.dart';
+import 'package:look_talk/view_model/mypage_view_model/alter_member_viewmodel.dart';
 import 'package:look_talk/view_model/search_view_model.dart';
 
 import '../core/network/dio_client.dart';
@@ -70,3 +72,6 @@ MyPostListViewModel provideMyPostListViewModel(String userId) => MyPostListViewM
 PostCreateViewModel providePostCreateViewModel() =>  PostCreateViewModel(PostCreateRepository(PostCreateApiClient(dio)));
 PostDetailViewModel providerPostDetailViewModel(String postId) => PostDetailViewModel(PostRepository(PostApiClient(dio)), postId);
 CommunityProductTabViewModel provideCommunityProductTabViewModel() => CommunityProductTabViewModel();
+
+//마이페이지
+AlterMemberViewmodel provideAlterMemberViewmodel() => AlterMemberViewmodel(repository: AlterMemberRepository(dio));
