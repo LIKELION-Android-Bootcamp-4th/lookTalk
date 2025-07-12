@@ -1,4 +1,7 @@
+import 'package:look_talk/model/entity/response/comment_response.dart';
 import 'package:look_talk/model/entity/response/post_user_response.dart';
+
+import '../comment.dart';
 
 class PostResponse {
   final String id;
@@ -11,6 +14,7 @@ class PostResponse {
   final PostUserResponse? user;
   final PostImageUrls? images;
   final bool isLiked;
+  final List<Comment> comments;
 
   PostResponse({
     required this.id,
@@ -23,6 +27,7 @@ class PostResponse {
     required this.user,
     this.images,
     required this.isLiked,
+    required this.comments,
   });
 
   factory PostResponse.fromJson(Map<String, dynamic> json) {
@@ -38,7 +43,8 @@ class PostResponse {
       createdAt: DateTime.parse(json['createdAt']),
       user: json['user'] != null ? PostUserResponse.fromJson(json['user']) : null,
       images: json['images'] != null ? PostImageUrls.fromJson(json['images']) : null,
-      isLiked: json['isLiked'] ?? false
+      isLiked: json['isLiked'],
+      comments: (json['comments'] as List<dynamic>?) ?.map((e) => Comment.fromJson(e)).toList() ?? []
     );
   }
 }
