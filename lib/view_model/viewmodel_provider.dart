@@ -43,7 +43,7 @@ final dio = DioClient.instance;
 
 // 로그인 & 회원가입
 AuthViewModel provideAuthViewModel() => AuthViewModel(AuthRepository(AuthApiClient(dio)));
-NicknameCheckViewModel provideNicknameCheckViewModel() => NicknameCheckViewModel(NicknameRepository(NicknameApiClient(dio)));
+CheckNameViewModel provideCheckNameViewModel() => CheckNameViewModel(CheckNameRepository(CheckNameApiClient(dio)));
 BuyerSignupViewModel provideBuyerSignupViewModel() => BuyerSignupViewModel(BuyerSignupRepository(BuyerSignupApiClient(dio)));
 SellerSignupViewmodel provideSellerSignupViewModel() => SellerSignupViewmodel(SellerSignupRepository(SellerSignupApiClient(dio)));
 

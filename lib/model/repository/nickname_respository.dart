@@ -3,13 +3,23 @@ import '../client/nickname_api_client.dart';
 import '../entity/request/nickname_request.dart';
 import '../entity/response/nickname_check_response.dart';
 
-// api client 를 사용해 받은 응답 반환
-class NicknameRepository {
-  final NicknameApiClient apiClient;
+// // api client 를 사용해 받은 응답 반환
+// class NicknameRepository {
+//   final NicknameApiClient apiClient;
+//
+//   NicknameRepository(this.apiClient);
+//
+//   Future<ApiResult<NicknameCheckResponse>> checkNickname(NicknameCheckRequest request,) {
+//     return apiClient.checkNicknameAvailable(request);
+//   }
+// }
 
-  NicknameRepository(this.apiClient);
+class CheckNameRepository{
+  final CheckNameApiClient apiClient;
 
-  Future<ApiResult<NicknameCheckResponse>> checkNickname(NicknameCheckRequest request,) {
-    return apiClient.checkNicknameAvailable(request);
+  CheckNameRepository(this.apiClient);
+
+  Future<ApiResult<CheckNameResponse>> check(CheckNameRequest request){
+    return apiClient.checkDuplicate(request);
   }
 }

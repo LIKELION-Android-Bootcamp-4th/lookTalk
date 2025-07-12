@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../model/entity/post_entity.dart';
 import '../../../view_model/community/post_detail_view_model.dart';
 import '../../common/component/app_bar/app_bar_search_cart.dart';
+import '../../common/component/community/comment_item.dart';
 import '../../common/const/colors.dart';
 import '../../common/const/gap.dart';
 
@@ -26,39 +27,65 @@ class PostDetailScreen extends StatelessWidget {
     if (post == null) {
       return const Scaffold(body: Center(child: Text('게시글이 존재하지 않습니다.')));
     }
-
     return Scaffold(
       appBar: const AppBarSearchCart(),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildUserInfo(context, post),
-                gap16,
-                _buildContents(context, post),
-                gap8,
-                _buildPhoto(post),
-                gap8,
-                _buildPostStats(post, viewModel, context),
-                gap4,
-              ],
-            ),
-          ),
+          gap16,
+          _buildUserInfo(context, post),
+          gap16,
+          _buildContents(context, post),
+          gap8,
+          _buildPhoto(post),
+          gap8,
+          _buildPostStats(post, viewModel, context),
+          gap8,
           _buildDivider(),
+          ..._buildCommentListItems(post),
+          gap128,
         ],
       ),
       bottomSheet: _buildCommentInput(viewModel),
     );
+
+
+    // return Scaffold(
+    //   appBar: const AppBarSearchCart(),
+    //   body: ListView(
+    //     //crossAxisAlignment: CrossAxisAlignment.start,
+    //     children: [
+    //       Padding(
+    //         padding: const EdgeInsets.symmetric(horizontal: 24.0),
+    //         child: Column(
+    //           crossAxisAlignment: CrossAxisAlignment.start,
+    //           children: [
+    //             _buildUserInfo(context, post),
+    //             gap16,
+    //             _buildContents(context, post),
+    //             gap8,
+    //             _buildPhoto(post),
+    //             gap8,
+    //             _buildPostStats(post, viewModel, context),
+    //             gap4,
+    //             _buildDivider(),
+    //             ..._buildCommentListItems(post),
+    //           ],
+    //         ),
+    //       ),
+    //       // _buildDivider(),
+    //       // Expanded(child: _buildCommentList(post)),
+    //     ],
+    //   ),
+    //   bottomSheet: _buildCommentInput(viewModel),
+    // );
+
+
   }
 
   Widget _buildUserInfo(BuildContext context, Post post) {
     final hasProfileImage = post.user.profileImageUrl?.isNotEmpty == true;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       child: Row(
         children: [
           CircleAvatar(
@@ -76,13 +103,16 @@ class PostDetailScreen extends StatelessWidget {
   }
 
   Widget _buildContents(BuildContext context, Post post) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(post.title, style: context.h1),
-        gap8,
-        Text(post.content, style: context.bodyBold),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(post.title, style: context.h1),
+          gap8,
+          Text(post.content, style: context.bodyBold),
+        ],
+      ),
     );
   }
 
@@ -93,16 +123,19 @@ class PostDetailScreen extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return Container(
-      width: 80,
-      height: 80,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: NetworkImage(imageUrl),
-          fit: BoxFit.cover,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      child: Container(
+        width: 80,
+        height: 80,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage(imageUrl),
+            fit: BoxFit.cover,
+          ),
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.grey[300],
         ),
-        borderRadius: BorderRadius.circular(8),
-        color: Colors.grey[300],
       ),
     );
   }
@@ -118,45 +151,49 @@ class PostDetailScreen extends StatelessWidget {
     }
 
     final isLiked = viewModel.isLiked;
+    print('isLiked값!!! : $isLiked');
 
-    return Row(
-      children: [
-        Expanded(
-          child: Row(
-            children: [
-              IconButton(
-                icon: Icon(
-                  isLiked ? Icons.favorite : Icons.favorite_border,
-                  color: isLiked ? Colors.red : Colors.black,
-                  size: 24,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Row(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    isLiked ? Icons.favorite : Icons.favorite_border,
+                    color: isLiked ? Colors.red : Colors.black,
+                    size: 24,
+                  ),
+                  onPressed: () {
+                    viewModel.toggleLike();
+                  },
                 ),
-                onPressed: () {
-                  viewModel.toggleLike();
-                },
-              ),
-              Text('${post.likeCount}', style: context.h1),
-              gapW24,
-              const Icon(
-                Icons.chat_bubble,
-                size: 16,
-                color: AppColors.iconGrey,
-              ),
-              gapW12,
-              Text(
-                '${post.commentCount}',
-                style: context.bodyBold.copyWith(
-                  fontSize: 15,
+                Text('${post.likeCount}', style: context.h1),
+                gapW24,
+                const Icon(
+                  Icons.chat_bubble,
+                  size: 16,
                   color: AppColors.iconGrey,
                 ),
-              ),
-            ],
+                gapW12,
+                Text(
+                  '${post.commentCount}',
+                  style: context.bodyBold.copyWith(
+                    fontSize: 15,
+                    color: AppColors.iconGrey,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        Text(
-          _formatDate(post.createAt),
-          style: context.bodyBold.copyWith(color: AppColors.iconGrey),
-        ),
-      ],
+          Text(
+            _formatDate(post.createAt),
+            style: context.bodyBold.copyWith(color: AppColors.iconGrey),
+          ),
+        ],
+      ),
     );
   }
 
@@ -167,6 +204,44 @@ class PostDetailScreen extends StatelessWidget {
       //height: 32,
     );
   }
+
+
+
+  // Widget _buildCommentList(Post post) {
+  //   final comments = post.comments;
+  //
+  //   if (comments.isEmpty) {
+  //     return const Padding(
+  //       padding: EdgeInsets.symmetric(vertical: 24.0, horizontal: 24.0),
+  //       child: Text('아직 댓글이 없습니다. 첫 댓글을 남겨보세요!'),
+  //     );
+  //   }
+  //
+  //   return ListView.builder(
+  //     padding: const EdgeInsets.symmetric(horizontal: 24.0),
+  //     itemCount: comments.length,
+  //     itemBuilder: (context, index) {
+  //       return CommentItem(comment: comments[index]);
+  //     },
+  //   );
+  // }
+
+  List<Widget> _buildCommentListItems(Post post) {
+    final comments = post.comments;
+
+    if (comments.isEmpty) {
+      return const [
+        Padding(
+          padding: EdgeInsets.all(24.0),
+          child: Text('아직 댓글이 없습니다. 첫 댓글을 남겨보세요!'),
+        ),
+      ];
+    }
+
+    return comments.map((comment) => CommentItem(comment: comment)).toList();
+  }
+
+
 
   Widget _buildCommentInput(PostDetailViewModel viewModel) {
     return SafeArea(
