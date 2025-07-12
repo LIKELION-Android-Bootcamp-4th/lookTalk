@@ -15,7 +15,6 @@ import 'package:look_talk/ui/main/community/post_detail_screen.dart';
 import 'package:look_talk/ui/main/home/home_screen.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/alter_member.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/mypage_screen.dart';
-import 'package:look_talk/ui/main/mypage/mypage_product/mypage_screen_seller.dart';
 
 import 'package:look_talk/ui/main/wishlist/wishlist_screen.dart';
 import 'package:look_talk/ui/search/search_screen.dart';
@@ -30,6 +29,7 @@ import '../../ui/main/community/communication_product_registration/product_regis
 import '../../ui/main/mypage/mypage_customer/notice.dart';
 import '../../ui/main/mypage/mypage_seller/manage_product_seller_screen.dart';
 import '../../ui/main/mypage/mypage_seller/mypage_screen_product_manage.dart';
+import '../../ui/main/mypage/mypage_seller/mypage_screen_seller.dart';
 import '../../ui/product/product_detail/product_detail_screen.dart';
 import 'package:look_talk/ui/product/inquiry/inquiry_screen.dart';
 // 뷰모델 및 프로바이더
@@ -244,6 +244,7 @@ final GoRouter router = GoRouter(
                 ? const MyPageScreenSeller()
                 : const MyPageScreenCustomer();
           },
+        ),
 
         GoRoute(path: '/alterMember',
         builder: (context,state) {
@@ -251,6 +252,7 @@ final GoRouter router = GoRouter(
               provideAlterMemberViewmodel(),
             child: AlterMember(), );
         }),
+
         GoRoute(
           path: '/notice',
           builder: (context, state) => const NoticeScreen(),
