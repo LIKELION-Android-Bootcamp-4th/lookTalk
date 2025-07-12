@@ -22,6 +22,9 @@ class DioClient {
         ..interceptors.addAll([
           InterceptorsWrapper(
             onRequest: (options, handler) async {
+
+              print('DEBUG: Request Path: ${options.path}');
+
               final excludedPaths = [
                 AuthEndpoints.socialLogin,
                 AuthEndpoints.refresh,
@@ -31,6 +34,8 @@ class DioClient {
 
               if (!isExcluded) {
                 final accessToken = await _tokenStorage.getAccessToken();
+
+                print('DEBUG: Access Token in Interceptor: $accessToken');
                 if (accessToken != null) {
                   options.headers['Authorization'] = 'Bearer $accessToken';
                 }

@@ -1,34 +1,29 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
-import '../../model/entity/response/pagination_entity.dart'; // [✅ 수정] 올바른 경로로 수정
-import '../../model/entity/response/wishlist_response.dart';
-import '../../model/repository/wishlist_repository.dart';
+import 'package:look_talk/model/entity/pagination_entity.dart';
+import 'package:look_talk/model/entity/wishlist_dto.dart';
+import 'package:look_talk/model/entity/wishlist_entity.dart';
+import 'package:look_talk/model/repository/wishlist_repository.dart';
 
 class WishlistViewModel extends ChangeNotifier {
   final WishlistRepository _repository;
 
-  WishlistViewModel(this._repository) {
-    print("--- [WishlistViewModel] C R E A T E D ---");
-  }
+  WishlistViewModel(this._repository);
 
-  // --- 상태 변수 및 Getters (이전과 동일) ---
   bool _isLoading = false;
   bool _isFirstLoad = true;
   String? _error;
+  List<WishlistItemEntity> _items = [];
   Pagination? _pagination;
-  final List<WishlistItem> _items = [];
 
   bool get isLoading => _isLoading;
   bool get isFirstLoad => _isFirstLoad;
   String? get error => _error;
-  UnmodifiableListView<WishlistItem> get items => UnmodifiableListView(_items);
+  UnmodifiableListView<WishlistItemEntity> get items => UnmodifiableListView(_items);
   bool get hasNext => _pagination?.hasNext ?? false;
 
-  // --- 함수 (이전과 동일) ---
   Future<void> fetchWishlist({bool isRefresh = false}) async {
-    print("--- [WishlistViewModel] fetchWishlist() CALLED ---");
-    if (_isLoading) return;
-    if (!hasNext && !isRefresh && !_isFirstLoad) return;
+    if (_isLoading || (!hasNext && !isRefresh && !_isFirstLoad)) return;
 
     _isLoading = true;
     if (isRefresh) {
@@ -36,22 +31,29 @@ class WishlistViewModel extends ChangeNotifier {
       _pagination = null;
       _isFirstLoad = true;
     }
-    notifyListeners(); // isFirstLoad가 아닐 때만 호출하는 것보다, 로딩 상태를 즉시 반영하기 위해 여기서 호출
+    if (_isFirstLoad || isRefresh) {
+      notifyListeners();
+    }
 
-    final nextPage = (isRefresh || _pagination == null) ? 1 : _pagination!.page + 1;
-    print('[WishlistViewModel] 찜 목록 불러오기 시작... (페이지: $nextPage)');
+    // [수정] Repository가 Exception을 던지므로 try-catch로 감싸서 오류를 처리합니다.
+    try {
+      final nextPage = (isRefresh || _pagination == null) ? 1 : _pagination!.page + 1;
+      // Repository는 이제 ApiResult 대신 WishlistResponseDto를 직접 반환합니다.
+      final responseDto = await _repository.fetchWishlist(page: nextPage);
 
-    final result = await _repository.fetchWishlist(page: nextPage);
-    print('[WishlistViewModel] API 응답 받음: success=${result.success}');
+      if (isRefresh) _items.clear();
 
-    if (result.success && result.data != null) {
-      _items.addAll(result.data!.items);
-      _pagination = result.data!.pagination;
+      final newItems = responseDto.items
+          .map((dto) => WishlistItemEntity.fromDto(dto))
+          .toList();
+
+      _items.addAll(newItems);
+      // _pagination = responseDto.pagination; // TODO: DTO에 pagination이 있다면 주석 해제
       _error = null;
-      print('[WishlistViewModel] 성공: 아이템 ${result.data!.items.length}개 추가됨. 총 아이템 수: ${_items.length}');
-    } else {
-      _error = result.message;
-      print('[WishlistViewModel] 실패: ${result.message}');
+
+    } catch (e) {
+      // Repository에서 던진 오류를 여기서 처리합니다.
+      _error = e.toString();
     }
 
     _isLoading = false;
@@ -59,30 +61,19 @@ class WishlistViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> refresh() async => await fetchWishlist(isRefresh: true);
 
-  /// 새로고침
-  Future<void> refresh() async {
-    await fetchWishlist(isRefresh: true);
-  }
-
-  /// 찜 아이템 추가
-  Future<void> addItem(String productId) async {
-    final result = await _repository.addItem(productId);
-    if (result.success) {
-      await refresh();
-    } else {
-      print('찜 추가 실패: ${result.message}');
-    }
-  }
-
-  /// 찜 아이템 삭제
   Future<void> removeItem(String productId) async {
-    final result = await _repository.removeItem(productId);
-    if (result.success) {
-      _items.removeWhere((item) => item.id == productId);
+    _items.removeWhere((item) => item.productId == productId);
+    notifyListeners();
+
+    try {
+      await _repository.removeItem(productId);
+    } catch (e) {
+      _error = e.toString();
       notifyListeners();
-    } else {
-      print('삭제 실패: ${result.message}');
+      // 실패 시 목록을 다시 불러와 동기화
+      await refresh();
     }
   }
 }

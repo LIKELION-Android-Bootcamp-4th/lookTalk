@@ -56,14 +56,15 @@ DetailListviewViewmodel provideCategoryDetailViewModel({
   required BringSubCategoryResponse mainCategory,
 }) =>
     DetailListviewViewmodel(
-      repository: CategoryDetailRepository(dio),
-      subCategories: subCategories,
-      initialSubCategory: initialSubCategory,
-      mainCategory: mainCategory
+        repository: CategoryDetailRepository(dio),
+        subCategories: subCategories,
+        initialSubCategory: initialSubCategory,
+        mainCategory: mainCategory
     );
 CartViewModel provideCartViewModel() => CartViewModel(CartRepository(CartApiClient(dio)));
-OrderViewModel provideOrderViewModel() => OrderViewModel(OrderRepository(OrderApiClient(DioClient())));
-WishlistViewModel provideWishlistViewModel() => WishlistViewModel(WishlistRepository(WishlistApiClient(dio)));
+// [✅ 수정] 다른 Provider와 일관성을 맞추기 위해 DioClient() 직접 생성 대신 공용 dio 객체를 사용합니다.
+OrderViewModel provideOrderViewModel() => OrderViewModel(OrderRepository(OrderApiClient(dio)));
+WishlistViewModel provideWishlistViewModel() => WishlistViewModel(WishlistRepository(dio));
 
 
 

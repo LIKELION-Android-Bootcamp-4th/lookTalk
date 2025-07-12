@@ -1,8 +1,7 @@
-import 'dart:convert';
-import 'pagination_entity.dart';
-import 'discount_dto.dart';
+// lib/model/entity/response/wishlist_response.dart
 
-/// 찜 목록 API 응답 전체 모델
+import 'package:look_talk/model/entity/response/pagination_entity.dart';
+
 class WishlistResponse {
   final List<WishlistItem> items;
   final Pagination pagination;
@@ -13,56 +12,52 @@ class WishlistResponse {
   });
 
   factory WishlistResponse.fromJson(Map<String, dynamic> json) {
-    final data = json['data'];
+    final data = json['data'] as Map<String, dynamic>? ?? {};
+    final paginationData = data['pagination'] as Map<String, dynamic>? ?? {};
+
     return WishlistResponse(
       items: (data['items'] as List<dynamic>? ?? [])
           .map((e) => WishlistItem.fromJson(e as Map<String, dynamic>))
           .toList(),
-      pagination: Pagination.fromJson(data['pagination'] as Map<String, dynamic>? ?? {}),
+      pagination: Pagination.fromJson(paginationData),
     );
   }
 }
 
-/// 찜 목록 개별 아이템 모델 (ProductSearch 구조 참고)
+// [수정] 서버 응답에 실제로 있는 데이터만 파싱하도록 수정
 class WishlistItem {
   final String id;
+  final String productId;
   final String name;
-  final String? thumbnailImage;
-  final String? brandName; // storeName을 brandName으로 사용
   final int price;
-  final DiscountDto? discount;
+  final String? thumbnailImageUrl;
+  // [수정] 서버에서 오지 않으므로, 임시로 기본값을 갖도록 처리
+  final String storeName;
+  final int? discountRate;
 
   WishlistItem({
     required this.id,
+    required this.productId,
     required this.name,
-    required this.thumbnailImage,
-    required this.brandName,
     required this.price,
-    this.discount,
+    this.thumbnailImageUrl,
+    // [수정] required 제거하고 기본값 할당
+    this.storeName = '상점 정보 없음',
+    this.discountRate,
   });
 
   factory WishlistItem.fromJson(Map<String, dynamic> json) {
-    DiscountDto? discount;
-    final rawDiscount = json['discount'];
-
-    if (rawDiscount != null && rawDiscount is String && rawDiscount.isNotEmpty) {
-      try {
-        discount = DiscountDto.fromjson(jsonDecode(rawDiscount));
-      } catch (e) {
-        discount = null;
-      }
-    }
+    // 상품 정보는 'entity' 객체 안에 들어있습니다.
+    final entity = json['entity'] as Map<String, dynamic>? ?? {};
 
     return WishlistItem(
-      id: json['_id'] ?? '',
-      name: json['name'] ?? '상품 정보 없음',
-      thumbnailImage: json['thumbnailImageUrl'] ??
-          (json['thumbnailImage'] is Map && json['thumbnailImage']?['url'] != null
-              ? json['thumbnailImage']['url'].toString()
-              : null),
-      brandName: json['store']?['name'], // store.name을 brandName으로 사용
-      price: json['price'] ?? 0,
-      discount: discount,
+      id: json['id'] ?? '',
+      productId: entity['id'] ?? '',
+      name: entity['name'] ?? '상품 정보 없음',
+      price: entity['price'] ?? 0,
+      thumbnailImageUrl: entity['thumbnailImageUrl'],
+      // storeName과 discountRate 파싱 로직을 제거했습니다.
+      // 어차피 데이터가 없기 때문입니다.
     );
   }
 }
