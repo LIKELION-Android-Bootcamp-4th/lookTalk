@@ -13,6 +13,7 @@ import 'package:look_talk/ui/main/mypage/mypage_customer/manage_product/manage_p
 import 'package:look_talk/ui/main/mypage/mypage_customer/notice.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/recent_product.dart';
 import 'package:look_talk/ui/main/mypage/mypage_seller/mypage_screen_seller.dart';
+import 'package:go_router/go_router.dart';
 
 class MyPageScreenCustomer extends StatefulWidget {
   const MyPageScreenCustomer({super.key});
@@ -60,8 +61,7 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
                 gapW16,
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (_)=> AlterMember()));
+                    context.push('/alterMember');
                   },
                   child: Row(
                     children: [
