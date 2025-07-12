@@ -9,7 +9,7 @@ Future<void> navigateWithAuthCheck({
   required String fallbackIfNotLoggedIn,
 }) async {
   final authViewModel = context.read<AuthViewModel>();
-  final isLoggedIn = await authViewModel.isLoggedIn();
+  final isLoggedIn = await authViewModel.isLoggedInForGuard();
 
   if (isLoggedIn) {
     context.push(destinationIfLoggedIn);

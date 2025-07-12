@@ -42,7 +42,7 @@ class _ProductEditForm extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            Text('상품 번호: ${vm.product.code}'),
+            Text('상품 번호: ${vm.product.productId}'),
             const SizedBox(height: 16),
 
             CommonTextField(

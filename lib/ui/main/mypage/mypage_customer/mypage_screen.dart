@@ -82,27 +82,27 @@ class MyPageScreenCustomer extends StatelessWidget {
               child:  _MyPageMenu(title: '공지사항'),
             ),
             gap16,
-            // GestureDetector(
-            //   onTap: () {
-            //     showDialog(
-            //       context: context,
-            //       builder: (context) => CommonModal(
-            //         title: "로그아웃",
-            //         content: "로그아웃 하시겠습니까?",
-            //         confirmText: "로그아웃 하기",
-            //         onConfirm: () {
-            //         },
-            //       ),
-            //     );
-            //   },
-            //   child: _MyPageMenu(title: '로그아웃'),
-            // ),
             GestureDetector(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_)=> MyPageScreenSeller()));
+                showDialog(
+                  context: context,
+                  builder: (context) => CommonModal(
+                    title: "로그아웃",
+                    content: "로그아웃 하시겠습니까?",
+                    confirmText: "로그아웃 하기",
+                    onConfirm: () {
+                    },
+                  ),
+                );
               },
               child: _MyPageMenu(title: '로그아웃'),
             ),
+            // GestureDetector(
+            //   onTap: () {
+            //     Navigator.push(context, MaterialPageRoute(builder: (_)=> MyPageScreenSeller()));
+            //   },
+            //   child: _MyPageMenu(title: '로그아웃'),
+            // ),
             gap16,
             GestureDetector(
               onTap: () {

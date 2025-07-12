@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:look_talk/model/entity/product_entity.dart';
-import 'package:look_talk/model/client/seller_product_api_client.dart';
-
-import '../../model/repository/product_repository.dart';
+import 'package:look_talk/model/repository/product_repository.dart';
 
 class ProductViewModel extends ChangeNotifier {
-  final ProductRepository _productRepository;
+  final ProductRepository _repository;
 
-  ProductViewModel(this._productRepository);
+  ProductViewModel(this._repository) {
+    // ViewModel이 생성될 때 자동으로 상품 목록 불러오기
+    fetchProducts();
+  }
 
   List<Product> _products = [];
   bool _isLoading = false;
@@ -20,9 +21,9 @@ class ProductViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _products = await _productRepository.getProducts(); // ✅
+      _products = await _repository.getProducts();
     } catch (e) {
-      print('상품 불러오기 실패: $e');
+      print('상품 목록 불러오기 실패: $e');
       _products = [];
     }
 

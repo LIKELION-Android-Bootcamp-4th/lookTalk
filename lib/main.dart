@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:look_talk/view_model/auth/auth_view_model.dart';
 import 'package:look_talk/view_model/mypage_view_model/notice_viewmodel.dart';
 import 'package:look_talk/view_model/viewmodel_provider.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,7 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => provideAuthViewModel()),
+        ChangeNotifierProvider<AuthViewModel>.value(value: authViewModel),
         ChangeNotifierProvider(create: (_) => provideNicknameCheckViewModel()),
 
         // [✅ CartViewModel Provider를 함수 호출로 변경]
