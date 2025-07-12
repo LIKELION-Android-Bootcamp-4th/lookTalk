@@ -104,7 +104,7 @@
           return PrimaryButton(
             text: isLoading ? '가입 중...' : '시작하기',
             borderRadius: BorderRadius.circular(10),
-            backgroundColor: isAvailable ? AppColors.secondary : Colors.grey,
+            backgroundColor: isAvailable ? AppColors.primary : Colors.grey,
             height: 60,
             onPressed: isAvailable && !isLoading
                 ? () async {

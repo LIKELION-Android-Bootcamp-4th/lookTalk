@@ -7,11 +7,15 @@ import '../../model/entity/request/seller_signup_request.dart';
 class SellerSignupViewmodel extends ChangeNotifier {
   final SellerSignupRepository _repository;
 
-  SellerSignupViewmodel(this._repository){
-    nameController.addListener(() {
-      notifyListeners();
-    });
+  SellerSignupViewmodel(this._repository) {
+    nameController.addListener(_onTextChanged);
+    descriptionController.addListener(_onTextChanged);
   }
+
+  void _onTextChanged() {
+    notifyListeners();
+  }
+
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
