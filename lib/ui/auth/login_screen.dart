@@ -188,6 +188,9 @@ class LoginScreen extends StatelessWidget {
     try {
       final GoogleSignIn signIn = GoogleSignIn.instance;
 
+      await signIn.signOut();
+      await signIn.disconnect();
+
       await signIn.initialize(
         serverClientId:
             '297394298746-334r4944egru9obvf9au90es85pvv5va.apps.googleusercontent.com',
@@ -203,6 +206,8 @@ class LoginScreen extends StatelessWidget {
 
       final GoogleSignInAuthentication authTokens = await user.authentication;
       final String? idToken = authTokens.idToken;
+
+      print(' 아이디 토큰!!!! : $idToken');
 
       if (auth == null || idToken == null) {
         _showError(context, '권한 요청 실패');

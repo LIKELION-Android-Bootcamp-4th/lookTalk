@@ -189,7 +189,7 @@ class PostDetailScreen extends StatelessWidget {
                 // TODO : 상점명, 할인율 서버에서 오는 값으로 바꾸기
                 gap4,
                 Text(
-                  '시티브리즈',
+                  post.product?.storeName ?? '상점 정보 없음',
                   style: context.body.copyWith(
                     fontSize: 12,
                     color: AppColors.textGrey,

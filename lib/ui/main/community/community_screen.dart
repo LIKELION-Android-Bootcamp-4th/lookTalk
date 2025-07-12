@@ -8,6 +8,9 @@ import 'package:look_talk/ui/main/community/community_question_tab.dart';
 import 'package:look_talk/ui/main/community/community_recommend_tab.dart';
 import 'package:provider/provider.dart';
 import '../../../view_model/community/community_tab_view_model.dart';
+import '../../../view_model/community/my_post_list_view_model.dart';
+import '../../../view_model/community/question_post_list_view_model.dart';
+import '../../../view_model/community/recommend_post_list_view_model.dart';
 import '../../common/const/colors.dart';
 
 const List<Tab> _communityTabs  = const [
@@ -86,15 +89,32 @@ class CommunityScreen extends StatelessWidget {
           //   side: BorderSide(width: 2, color: AppColors.black),
           // ),
           backgroundColor: AppColors.primary,
-          onPressed: () {
-            //context.push('/community/write');
-            //context.push('/login');
-            //context.push('/signup');
-            navigateWithAuthCheck(
+          onPressed: () async {
+            final result = await navigateWithAuthCheck(
               context: context,
               destinationIfLoggedIn: '/community/write',
               fallbackIfNotLoggedIn: '/login',
             );
+            //context.push('/community/write');
+            //context.push('/login');
+            //context.push('/signup');
+
+            // TODO : 등록하기 후 상세 조회화면에서 되돌아 왔을때 화면 작성한 게시글 잘 보이는지 확인
+            if(result == true){
+              final tabIndex = context.read<CommunityTabViewModel>().currentTabIndex;
+
+              switch(tabIndex){
+                case 0:
+                  context.read<QuestionPostListViewModel>().fetchPosts(reset: true);
+                  break;
+                case 1:
+                  context.read<RecommendPostListViewModel>().fetchPosts(reset: true);
+                  break;
+                case 2:
+                  context.read<MyPostListViewModel>().fetchPosts(reset: true);
+                  break;
+              }
+            }
           },
           elevation: 3,
           //shape: const CircleBorder(),

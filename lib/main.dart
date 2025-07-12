@@ -24,7 +24,6 @@ void main() async {
   await GoogleSignIn.instance.initialize(
       serverClientId: '297394298746-334r4944egru9obvf9au90es85pvv5va.apps.googleusercontent.com'
   );
-
   runApp(
     MultiProvider(
       providers: [

@@ -71,20 +71,25 @@ class ProductResponse {
   final String name;
   final int price;
   final String? thumbnailImageUrl;
+  final String? storeName;
 
   ProductResponse({
     required this.id,
     required this.name,
     required this.price,
     this.thumbnailImageUrl,
+    this.storeName
   });
 
-  factory ProductResponse.fromJson(Map<String, dynamic> json) {
+  factory ProductResponse.fromJson(Map<String, dynamic> json){
+    final store = json['store'] as Map<String, dynamic>?;
+
     return ProductResponse(
       id: json['id'] ?? '',
       name: json['name'] ?? '',
       price: json['price'] ?? 0,
       thumbnailImageUrl: json['thumbnailImageUrl'],
+      storeName: store?['name']
     );
   }
 }
