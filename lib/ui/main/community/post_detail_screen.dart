@@ -1,0 +1,181 @@
+import 'package:flutter/material.dart';
+import 'package:look_talk/core/extension/text_style_extension.dart';
+import 'package:provider/provider.dart';
+import '../../../model/entity/post_entity.dart';
+import '../../../view_model/community/post_detail_view_model.dart';
+import '../../common/component/app_bar/app_bar_search_cart.dart';
+import '../../common/const/colors.dart';
+import '../../common/const/gap.dart';
+
+class PostDetailScreen extends StatelessWidget {
+  const PostDetailScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final viewModel = context.watch<PostDetailViewModel>();
+    final post = viewModel.post;
+
+    if (viewModel.isLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (viewModel.errorMessage != null) {
+      return Scaffold(body: Center(child: Text(viewModel.errorMessage!)));
+    }
+
+    if (post == null) {
+      return const Scaffold(body: Center(child: Text('게시글이 존재하지 않습니다.')));
+    }
+
+    return Scaffold(
+      appBar: const AppBarSearchCart(),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildUserInfo(context, post),
+            gap32,
+            _buildContents(context, post),
+            gap16,
+            _buildPostStats(post, viewModel, context),
+          ],
+        ),
+      ),
+      bottomSheet: _buildCommentInput(),
+    );
+  }
+
+  Widget _buildUserInfo(BuildContext context, Post post) {
+    final hasProfileImage = post.user.profileImageUrl?.isNotEmpty == true;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 21,
+            backgroundImage: hasProfileImage
+                ? NetworkImage(post.user.profileImageUrl!)
+                : const AssetImage('assets/images/profile.png')
+                      as ImageProvider,
+          ),
+          gapW8,
+          Text(post.user.nickName, style: context.h1.copyWith(fontSize: 15)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContents(BuildContext context, Post post) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(post.title, style: context.h1),
+        gap8,
+        Text(post.content, style: context.bodyBold),
+      ],
+    );
+  }
+
+
+  Widget _buildPhoto(){
+    return Container(
+      width: 80,
+      height: 80,
+      decoration: BoxDecoration(
+        // image: DecorationImage(
+        //   image: NetworkImage(post.images!.main!),
+        //   fit: BoxFit.cover,
+        // ),
+        borderRadius: BorderRadius.circular(8),
+        color: Colors.grey[300],
+      ),
+    );
+  }
+
+  Widget _buildPostStats(
+    Post post,
+    PostDetailViewModel viewModel,
+    BuildContext context,
+  ) {
+    String _formatDate(DateTime date) {
+      String _twoDigits(int n) => n.toString().padLeft(2, '0');
+      return '${_twoDigits(date.month)}/${_twoDigits(date.day)}  ${_twoDigits(date.hour)}:${_twoDigits(date.minute)}';
+    }
+
+    final isLiked = viewModel.isLiked;
+
+    return Row(
+      children: [
+        Expanded(
+          child: Row(
+            children: [
+              IconButton(
+                icon: Icon(
+                  isLiked ? Icons.favorite : Icons.favorite_border,
+                  color: isLiked ? Colors.red : Colors.black,
+                  size: 24,
+                ),
+                onPressed: () {
+                  viewModel.toggleLike();
+                },
+              ),
+              Text('${post.likeCount}', style: context.h1),
+              gapW24,
+              const Icon(
+                Icons.chat_bubble,
+                size: 16,
+                color: AppColors.iconGrey,
+              ),
+              gapW12,
+              Text(
+                '${post.commentCount}',
+                style: context.bodyBold.copyWith(
+                  fontSize: 15,
+                  color: AppColors.iconGrey,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Text(
+          _formatDate(post.createAt),
+          style: context.bodyBold.copyWith(color: AppColors.iconGrey),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCommentInput() {
+    return SafeArea(
+      child: Material(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+            decoration: BoxDecoration(
+              color: AppColors.blueButton,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              children: [
+                gapW8,
+                const Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: '댓글을 입력해주세요.',
+                      border: InputBorder.none,
+                      hintStyle: TextStyle(color: AppColors.textGrey),
+                    ),
+                  ),
+                ),
+                IconButton(onPressed: () {}, icon: const Icon(Icons.send)),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
