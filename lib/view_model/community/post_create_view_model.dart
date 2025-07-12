@@ -64,8 +64,6 @@ class PostCreateViewModel with ChangeNotifier {
   }
 
 
-
-
   Future<void> pickImage() async {
     final XFile? pickedFile = await _picker.pickImage(
       source: ImageSource.gallery,
