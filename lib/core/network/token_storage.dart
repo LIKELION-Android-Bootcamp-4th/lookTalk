@@ -1,9 +1,12 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class TokenStorage {
   static const _accessTokenKey = 'accessToken';
   static const _refreshTokenKey = 'refreshToken';
   static const _userId = 'userId';
+  static const _companyCodeKey = 'companyCode';
 
   final _storage = const FlutterSecureStorage();
 
@@ -11,10 +14,12 @@ class TokenStorage {
     required String accessToken,
     required String refreshToken,
     required String userId,
+    String? companyCode,
   }) async {
     await _storage.write(key: _accessTokenKey, value: accessToken);
     await _storage.write(key: _refreshTokenKey, value: refreshToken);
     await _storage.write(key: _userId, value: userId);
+    await _storage.write(key: _companyCodeKey, value: companyCode);
 
     print('TokenStorage 저장 완료');
     print('→ accessToken: $accessToken');
@@ -36,6 +41,7 @@ class TokenStorage {
     print('유저 아이디 : $value');
     return value;
   }
+  Future<String?> getCompanyCode() async => _storage.read(key: _companyCodeKey);
 
   Future<void> deleteTokens() async {
     await _storage.deleteAll();
@@ -45,5 +51,20 @@ class TokenStorage {
     final token = await getAccessToken();
     return token != null && token.isNotEmpty;
   }
+  Future<void> saveUserRole(String role) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user_role', role);
+  }
 
+  Future<String?> loadUserRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('user_role');
+  }
+
+  Future<void> clearUserRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('user_role');
+  }
 }
+
+

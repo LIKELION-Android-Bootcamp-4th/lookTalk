@@ -3,8 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:look_talk/view_model/auth/auth_view_model.dart';
+
 import 'package:look_talk/view_model/community/post_create_view_model.dart';
 import 'package:look_talk/view_model/community/selected_product_view_model.dart';
+
 import 'package:look_talk/view_model/mypage_view_model/notice_viewmodel.dart';
 import 'package:look_talk/view_model/viewmodel_provider.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +31,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+
         ChangeNotifierProvider(create: (_) => SelectedProductViewModel()),
         ChangeNotifierProvider(create: (_) => provideAuthViewModel()),
         ChangeNotifierProvider(create: (_) => provideCheckNameViewModel()),
