@@ -18,4 +18,8 @@ factory DiscountDto.fromjson(Map<String,dynamic> json){
 //   final now = DateTime.now();
 //   return !now.isBefore(from) && !now.isAfter(to);
 // }
+
+  Map<String, dynamic> toJson() => {
+    'value': value,
+  };
 }
