@@ -32,6 +32,7 @@ class Post {
   final bool isLiked;
   final PostUserResponse user;
   final List<Comment> comments;
+  final ProductResponse? product;
 
   Post({
     required this.id,
@@ -45,6 +46,7 @@ class Post {
     required this.isLiked,
     required this.user,
     required this.comments,
+    this.product,
   });
 
   // factory Post.fromJson(Map<String, dynamic> json) {
@@ -74,6 +76,7 @@ class Post {
       isLiked: response.isLiked,
       user: response.user ?? PostUserResponse.empty(),
       comments: response.comments,
+      product: response.product,
     );
   }
 

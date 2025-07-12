@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
+import 'package:look_talk/ui/common/component/primary_button.dart';
 import 'package:provider/provider.dart';
 import '../../../model/entity/post_entity.dart';
 import '../../../view_model/community/post_detail_view_model.dart';
@@ -38,6 +39,8 @@ class PostDetailScreen extends StatelessWidget {
           gap8,
           _buildPhoto(post),
           gap8,
+          _buildProductInfo(post, context),
+          gap8,
           _buildPostStats(post, viewModel, context),
           gap8,
           _buildDivider(),
@@ -47,7 +50,6 @@ class PostDetailScreen extends StatelessWidget {
       ),
       bottomSheet: _buildCommentInput(viewModel),
     );
-
 
     // return Scaffold(
     //   appBar: const AppBarSearchCart(),
@@ -78,8 +80,6 @@ class PostDetailScreen extends StatelessWidget {
     //   ),
     //   bottomSheet: _buildCommentInput(viewModel),
     // );
-
-
   }
 
   Widget _buildUserInfo(BuildContext context, Post post) {
@@ -136,6 +136,105 @@ class PostDetailScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           color: Colors.grey[300],
         ),
+      ),
+    );
+  }
+
+  Widget _buildProductInfo(Post post, BuildContext context) {
+    final product = post.product;
+
+    if (product == null) {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade300),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          if (product.thumbnailImageUrl != null &&
+              product.thumbnailImageUrl!.isNotEmpty)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.network(
+                product.thumbnailImageUrl!,
+                width: 80,
+                height: 80,
+                fit: BoxFit.cover,
+              ),
+            )
+          else
+            Container(
+              width: 80,
+              height: 80,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.image_not_supported, color: Colors.grey),
+            ),
+
+          const SizedBox(width: 16),
+
+          // 상품 정보
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // TODO : 상점명, 할인율 서버에서 오는 값으로 바꾸기
+                gap4,
+                Text(
+                  '시티브리즈',
+                  style: context.body.copyWith(
+                    fontSize: 12,
+                    color: AppColors.textGrey,
+                  ),
+                ),
+                Text(product.name, style: context.body),
+                gap4,
+                Row(
+                  children: [
+                    Text('25%', style: context.h1.copyWith(color: AppColors.red, fontSize: 14)),
+                    gapW8,
+                    Text(
+                      '${product.price}원',
+                      style: context.h1.copyWith(fontSize: 14),
+                    ),
+                  ],
+                ),
+                
+              ],
+            ),
+          ),
+
+          // 상품 보기 버튼
+          ElevatedButton(
+            onPressed: () {
+              // TODO: 상품 상세 페이지로 이동 (id 넘겨주기)
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
+              minimumSize: const Size(0, 32),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+              textStyle: const TextStyle(fontSize: 14),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(9),
+                side: const BorderSide(color: AppColors.black, width: 1.3),
+              ),
+              elevation: 0,
+            ),
+            child: Text(
+              "상품 보기",
+              style: context.bodyBold.copyWith(fontSize: 14),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -205,8 +304,6 @@ class PostDetailScreen extends StatelessWidget {
     );
   }
 
-
-
   // Widget _buildCommentList(Post post) {
   //   final comments = post.comments;
   //
@@ -238,17 +335,27 @@ class PostDetailScreen extends StatelessWidget {
       ];
     }
 
-    return comments.map((comment) => CommentItem(comment: comment)).toList();
+    return comments
+        .map(
+          (comment) => Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: CommentItem(comment: comment),
+          ),
+        )
+        .toList();
   }
-
-
 
   Widget _buildCommentInput(PostDetailViewModel viewModel) {
     return SafeArea(
       child: Material(
         color: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
+          padding: const EdgeInsets.only(
+            top: 10,
+            bottom: 25,
+            right: 15,
+            left: 15,
+          ),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
             decoration: BoxDecoration(
@@ -274,9 +381,9 @@ class PostDetailScreen extends StatelessWidget {
                       icon: const Icon(Icons.send),
                       onPressed: () async {
                         final postId = viewModel.post?.id;
-                        if(postId != null){
+                        if (postId != null) {
                           await viewModel.submitComment(postId);
-                        }else{
+                        } else {
                           print('post id가 null!!! ');
                         }
                       },

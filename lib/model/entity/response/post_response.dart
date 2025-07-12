@@ -15,6 +15,7 @@ class PostResponse {
   final PostImageUrls? images;
   final bool isLiked;
   final List<Comment> comments;
+  final ProductResponse? product;
 
   PostResponse({
     required this.id,
@@ -28,6 +29,7 @@ class PostResponse {
     this.images,
     required this.isLiked,
     required this.comments,
+    this.product,
   });
 
   factory PostResponse.fromJson(Map<String, dynamic> json) {
@@ -44,7 +46,8 @@ class PostResponse {
       user: json['user'] != null ? PostUserResponse.fromJson(json['user']) : null,
       images: json['images'] != null ? PostImageUrls.fromJson(json['images']) : null,
       isLiked: json['isLiked'],
-      comments: (json['comments'] as List<dynamic>?) ?.map((e) => Comment.fromJson(e)).toList() ?? []
+      comments: (json['comments'] as List<dynamic>?) ?.map((e) => Comment.fromJson(e)).toList() ?? [],
+      product: json['product'] != null ? ProductResponse.fromJson(json['product']) : null,
     );
   }
 }
@@ -62,4 +65,29 @@ class PostImageUrls {
     );
   }
 }
+
+class ProductResponse {
+  final String id;
+  final String name;
+  final int price;
+  final String? thumbnailImageUrl;
+
+  ProductResponse({
+    required this.id,
+    required this.name,
+    required this.price,
+    this.thumbnailImageUrl,
+  });
+
+  factory ProductResponse.fromJson(Map<String, dynamic> json) {
+    return ProductResponse(
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      price: json['price'] ?? 0,
+      thumbnailImageUrl: json['thumbnailImageUrl'],
+    );
+  }
+}
+
+
 
