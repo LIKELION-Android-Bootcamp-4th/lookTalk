@@ -1,12 +1,15 @@
+
+
 import 'package:flutter/material.dart';
-import 'package:look_talk/model/entity/category_entity.dart';
-import 'package:look_talk/ui/main/category/category/gender_toggle.dart';
-import 'package:look_talk/ui/main/category/category/main_category.dart';
+import 'package:go_router/go_router.dart';
 import 'package:look_talk/ui/main/category/category/sub_category.dart';
-import 'package:look_talk/ui/main/category/categorydetail/category_detail_screen.dart';
-import 'package:look_talk/view_model/category/category_data_select_viewmodel.dart';
-import 'package:look_talk/view_model/category/category_sub_data_select_viewmodel.dart';
 import 'package:provider/provider.dart';
+
+import '../../../../model/entity/response/bring_sub_category_response.dart';
+import '../../../../view_model/category/category_data_select_viewmodel.dart';
+import '../../../common/component/app_bar/app_bar_home_search_cart.dart';
+import 'gender_toggle.dart';
+import 'main_category.dart';
 
 class CategoryScreen extends StatefulWidget {
   @override
@@ -16,49 +19,18 @@ class CategoryScreen extends StatefulWidget {
 class _CategoryScreenState extends State<CategoryScreen> {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => CategoryDataSelectViewmodel()),
-        ChangeNotifierProvider(create: (_) => CategorySubDataSelectViewModel())
-      ],
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("카테고리"),
-          titleTextStyle: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-          actions: [
-            Padding(
-              padding: EdgeInsets.only(right: 16),
-              child: Row(
-                children: [
-                  IconButton(onPressed: () {}, icon: Icon(Icons.search)),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.shopping_cart_outlined)),
-                ],
-              ),
-            ),
-          ],
-        ),
-        body: Consumer2<CategoryDataSelectViewmodel, CategorySubDataSelectViewModel>(
-          builder: (context, mainViewmodel, subViewmodel, child) {
-            final subCategories = mainViewmodel.categories
-                .firstWhere(
-                  (category) => category.mainCategory == subViewmodel.selectedMainCategory,
-              orElse: () => CategoryEntity(id: 0, mainCategory: '', subCategory: []),
-            )
-                .subCategory;
-
+    return Scaffold(
+        appBar: AppBarHomeSearchCart(title: '카테고리',),
+        body: Consumer<CategoryDataSelectViewmodel>(
+          builder: (context, viewmodel, child) {
             return Column(
               children: [
                 Padding(
                   padding: EdgeInsets.all(16),
                   child: GenderToggle(
-                    selectedGender: mainViewmodel.selectedGender,
+                    selectedGender: viewmodel.selectedGender,
                     onSelectedButton: (gender) {
-                      mainViewmodel.changeGender(gender);
-                      subViewmodel.changeMainCategory(gender);
+                      viewmodel.fetchMainCategories(gender);
                     },
                   ),
                 ),
@@ -69,10 +41,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         flex: 2,
                         child:
                       MainCategory(
-                        selectedMainCategory: subViewmodel.selectedMainCategory,
+                        selectedMainCategory: viewmodel.selectedMainCategory ?? BringSubCategoryResponse(id: '', name: '', children: []),
                         onSelect: (category) {
                           setState(() {
-                            subViewmodel.changeMainCategory(category);
+                            viewmodel.changeMainCategory(category);
+                            viewmodel.fetchSubCategories(category.id);
                           });
                         },
                       ),
@@ -81,23 +54,25 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       Expanded(
                         flex: 3, // flex로 비율 설정.
                           child:
-                      SubCategory(
-                        selectedSubCategory: subViewmodel.selectedSubCategory,
-                        subCategories: subCategories,
-                        onSelect: (category) {
-                          subViewmodel.changeSubCategory(category);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => CategoryDetailScreen(
-                                mainCategory: subViewmodel.selectedMainCategory,
-                                subCategory: subCategories,
-                                selectedCategory: category,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+                           viewmodel.selectedMainCategory != null
+                              ? SubCategory(
+                            selectedSubCategory: viewmodel.selectedSubCategory ?? BringSubCategoryResponse(id: '', name: '선택 없음', children: []),
+                            subCategories: viewmodel.subCategories,
+                            onSelect: (category) {
+                              viewmodel.changeSubCategory(category);
+
+
+                              context.pushNamed(
+                                'categoryDetail',
+                                extra: {
+                                  'mainCategory' : viewmodel.selectedMainCategory,
+                                  'subCategories' : viewmodel.subCategories,
+                                  'selectedSubCategory' : viewmodel.selectedSubCategory,
+                                }
+                              );
+                            },
+                          )
+                              : const SizedBox()
                       ),
                     ],
                   ),
@@ -106,7 +81,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
             );
           },
         ),
-      ),
     );
   }
 }

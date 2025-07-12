@@ -91,8 +91,12 @@ class AuthViewModel with ChangeNotifier {
           notifyListeners();
           context.go('/home');
         } else {
-          // 신규 가입자 → 역할 선택 화면으로 이동
-          context.go('/signup');
+
+          if(context.canPop()){
+            context.pop(); // TODO: 이전 화면으로 잘 가는지 확인
+          }else{
+            context.go('/home'); // TODO : 이전에 있던 화면으로...!?
+          }
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result.message)));

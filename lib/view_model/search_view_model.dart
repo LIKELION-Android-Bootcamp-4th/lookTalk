@@ -7,6 +7,8 @@ class SearchViewModel extends ChangeNotifier {
 
   List<ProductSearch> products = [];
   List<CommunitySearch> communities = [];
+  List<CommunitySearch> recommendCommunities = [];
+  List<CommunitySearch> questionCommunities = [];
 
   SearchViewModel({required this.repository});
 
@@ -19,6 +21,11 @@ class SearchViewModel extends ChangeNotifier {
 
       products = result.products;
       communities = result.community;
+      recommendCommunities = communities.where(
+              (e) => e.category == 'coord_recommend').toList();
+      questionCommunities = communities.where(
+              (e) => e.category == 'coord_question').toList();
+      
       notifyListeners();
     } catch (e) {
       print('검색에 오류 발생: $e');

@@ -8,6 +8,7 @@ class DioClient {
   static final TokenStorage _tokenStorage = TokenStorage();
 
   static final Dio _dio =
+
   Dio(
     BaseOptions(
       baseUrl: 'http://git.hansul.kr:3000',
@@ -72,6 +73,7 @@ class DioClient {
                 return handler.resolve(cloneResponse);
               } catch (e) {
                 await _tokenStorage.deleteTokens(); // 재발급 실패 → 로그아웃
+
               }
             }
           }

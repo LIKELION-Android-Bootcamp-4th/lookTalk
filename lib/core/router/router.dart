@@ -1,23 +1,32 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+
+import 'package:look_talk/model/entity/response/bring_sub_category_response.dart';
+import 'package:look_talk/model/repository/category_detail_repository.dart';
+import 'package:look_talk/model/repository/category_repository.dart';
+import 'package:look_talk/ui/cart/cart_screen.dart';
+import 'package:look_talk/ui/main/bottom_nav_screen.dart';
+import 'package:look_talk/ui/main/category/category/category_screen.dart';
+import 'package:look_talk/ui/main/category/categorydetail/category_detail_screen.dart';
+import 'package:look_talk/ui/main/community/community_entry_point.dart';
+import 'package:look_talk/ui/main/community/post_create_screen.dart';
+import 'package:look_talk/ui/main/community/post_detail_screen.dart';
+import 'package:look_talk/ui/main/home/home_screen.dart';
+import 'package:look_talk/ui/main/mypage/mypage_customer/alter_member.dart';
+import 'package:look_talk/ui/main/mypage/mypage_customer/mypage_screen.dart';
+import 'package:look_talk/ui/main/mypage/mypage_product/mypage_screen_seller.dart';
+
+import 'package:look_talk/ui/main/wishlist/wishlist_screen.dart';
+import 'package:look_talk/ui/search/search_screen.dart';
+import 'package:look_talk/view_model/home/home_category_viewmodel.dart';
 import 'package:provider/provider.dart';
 
-// 화면 import
+import '../../ui/auth/buyer_info_screen.dart';
 import '../../ui/auth/login_screen.dart';
 import '../../ui/auth/seller_info_screen.dart';
 import '../../ui/auth/signup_choice_screen.dart';
-import '../../ui/auth/buyer_info_screen.dart';
-import '../../ui/main/bottom_nav_screen.dart';
-import '../../ui/main/home/home_screen.dart';
-import '../../ui/main/category/category/category_screen.dart';
-import '../../ui/main/community/community_entry_point.dart';
-import '../../ui/main/community/post_create_screen.dart';
-import '../../ui/main/community/post_detail_screen.dart';
-import '../../ui/cart/cart_screen.dart';
-import '../../ui/search/search_screen.dart';
-import '../../ui/main/wishlist/wishlist_screen.dart';
-import '../../ui/main/mypage/mypage_customer/mypage_screen.dart';
-import '../../ui/main/mypage/mypage_seller/mypage_screen_seller.dart';
+import '../../ui/main/community/communication_product_registration/product_registration_screen.dart';
 import '../../ui/main/mypage/mypage_customer/notice.dart';
 import '../../ui/main/mypage/mypage_seller/manage_product_seller_screen.dart';
 import '../../ui/main/mypage/mypage_seller/mypage_screen_product_manage.dart';
@@ -28,6 +37,10 @@ import '../../view_model/viewmodel_provider.dart';
 import '../../view_model/auth/auth_view_model.dart';
 
 final authViewModel = provideAuthViewModel();
+
+
+final _categoryDetailRepository = CategoryDetailRepository(dio);
+final _categoryRepository = CategoryRepository(dio);
 
 final GoRouter router = GoRouter(
   initialLocation: '/home',
@@ -57,20 +70,34 @@ final GoRouter router = GoRouter(
       routes: [
         GoRoute(
           path: 'user',
-          builder: (context, state) => MultiProvider(
-            providers: [
-              ChangeNotifierProvider(create: (_) => provideNicknameCheckViewModel()),
-              ChangeNotifierProvider(create: (_) => provideBuyerSignupViewModel()),
-            ],
-            child: const BuyerInfoScreen(),
-          ),
+
+          builder: (context, state) {
+            return MultiProvider(
+              providers: [
+                ChangeNotifierProvider(
+                  create: (_) => provideCheckNameViewModel(),
+                ),
+                ChangeNotifierProvider(
+                  create: (_) => provideBuyerSignupViewModel(),
+                ),
+              ],
+              child: const BuyerInfoScreen(),
+            );
+          },
         ),
         GoRoute(
           path: 'seller',
-          builder: (context, state) => ChangeNotifierProvider(
-            create: (_) => provideSellerSignupViewModel(),
-            child: const SellerInfoScreen(),
-          ),
+          builder: (context, state) {
+            return MultiProvider(
+              providers: [
+                ChangeNotifierProvider(create: (_) => provideCheckNameViewModel()),
+                ChangeNotifierProvider(
+                  create: (_) => provideSellerSignupViewModel(),
+                ),
+              ],
+              child: const SellerInfoScreen(),
+            );
+          },
         ),
       ],
     ),
@@ -88,10 +115,20 @@ final GoRouter router = GoRouter(
 
     GoRoute(
       path: '/community/write',
-      builder: (context, state) => ChangeNotifierProvider(
-        create: (_) => providePostCreateViewModel(),
-        child: PostCreateScreen(),
-      ),
+
+      builder: (context, state) =>  PostCreateScreen(),
+      routes: [
+        GoRoute(
+          path: 'product-register',
+          builder: (context, state) => MultiProvider(
+            providers: [
+              ChangeNotifierProvider(create: (_) => provideCommunityProductTabViewModel()),
+              ChangeNotifierProvider(create: (_) => provideSearchScreenViewModel()),
+            ],
+            child: const ProductRegistrationScreen(),
+          ),
+        ),
+      ],
     ),
 
     GoRoute(
@@ -145,10 +182,52 @@ final GoRouter router = GoRouter(
         ),
       ),
       routes: [
-        GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
-        GoRoute(path: '/category', builder: (context, state) => CategoryScreen()),
-        GoRoute(path: '/community', builder: (context, state) => const CommunityEntryPoint()),
-        GoRoute(path: '/wishlist', builder: (context, state) => const WishlistScreen()),
+
+        GoRoute(path: '/home', builder: (context, state){
+          return ChangeNotifierProvider(
+              create:(_) => provideHomeViewModelDefault(),
+          child: const HomeScreen(),);
+
+} ),
+         GoRoute(
+           path: '/category',
+           builder: (context, state) {
+             return ChangeNotifierProvider(
+               create: (_) => provideCategoryDataSelectViewmodel(),
+               child: CategoryScreen(),
+             );
+           }
+         ),
+        GoRoute(
+          path: '/categoryDetail',
+          name: 'categoryDetail',
+          builder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>;
+            final subCategories = extra['subCategories'] as List<BringSubCategoryResponse>;
+            final selected = extra['selectedSubCategory'] as BringSubCategoryResponse;
+            final mainCategory = extra['mainCategory'] ;
+
+
+            return ChangeNotifierProvider(
+              create: (_) => provideCategoryDetailViewModel(
+                subCategories: subCategories,
+                initialSubCategory: selected,
+                mainCategory: mainCategory
+
+              ),
+              child: CategoryDetailScreen(),
+            );
+          },
+        ),
+        GoRoute(
+          path: '/community',
+          builder: (context, state) => const CommunityEntryPoint()
+        ),
+
+        GoRoute(
+          path: '/wishlist',
+          builder: (context, state) => const WishlistScreen(),
+        ),
         GoRoute(
           path: '/mypage',
           builder: (context, state) {
@@ -165,6 +244,24 @@ final GoRouter router = GoRouter(
                 ? const MyPageScreenSeller()
                 : const MyPageScreenCustomer();
           },
+
+        GoRoute(path: '/alterMember',
+        builder: (context,state) {
+          return ChangeNotifierProvider(create: (_) =>
+              provideAlterMemberViewmodel(),
+            child: AlterMember(), );
+        }),
+        GoRoute(
+          path: '/notice',
+          builder: (context, state) => const NoticeScreen(),
+        ),
+        GoRoute(
+          path: '/seller/products',
+          builder: (context, state) => const MyPageProductManageScreen(),
+        ),
+        GoRoute(
+          path: '/seller/orders',
+          builder: (context, state) => const ManageProductSellerScreen(),
         ),
       ],
     ),

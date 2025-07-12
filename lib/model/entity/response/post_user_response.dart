@@ -17,5 +17,14 @@ class PostUserResponse {
     );
   }
 
+  factory PostUserResponse.empty() {
+    return PostUserResponse(
+      id: '',
+      nickName: '알 수 없음',
+      profileImageUrl: null,
+    );
+  }
+
+
 
 }

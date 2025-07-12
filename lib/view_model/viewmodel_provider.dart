@@ -1,17 +1,27 @@
 import 'package:dio/dio.dart';
 import 'package:look_talk/model/client/buyer_signup_api_client.dart';
 import 'package:look_talk/model/client/post_create_api_client.dart';
+import 'package:look_talk/model/entity/response/bring_sub_category_response.dart';
 import 'package:look_talk/model/client/seller_signup_api_client.dart';
+import 'package:look_talk/model/repository/alter_member_repository.dart';
 import 'package:look_talk/model/repository/buyer_signup_repository.dart';
+import 'package:look_talk/model/repository/category_detail_repository.dart';
+import 'package:look_talk/model/repository/category_repository.dart';
+import 'package:look_talk/model/repository/home_repository.dart';
 import 'package:look_talk/model/repository/post_repository.dart';
 import 'package:look_talk/model/repository/seller_signup_repository.dart';
 import 'package:look_talk/view_model/auth/buyer_signup_view_model.dart';
+import 'package:look_talk/view_model/category/category_data_select_viewmodel.dart';
+import 'package:look_talk/view_model/category/category_detail/detail_listview_viewmodel.dart';
 import 'package:look_talk/view_model/auth/seller_signup_view_model.dart';
+import 'package:look_talk/view_model/community/community_product_tab_view_model.dart';
 import 'package:look_talk/view_model/community/post_create_view_model.dart';
 import 'package:look_talk/view_model/community/post_detail_view_model.dart';
 import 'package:look_talk/view_model/product/product_detail_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_list_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_register_viewmodel.dart';
+import 'package:look_talk/view_model/home/home_category_viewmodel.dart';
+import 'package:look_talk/view_model/mypage_view_model/alter_member_viewmodel.dart';
 import 'package:look_talk/view_model/search_view_model.dart';
 import 'package:look_talk/model/client/seller_product_api_client.dart';
 import '../model/repository/product_repository.dart';
@@ -47,12 +57,24 @@ final dio = DioClient.instance;
 // 로그인 & 회원가입
 final authViewModel = provideAuthViewModel();
 AuthViewModel provideAuthViewModel() => AuthViewModel(AuthRepository(AuthApiClient(dio)));
-NicknameCheckViewModel provideNicknameCheckViewModel() => NicknameCheckViewModel(NicknameRepository(NicknameApiClient(dio)));
+CheckNameViewModel provideCheckNameViewModel() => CheckNameViewModel(CheckNameRepository(CheckNameApiClient(dio)));
 BuyerSignupViewModel provideBuyerSignupViewModel() => BuyerSignupViewModel(BuyerSignupRepository(BuyerSignupApiClient(dio)));
 SellerSignupViewmodel provideSellerSignupViewModel() => SellerSignupViewmodel(SellerSignupRepository(SellerSignupApiClient(dio)));
 
 // 검색 & 장바구니
 SearchViewModel provideSearchScreenViewModel() => SearchViewModel(repository: SearchRepository(dio));
+CategoryDataSelectViewmodel provideCategoryDataSelectViewmodel() => CategoryDataSelectViewmodel(repository: CategoryRepository(dio));
+DetailListviewViewmodel provideCategoryDetailViewModel({
+  required List<BringSubCategoryResponse> subCategories,
+  required BringSubCategoryResponse initialSubCategory,
+  required BringSubCategoryResponse mainCategory,
+}) =>
+    DetailListviewViewmodel(
+      repository: CategoryDetailRepository(dio),
+      subCategories: subCategories,
+      initialSubCategory: initialSubCategory,
+      mainCategory: mainCategory
+    );
 CartViewModel provideCartViewModel() => CartViewModel(CartRepository(CartApiClient(dio)));
 
 // 주문
@@ -67,6 +89,7 @@ PostCreateViewModel providePostCreateViewModel() =>  PostCreateViewModel(PostCre
 PostDetailViewModel providerPostDetailViewModel(String postId) => PostDetailViewModel(PostRepository(PostApiClient(dio)), postId);
 
 
+
 ProductViewModel provideProductViewModel() {
   return ProductViewModel(ProductRepository(dio));
 }
@@ -76,3 +99,15 @@ ProductDetailViewModel provideProductDetailViewModel(String productId) =>
     ProductDetailViewModel(ProductRepository(dio), productId);
 InquiryViewModel provideInquiryViewModel() => InquiryViewModel();
 
+CommunityProductTabViewModel provideCommunityProductTabViewModel() => CommunityProductTabViewModel();
+
+//마이페이지
+AlterMemberViewmodel provideAlterMemberViewmodel() => AlterMemberViewmodel(repository: AlterMemberRepository(dio));
+
+//홈화면
+HomeCategoryViewModel provideHomeViewModelDefault() {
+  final categoryRepository = CategoryRepository(dio);
+  final categoryDetailRepository = CategoryDetailRepository(dio);
+  final homeRepository = HomeRepository(dio, categoryDetailRepository, categoryRepository);
+  return HomeCategoryViewModel(homeRepository);
+}
