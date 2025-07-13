@@ -16,7 +16,7 @@ abstract class BasePostListViewModel with ChangeNotifier {
   BasePostListViewModel(this.repository, this.request);
 
   Future<void> fetchPosts({bool reset = false}) async {
-    if (isLoading || (pagination != null && !pagination!.hasNext)) return;
+    if (!reset && (pagination != null && !pagination!.hasNext)) return;
 
     isLoading = true;
     notifyListeners();

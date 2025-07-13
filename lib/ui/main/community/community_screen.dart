@@ -13,7 +13,7 @@ import '../../../view_model/community/question_post_list_view_model.dart';
 import '../../../view_model/community/recommend_post_list_view_model.dart';
 import '../../common/const/colors.dart';
 
-const List<Tab> _communityTabs  = const [
+const List<Tab> _communityTabs = const [
   Tab(text: '코디 질문'),
   Tab(text: '코디 추천'),
   Tab(text: 'My+'),
@@ -38,27 +38,46 @@ class CommunityScreen extends StatelessWidget {
       child: Builder(
         builder: (BuildContext context) {
           final tabController = DefaultTabController.of(context);
+          final viewModel = context.read<CommunityTabViewModel>();
           tabController.addListener(() {
+            // if (!tabController.indexIsChanging) {
+            //   context.read<CommunityTabViewModel>().setTabIndex(
+            //     tabController.index,
+            //   );
+            // }
             if (!tabController.indexIsChanging) {
-              context.read<CommunityTabViewModel>().setTabIndex(
-                tabController.index,
-              );
+              final currentIndex = tabController.index;
+              final viewModel = context.read<CommunityTabViewModel>();
+
+              final wasSameTab = viewModel.currentTabIndex == currentIndex;
+              viewModel.setTabIndex(currentIndex);
+
+              // 탭이 바뀌거나 같은 탭 다시 클릭한 경우
+              switch (currentIndex) {
+                case 0:
+                  context.read<QuestionPostListViewModel>().fetchPosts(reset: true);
+                  break;
+                case 1:
+                  context.read<RecommendPostListViewModel>().fetchPosts(reset: true);
+                  break;
+                case 2:
+                  context.read<MyPostListViewModel>().fetchPosts(reset: true);
+                  break;
+              }
             }
           });
 
           return Scaffold(
             appBar: _buildAppBar(context),
             body: const TabBarView(children: _tabViews),
-            floatingActionButton: _buildFAB(context)
+            floatingActionButton: _buildFAB(context),
           );
         },
       ),
     );
-
-
   }
 
-  PreferredSizeWidget _buildAppBar(BuildContext context){
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBarSearchCart(
       title: '커뮤니티',
       bottom: TabBar(
@@ -78,7 +97,7 @@ class CommunityScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFAB(BuildContext context){
+  Widget _buildFAB(BuildContext context) {
     return Transform.translate(
       offset: const Offset(0, -15),
       child: SizedBox(
@@ -90,39 +109,83 @@ class CommunityScreen extends StatelessWidget {
           // ),
           backgroundColor: AppColors.primary,
           onPressed: () async {
-            final result = await navigateWithAuthCheck(
-              context: context,
-              destinationIfLoggedIn: '/community/write',
-              fallbackIfNotLoggedIn: '/login',
-            );
+            final postId = await navigateForPostWrite(context: context);
             //context.push('/community/write');
             //context.push('/login');
             //context.push('/signup');
 
-            // TODO : 등록하기 후 상세 조회화면에서 되돌아 왔을때 화면 작성한 게시글 잘 보이는지 확인
-            if(result == true){
-              final tabIndex = context.read<CommunityTabViewModel>().currentTabIndex;
+            print('FAB 클릭 후 result 값: $postId');
 
-              switch(tabIndex){
-                case 0:
-                  context.read<QuestionPostListViewModel>().fetchPosts(reset: true);
-                  break;
-                case 1:
-                  context.read<RecommendPostListViewModel>().fetchPosts(reset: true);
-                  break;
-                case 2:
-                  context.read<MyPostListViewModel>().fetchPosts(reset: true);
-                  break;
-              }
+            // TODO : 등록하기 후 상세 조회화면에서 되돌아 왔을때 화면 작성한 게시글 잘 보이는지 확인
+            // if (result == true) {
+            //   final tabIndex = context
+            //       .read<CommunityTabViewModel>()
+            //       .currentTabIndex;
+            //
+            //   switch (tabIndex) {
+            //     case 0:
+            //       context.read<QuestionPostListViewModel>().fetchPosts(
+            //         reset: true,
+            //       );
+            //       break;
+            //     case 1:
+            //       context.read<RecommendPostListViewModel>().fetchPosts(
+            //         reset: true,
+            //       );
+            //       break;
+            //     case 2:
+            //       context.read<MyPostListViewModel>().fetchPosts(reset: true);
+            //       break;
+            //   }
+            // }
+            if (postId  != null && postId.isNotEmpty) {
+              context.push('/post/$postId');
+
+              // final tabIndex = context
+              //     .read<CommunityTabViewModel>()
+              //     .currentTabIndex;
+              //
+              // switch (tabIndex) {
+              //   case 0:
+              //     await context.read<QuestionPostListViewModel>().fetchPosts(
+              //       reset: true,
+              //     );
+              //     break;
+              //   case 1:
+              //     await context.read<RecommendPostListViewModel>().fetchPosts(
+              //       reset: true,
+              //     );
+              //     break;
+              //   case 2:
+              //     await context.read<MyPostListViewModel>().fetchPosts(
+              //       reset: true,
+              //     );
+              //     break;
+              // }
+
+              Future.microtask(() {
+                final tabIndex = context.read<CommunityTabViewModel>().currentTabIndex;
+
+                switch (tabIndex) {
+                  case 0:
+                    context.read<QuestionPostListViewModel>().fetchPosts(reset: true);
+                    break;
+                  case 1:
+                    context.read<RecommendPostListViewModel>().fetchPosts(reset: true);
+                    break;
+                  case 2:
+                    context.read<MyPostListViewModel>().fetchPosts(reset: true);
+                    break;
+                }
+              });
+
             }
           },
           elevation: 3,
           //shape: const CircleBorder(),
-          child: const Icon(Icons.add, color: AppColors.white, size: 28,),
+          child: const Icon(Icons.add, color: AppColors.white, size: 28),
         ),
       ),
     );
   }
-
-
 }

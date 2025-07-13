@@ -20,3 +20,17 @@ Future<bool?> navigateWithAuthCheck({
     return false;
   }
 }
+
+Future<String?> navigateForPostWrite({
+  required BuildContext context,
+}) async {
+  final authViewModel = context.read<AuthViewModel>();
+  final isLoggedIn = await authViewModel.isLoggedIn();
+
+  if (isLoggedIn) {
+    return await context.push<String>('/community/write');
+  } else {
+    context.push('/login');
+    return null;
+  }
+}
