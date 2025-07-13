@@ -239,8 +239,9 @@ final GoRouter router = GoRouter(
               });
               return const SizedBox.shrink();
             }
-
+            print('유저 롤!!! : ${authViewModel.userRole}');
             if (authViewModel.userRole == 'seller') {
+
               return const MyPageScreenSeller();
             } else {
               return const MyPageScreenCustomer();

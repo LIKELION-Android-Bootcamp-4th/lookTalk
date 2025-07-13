@@ -100,14 +100,14 @@ class LoginScreen extends StatelessWidget {
         token = await kakao.UserApi.instance.loginWithKakaoAccount();
       }
 
+
       final authInfo = AuthInfo(
         accessToken: token.accessToken,
         tokenType: 'bearer',
         refreshToken: token.refreshToken,
-        idToken: token.idToken,
-        expiresIn: token.expiresAt.difference(DateTime.now()).inSeconds,
+        expiresIn: 21599,
         scope: token.scopes?.join(' '),
-        refreshTokenExpiresIn: token.refreshTokenExpiresAt?.difference(DateTime.now()).inSeconds,
+        refreshTokenExpiresIn: 5184000,
       );
       await vm.handleSocialLogin(context, authInfo, 'kakao');
 
@@ -127,6 +127,9 @@ class LoginScreen extends StatelessWidget {
           accessToken: token.accessToken,
           tokenType: token.tokenType,
           refreshToken: token.refreshToken,
+          expiresIn: 21599,
+          scope: 'account_email profile',
+          refreshTokenExpiresIn: 5184000,
         );
         await vm.handleSocialLogin(context, authInfo, 'naver');
       } else {
@@ -142,30 +145,35 @@ class LoginScreen extends StatelessWidget {
       AuthViewModel vm,
       ) async {
     try {
-      // 1. GoogleSignIn() 생성자를 사용하여 인스턴스를 만듭니다.
-      final GoogleSignIn signIn = GoogleSignIn();
-      // 2. signIn() 메서드를 호출하여 로그인을 시도합니다.
+      final GoogleSignIn signIn = GoogleSignIn(
+        scopes: ['email', 'profile'],
+        serverClientId: '297394298746-334r4944egru9obvf9au90es85pvv5va.apps.googleusercontent.com',
+      );
+
       final GoogleSignInAccount? user = await signIn.signIn();
 
       if (user == null) {
-        _showError(context, '구글 로그인 취소');
+        _showError(context, '로그인 취소됨');
         return;
       }
 
-      // 3. authentication getter를 통해 인증 정보를 가져옵니다.
-      final GoogleSignInAuthentication auth = await user.authentication;
+      final GoogleSignInAuthentication authTokens = await user.authentication;
 
-      // 4. accessToken이 null인지 확인합니다.
-      if (auth.accessToken == null) {
-        _showError(context, '구글 토큰 정보를 가져올 수 없습니다.');
+      final String? idToken = authTokens.idToken;
+      final String? accessToken = authTokens.accessToken;
+
+      if (idToken == null || accessToken == null) {
+        _showError(context, '권한 요청 실패');
         return;
       }
 
-      // 5. AuthInfo 객체를 올바르게 생성합니다.
       final authInfo = AuthInfo(
-        accessToken: auth.accessToken!,
+        accessToken: accessToken,
         tokenType: 'bearer',
-        idToken: auth.idToken,
+        idToken: idToken,
+        expiresIn: 3600,
+        scope: 'email profile',
+        refreshTokenExpiresIn: 0,
       );
 
       await vm.handleSocialLogin(context, authInfo, 'google');
