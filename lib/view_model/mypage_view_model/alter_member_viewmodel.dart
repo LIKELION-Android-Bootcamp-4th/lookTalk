@@ -17,7 +17,10 @@ class AlterMemberViewmodel with ChangeNotifier{
     _alterMember = await repository.resultMember();
     notifyListeners();
 }
-
+  Future<void> fetchLatestMember() async {
+    _alterMember = await repository.resultMember();
+    notifyListeners();
+  }
 Future<void> updateMemberFetch(String nickName, String? profileImage) async{
     try {
       final FormData formData = FormData.fromMap({

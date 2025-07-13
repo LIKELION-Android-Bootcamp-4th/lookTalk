@@ -264,8 +264,11 @@ final GoRouter router = GoRouter(
 
         GoRoute(path: '/alterMember',
         builder: (context,state) {
-          return ChangeNotifierProvider(create: (_) =>
-              provideAlterMemberViewmodel(),
+          return MultiProvider(
+              providers :[
+              ChangeNotifierProvider(create: (_) => provideAlterMemberViewmodel()),
+              ChangeNotifierProvider(create: (_) => provideBuyerSignupViewModel()),
+              ],
             child: AlterMember(), );
         }),
 
