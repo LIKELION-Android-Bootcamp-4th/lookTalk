@@ -9,7 +9,7 @@ class AlterMember {
     return AlterMember(
         email: json['email'],
         nickName: json['nickName'],
-        profileImage: json['profile']?['name'] as String?,
+        profileImage: json['profile']?['profileImage']?['url']
     );
   }
 }

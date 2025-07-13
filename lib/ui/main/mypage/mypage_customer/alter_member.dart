@@ -187,7 +187,9 @@ class AlterMemberState extends State<AlterMember> {
         radius: 60,
         backgroundColor: Colors.grey[400],
         backgroundImage: imagePathToUse != null
-            ? FileImage(File(imagePathToUse))
+              ? (imagePathToUse.startsWith('http')
+            ? NetworkImage(imagePathToUse) as ImageProvider
+            : FileImage(File(imagePathToUse)))
             : null,
         child: imagePathToUse == null
             ? Icon(Icons.person, size: 60, color: AppColors.white)

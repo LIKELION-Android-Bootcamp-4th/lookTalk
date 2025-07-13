@@ -41,6 +41,7 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<AlterMemberViewmodel>();
+    final viewImageUrl = viewModel.alterMember?.member.profileImage;
     final dio = DioClient.instance;
     return Scaffold(
       appBar: AppBarSearchCart(title: "마이페이지",),
@@ -54,7 +55,12 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
                 CircleAvatar(
                   radius: 60,
                   backgroundColor: Colors.grey[400],
-                  child: Icon(Icons.person, size: 60, color: AppColors.white),
+                  backgroundImage: viewImageUrl != null && viewImageUrl.isNotEmpty
+                  ? NetworkImage(viewImageUrl)
+                  : null,
+                  child: viewImageUrl == null || viewImageUrl.isEmpty
+                  ? Icon(Icons.person, size: 60, color: AppColors.white)
+                  : null,
                 ),
                 gapW16,
                 GestureDetector(
