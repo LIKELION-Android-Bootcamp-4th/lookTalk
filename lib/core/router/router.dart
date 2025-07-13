@@ -240,11 +240,14 @@ final GoRouter router = GoRouter(
               return const SizedBox.shrink();
             }
 
-            return authViewModel.userRole == 'seller'
-                ? const MyPageScreenSeller()
-                : const MyPageScreenCustomer();
+            if (authViewModel.userRole == 'seller') {
+              return const MyPageScreenSeller();
+            } else {
+              return const MyPageScreenCustomer();
+            }
           },
         ),
+
 
         GoRoute(path: '/alterMember',
         builder: (context,state) {
