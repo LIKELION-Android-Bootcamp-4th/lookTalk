@@ -9,7 +9,7 @@ Future<bool?> navigateWithAuthCheck({
   required String fallbackIfNotLoggedIn,
 }) async {
   final authViewModel = context.read<AuthViewModel>();
-  final isLoggedIn = await authViewModel.isLoggedIn();
+  final isLoggedIn = await authViewModel.isLoggedInForGuard();
 
   if (isLoggedIn) {
     return await context.push(destinationIfLoggedIn);
@@ -25,7 +25,7 @@ Future<String?> navigateForPostWrite({
   required BuildContext context,
 }) async {
   final authViewModel = context.read<AuthViewModel>();
-  final isLoggedIn = await authViewModel.isLoggedIn();
+  final isLoggedIn = await authViewModel.isLoggedInForGuard();
 
   if (isLoggedIn) {
     return await context.push<String>('/community/write');

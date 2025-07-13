@@ -1,15 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:look_talk/model/entity/product_entity.dart';
+import 'package:look_talk/model/repository/product_repository.dart';
 
 class ProductDetailViewModel extends ChangeNotifier {
+  final ProductRepository repository;
+  final String productId;
+
   int selectedIndex = 0;
   bool isWishlist = false;
+  int wishlistCount = 0;
 
   final List<String> tabs = ['상품정보', '리뷰', '커뮤니티', '문의'];
-  String productName = '상품 명';
-  String imageUrl = '상품이미지';
-  int discountPercent = 20;
-  int originalPrice = 50000;
-  int finalPrice = 40000;
+
+  Product? product;
+
+  ProductDetailViewModel(this.repository, this.productId) {
+    fetchProductDetail();
+  }
+
+  Future<void> fetchProductDetail() async {
+    try {
+      final result = await repository.fetchProductDetail(productId);
+      product = result;
+
+      // dynamicFields에서 찜 수 가져오기 (예: 서버에서 제공 시)
+      wishlistCount = result.dynamicFields?['wishlistCount'] ?? 0;
+
+      notifyListeners();
+    } catch (e) {
+      print('상품 상세 불러오기 실패: $e');
+    }
+  }
+
+  /// UI 연동용 Getter들
+  int get discountPercent => product?.discountPercent ?? 0;
+  int get originalPrice => product?.originalPrice ?? 0;
+  int get finalPrice => product?.finalPrice ?? 0;
+  String get productName => product?.name ?? '';
+  String get imageUrl => product?.thumbnailImagePath ?? '';
+  int get price => product?.price ?? 0;
+  String get category => product?.category ?? '';
 
   void selectTab(int index) {
     if (selectedIndex != index) {
@@ -18,9 +48,10 @@ class ProductDetailViewModel extends ChangeNotifier {
     }
   }
 
+  /// 찜 상태 변경 (실제 서버 요청 필요 시 API 호출 추가)
   void toggleWishlist() {
     isWishlist = !isWishlist;
-    // 찜기능
+    wishlistCount += isWishlist ? 1 : -1;
     notifyListeners();
   }
 }
