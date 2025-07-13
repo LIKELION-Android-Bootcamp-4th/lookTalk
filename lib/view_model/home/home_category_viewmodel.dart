@@ -9,18 +9,22 @@ class HomeCategoryViewModel with ChangeNotifier{
   HomeCategoryViewModel(this._homeRepository){
     _initialize();
   }
-
+  bool _isLoading = true;
   List<String> _homeCategory = homeCategoryData;
   String _selectedCategory = '전체';
   List<Home> _productList = [];
 
+  bool get isLoading => _isLoading;
   String get selectedCategory => _selectedCategory;
   List<String> get homeCategory => _homeCategory;
   List<Home> get productList => _productList;
 
   Future<void> _initialize() async {
+    _isLoading = true;
     await _homeRepository.init();
     await changeProductList(_selectedCategory);
+    _isLoading = false;
+    notifyListeners();
   }
 
   void changeHomeCategory(String category) {

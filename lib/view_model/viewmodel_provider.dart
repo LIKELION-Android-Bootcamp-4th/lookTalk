@@ -8,6 +8,7 @@ import 'package:look_talk/model/repository/buyer_signup_repository.dart';
 import 'package:look_talk/model/repository/category_detail_repository.dart';
 import 'package:look_talk/model/repository/category_repository.dart';
 import 'package:look_talk/model/repository/home_repository.dart';
+import 'package:look_talk/model/repository/order_list_repository.dart';
 import 'package:look_talk/model/repository/post_repository.dart';
 import 'package:look_talk/model/repository/seller_signup_repository.dart';
 import 'package:look_talk/view_model/auth/buyer_signup_view_model.dart';
@@ -17,6 +18,7 @@ import 'package:look_talk/view_model/auth/seller_signup_view_model.dart';
 import 'package:look_talk/view_model/community/community_product_tab_view_model.dart';
 import 'package:look_talk/view_model/community/post_create_view_model.dart';
 import 'package:look_talk/view_model/community/post_detail_view_model.dart';
+import 'package:look_talk/view_model/mypage_view_model/search_my_product_list_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_detail_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_list_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_register_viewmodel.dart';
@@ -103,7 +105,7 @@ CommunityProductTabViewModel provideCommunityProductTabViewModel() => CommunityP
 
 //마이페이지
 AlterMemberViewmodel provideAlterMemberViewmodel() => AlterMemberViewmodel(repository: AlterMemberRepository(dio));
-
+SearchMyProductListViewmodel provideSearchMyProductListViewmodel () => SearchMyProductListViewmodel(repository: OrderListRepository(dio));
 //홈화면
 HomeCategoryViewModel provideHomeViewModelDefault() {
   final categoryRepository = CategoryRepository(dio);

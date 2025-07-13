@@ -14,6 +14,7 @@ import 'package:look_talk/ui/main/community/post_create_screen.dart';
 import 'package:look_talk/ui/main/community/post_detail_screen.dart';
 import 'package:look_talk/ui/main/home/home_screen.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/alter_member.dart';
+import 'package:look_talk/ui/main/mypage/mypage_customer/manage_product/manage_product_screen.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/mypage_screen.dart';
 
 import 'package:look_talk/ui/main/wishlist/wishlist_screen.dart';
@@ -248,6 +249,13 @@ final GoRouter router = GoRouter(
             }
           },
         ),
+
+        GoRoute(path: '/manageProduct',
+            builder: (context,state) {
+              return ChangeNotifierProvider(create: (_) =>
+                 provideSearchMyProductListViewmodel(),
+                child: ManageProductScreen(), );
+            }),
 
 
         GoRoute(path: '/alterMember',
