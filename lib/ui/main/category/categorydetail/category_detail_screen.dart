@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/model/entity/response/bring_sub_category_response.dart';
 import 'package:look_talk/ui/common/component/app_bar/app_bar_home_search_cart.dart';
+import 'package:look_talk/ui/common/component/common_loading.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
 import 'package:look_talk/ui/main/category/categorydetail/detail_listview.dart';
 import 'package:look_talk/view_model/category/category_detail/detail_listview_viewmodel.dart';
@@ -15,7 +16,9 @@ class CategoryDetailScreen extends StatelessWidget {
     final viewModel = context.watch<DetailListviewViewmodel>();
     final productList = viewModel.productList;
 
-    return Scaffold(
+    return viewModel.isLoading
+      ? CommonLoading()
+      : Scaffold(
       appBar: AppBarHomeSearchCart(title: viewModel.mainCategory.name),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
