@@ -11,8 +11,8 @@ class MyPostListViewModel extends BasePostListViewModel {
       page: 0,
       limit: 20,
       userId: userId,
-      sortBy: 'createdAt',
-      sortOrder: 'desc',
+      sortBy: SortType.createdAt,
+      sortOrder: SortOrder.desc,
     ),
   );
 
