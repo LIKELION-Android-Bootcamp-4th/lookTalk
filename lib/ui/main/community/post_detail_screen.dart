@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/ui/common/component/primary_button.dart';
 import 'package:provider/provider.dart';
@@ -226,7 +227,7 @@ class PostDetailScreen extends StatelessWidget {
           // 상품 보기 버튼
           ElevatedButton(
             onPressed: () {
-              // TODO: 상품 상세 페이지로 이동 (id 넘겨주기)
+              context.push('/product/${product.id}');
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
