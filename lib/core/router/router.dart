@@ -232,21 +232,25 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '/mypage',
           builder: (context, state) {
-            final authViewModel = context.watch<AuthViewModel>();
+            return ChangeNotifierProvider(
+              create: (_) => provideAlterMemberViewmodel(),
+              builder: (context, child) {
+                final authViewModel = context.watch<AuthViewModel>();
 
-            if (!authViewModel.isLoggedIn) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                context.go('/login');
-              });
-              return const SizedBox.shrink();
-            }
-            print('유저 롤!!! : ${authViewModel.userRole}');
-            if (authViewModel.userRole == 'seller') {
+                if (!authViewModel.isLoggedIn) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    context.go('/login');
+                  });
+                  return const SizedBox.shrink();
+                }
 
-              return const MyPageScreenSeller();
-            } else {
-              return const MyPageScreenCustomer();
-            }
+                print('유저 롤!!! : ${authViewModel.userRole}');
+
+                return authViewModel.userRole == 'seller'
+                    ? const MyPageScreenSeller()
+                    : const MyPageScreenCustomer();
+              },
+            );
           },
         ),
 
