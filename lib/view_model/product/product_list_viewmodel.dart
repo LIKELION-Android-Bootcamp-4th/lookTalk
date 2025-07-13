@@ -1,16 +1,32 @@
-import 'package:flutter/cupertino.dart';
-import 'package:look_talk/model/product_dummy.dart';
-import '../../model/entity/product_entity.dart';
+import 'package:flutter/material.dart';
+import 'package:look_talk/model/entity/product_entity.dart';
+import 'package:look_talk/model/client/seller_product_api_client.dart';
+
+import '../../model/repository/product_repository.dart';
 
 class ProductViewModel extends ChangeNotifier {
-  // 상품 목록 (초기값: 더미 데이터로 설정)
-  final List<Product> _products = ProductRepository.dummyProducts();
+  final ProductRepository _productRepository;
 
-  List<Product> get products => List.unmodifiable(_products);
+  ProductViewModel(this._productRepository);
 
-  // 상품 추가
-  void addProduct(Product product) {
-    _products.add(product);
+  List<Product> _products = [];
+  bool _isLoading = false;
+
+  List<Product> get products => _products;
+  bool get isLoading => _isLoading;
+
+  Future<void> fetchProducts() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      _products = await _productRepository.getProducts(); // ✅
+    } catch (e) {
+      print('상품 불러오기 실패: $e');
+      _products = [];
+    }
+
+    _isLoading = false;
     notifyListeners();
   }
 }

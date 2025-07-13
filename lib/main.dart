@@ -18,16 +18,16 @@ import 'view_model/community/community_tab_view_model.dart';
 
 void main() async {
   KakaoSdk.init(nativeAppKey: '2be79d6c89568bf54e78a7e7b1bc3fbc', loggingEnabled: true);
-  await GoogleSignIn.instance.initialize(
-      serverClientId: '297394298746-334r4944egru9obvf9au90es85pvv5va.apps.googleusercontent.com'
+  final GoogleSignIn googleSignIn = GoogleSignIn(
+    clientId: '297394298746-334r4944egru9obvf9au90es85pvv5va.apps.googleusercontent.com',
   );
-
+  await googleSignIn.signInSilently();
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => SelectedProductViewModel()),
         ChangeNotifierProvider(create: (_) => provideAuthViewModel()),
-        ChangeNotifierProvider(create: (_) => provideNicknameCheckViewModel()),
+        ChangeNotifierProvider(create: (_) => provideCheckNameViewModel()),
 
         // [✅ CartViewModel Provider를 함수 호출로 변경]
         ChangeNotifierProvider(create: (_) => provideCartViewModel()),

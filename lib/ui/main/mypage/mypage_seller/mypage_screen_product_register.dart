@@ -1,7 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:look_talk/view_model/product/product_register_viewmodel.dart';
-import 'package:look_talk/view_model/product/product_list_viewmodel.dart';
 import 'package:look_talk/ui/common/component/common_text_field.dart';
 
 class ProductRegisterScreen extends StatelessWidget {
@@ -24,15 +24,36 @@ class _ProductRegisterForm extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          Container(
-            height: 150,
-            width: double.infinity,
-            color: Colors.grey[300],
-            child: const Center(child: Text("사진 업로드")),
+          GestureDetector(
+            onTap: vm.pickImage,
+            child: Container(
+              height: 150,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: vm.imageFile != null
+                  ? ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.file(
+                  File(vm.imageFile!.path),
+                  fit: BoxFit.cover,
+                ),
+              )
+                  : const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.camera_alt, size: 40, color: Colors.grey),
+                  SizedBox(height: 8),
+                  Text("사진 업로드"),
+                ],
+              ),
+            ),
           ),
           const SizedBox(height: 16),
 
-          // 성별 Dropdown
           _buildDropdown(
             hint: '성별',
             value: vm.selectedGender,
@@ -41,7 +62,6 @@ class _ProductRegisterForm extends StatelessWidget {
           ),
           const SizedBox(height: 16),
 
-          // 상위 카테고리 Dropdown (성별 선택 후에만 활성화)
           _buildDropdown(
             hint: '상위 카테고리',
             value: vm.selectedTopCategoryEntity?.mainCategory,
@@ -49,7 +69,6 @@ class _ProductRegisterForm extends StatelessWidget {
             onChanged: vm.selectedGender == null ? null : vm.setTopCategory,
           ),
           const SizedBox(height: 16),
-          // 하위 카테고리 Dropdown (상위 카테고리 선택 후 활성화)
           _buildDropdown(
             hint: '하위 카테고리',
             value: vm.selectedSubCategory,
@@ -97,13 +116,25 @@ class _ProductRegisterForm extends StatelessWidget {
             width: double.infinity,
             height: 48,
             child: ElevatedButton(
-              onPressed: () {
-                vm.registerAndNotify(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('상품이 등록되었습니다.')),
-                );
+              onPressed: vm.isLoading ? null : () async {
+                final success = await vm.registerAndNotify(context);
+
+                if (!context.mounted) return;
+
+                if (success) {
+                  DefaultTabController.of(context)?.animateTo(0);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('상품이 성공적으로 등록되었습니다.')),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('상품 등록에 실패했습니다. 입력 값을 확인해주세요.')),
+                  );
+                }
               },
-              child: const Text('완료'),
+              child: vm.isLoading
+                  ? const CircularProgressIndicator(color: Colors.white)
+                  : const Text('완료'),
             ),
           ),
         ],
@@ -125,7 +156,7 @@ class _ProductRegisterForm extends StatelessWidget {
       ),
       items: items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
       onChanged: onChanged,
-      disabledHint: value != null ? Text(value) : null,
+      disabledHint: const Text('이전 단계를 먼저 선택해주세요'),
     );
   }
 }

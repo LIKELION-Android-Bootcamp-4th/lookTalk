@@ -1,6 +1,7 @@
 class HomeEndpoints {
   // 전체 카테고리 조회
   static const String homeProductCategoryList = "/api/categories/";//GET 특정 카테고리 조회
+  static const String allProduct = '/api/products';
 
 }
 

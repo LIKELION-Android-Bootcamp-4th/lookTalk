@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
+import '../../view_model/auth/auth_view_model.dart';
 
 class SignupChoiceScreen extends StatelessWidget {
-
-  const SignupChoiceScreen({
-    super.key,
-  });
+  const SignupChoiceScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final authViewModel = context.read<AuthViewModel>();
     return Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(
-            onPressed: () => context.push('/home'),
-            icon: Icon(Icons.home_outlined),
+            onPressed: () => context.go('/home'),
+            icon: const Icon(Icons.home_outlined),
           ),
         ],
       ),
@@ -33,11 +33,11 @@ class SignupChoiceScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildRoundedButton(context, '판매자로\n시작하기', () {
-                  context.push('/signup/seller');
+                  authViewModel.completeSignup(context, 'seller');
                 }),
                 gapW32,
                 _buildRoundedButton(context, '쇼핑하러\n가기', () {
-                  context.push('/signup/user');
+                  authViewModel.completeSignup(context, 'buyer');
                 }),
               ],
             ),
@@ -48,21 +48,27 @@ class SignupChoiceScreen extends StatelessWidget {
   }
 
   Widget _buildRoundedButton(
-    BuildContext context,
-    String text,
-    VoidCallback onPressed,
-  ) {
+      BuildContext context,
+      String text,
+      VoidCallback onPressed,
+      ) {
     return TextButton(
       onPressed: onPressed,
       style: TextButton.styleFrom(
-        minimumSize: Size(150, 150),
+        minimumSize: const Size(150, 150),
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: BorderSide(color: Colors.black, width: 2),
+          side: const BorderSide(color: Colors.black, width: 2),
         ),
       ),
-      child: Center(child: Text(text, style: context.h1.copyWith(fontSize: 25), textAlign: TextAlign.center,)),
+      child: Center(
+        child: Text(
+          text,
+          style: context.h1.copyWith(fontSize: 25),
+          textAlign: TextAlign.center,
+        ),
+      ),
     );
   }
 }

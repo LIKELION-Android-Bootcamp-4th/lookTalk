@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../model/entity/comment.dart';
 import '../../model/entity/post_entity.dart';
 import '../../model/entity/request/comment_request.dart';
 import '../../model/entity/response/comment_response.dart';
@@ -33,6 +34,7 @@ class PostDetailViewModel with ChangeNotifier {
       final result = await _repository.fetchPosts(id);
       if (result.success && result.data != null) {
         _post = Post.fromResponse(result.data!);
+        _isLiked = post?.isLiked ?? false;
         _error = null;
       } else {
         _error = result.message ?? '알 수 없는 오류';
@@ -77,11 +79,14 @@ class PostDetailViewModel with ChangeNotifier {
     final result = await _repository.addComment(postId: postId, request: request);
 
     if (result.success && result.data != null) {
-      comments.add(result.data!);  // 댓글 리스트에 추가
+      final newComment = Comment.fromResponse(result.data!);
+
+      final updatedComments = List<Comment>.from(post!.comments)..add(newComment);
+
+      _post = _post!.copyWith(comments: updatedComments);
       commentController.clear();
       notifyListeners();
     } else {
-      // 에러 처리 (예: 토스트)
       print('댓글 작성 실패: ${result.message}');
     }
   }

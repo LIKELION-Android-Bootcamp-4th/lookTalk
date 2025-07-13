@@ -21,7 +21,7 @@ class ProductEditViewModel extends ChangeNotifier {
 
   void submit() {
     print('상품명: ${product.name}');
-    print('상품번호: ${product.code}');
+    print('상품번호: ${product.productId}');
     print('재고: ${stockController.text}');
     print('판매상태: $status');
     print('정가: ${priceController.text}');
