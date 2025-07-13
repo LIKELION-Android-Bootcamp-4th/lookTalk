@@ -65,17 +65,6 @@
       return Text('회사명');
     }
 
-    // Widget _buildNameTextField(BuildContext context) {
-    //   return Consumer<CheckNameViewModel>(
-    //     builder: (context, viewModel, child) {
-    //       return CommonTextField(
-    //         onChanged: (value) {
-    //           viewModel.check(CheckNameType.storeName ,value);
-    //         },
-    //       );
-    //     },
-    //   );
-    // }
     Widget _buildNameTextField(BuildContext context) {
       final checkNameViewModel = context.read<CheckNameViewModel>();
       final signupViewModel = context.read<SellerSignupViewmodel>();
@@ -109,65 +98,6 @@
       );
     }
 
-    // Widget _buildStartButton() {
-    //   // TODO : 회사명 중복 체크
-    //   return Consumer<SellerSignupViewmodel>(
-    //     builder: (context, signupViewModel, child){
-    //       final isLoading = signupViewModel.isLoading;
-    //       final name = signupViewModel.nameController.text.trim();
-    //       final isEnabled = name.isNotEmpty;
-    //
-    //       return PrimaryButton(
-    //         text: isLoading ? '가입 중 ...' : '시작하기',
-    //         borderRadius: BorderRadius.circular(10),
-    //         // TODO: 중복 체크 부분으로 바꾸기
-    //         backgroundColor: isLoading ? AppColors.secondary : Colors.grey,
-    //         height: 60,
-    //         onPressed: isEnabled ? () async {
-    //           if (name.isEmpty) {
-    //             ScaffoldMessenger.of(context).showSnackBar(
-    //               const SnackBar(
-    //                 content: Text('회사명을 입력해주세요.'),
-    //                 duration: Duration(seconds: 2),
-    //               ),
-    //             );
-    //             return;
-    //           }
-    //
-    //           final result = await signupViewModel.submitSignup(name);
-    //
-    //           if (context.mounted) {
-    //             if (result.success) {
-    //               ScaffoldMessenger.of(context).showSnackBar(
-    //                 const SnackBar(content: Text("LookTalk에 오신 것을 환영해요!")),
-    //               );
-    //
-    //               context.go('/home');
-    //             } else {
-    //               ScaffoldMessenger.of(context).showSnackBar(
-    //                 SnackBar(
-    //                   content: Text(result.message),
-    //                   duration: const Duration(seconds: 2),
-    //                 ),
-    //               );
-    //             }
-    //           }
-    //
-    //         } : (){
-    //           ScaffoldMessenger.of(context).showSnackBar(
-    //             const SnackBar(
-    //               content: Text('로딩중 '),
-    //               duration: Duration(seconds: 2),
-    //             ),
-    //           );
-    //         }
-    //       );
-    //
-    //     }
-    //   );
-    // }
-
-
     Widget _buildDescriptionText() {
       return Text('회사 설명');
     }
@@ -176,52 +106,6 @@
       final vm = context.read<SellerSignupViewmodel>();
       return CommonTextField(controller: vm.descriptionController);
     }
-    //
-    // Widget _buildStartButton() {
-    //   return Consumer<SellerSignupViewmodel>(
-    //     builder: (context, signupViewModel, child) {
-    //       final isLoading = signupViewModel.isLoading;
-    //       final name = signupViewModel.nameController.text.trim();
-    //       final description = signupViewModel.descriptionController.text.trim();
-    //       final isEnabled = name.isNotEmpty && description.isNotEmpty;
-    //
-    //       return PrimaryButton(
-    //         text: isLoading ? '가입 중 ...' : '시작하기',
-    //         borderRadius: BorderRadius.circular(10),
-    //         backgroundColor: isEnabled ? AppColors.primary : Colors.grey,
-    //         height: 60,
-    //         onPressed: isEnabled
-    //             ? () async {
-    //                 final result = await signupViewModel.submitSignup(name, description);
-    //
-    //                 if (context.mounted) {
-    //                   if (result.success) {
-    //                     ScaffoldMessenger.of(context).showSnackBar(
-    //                       const SnackBar(content: Text("LookTalk에 오신 것을 환영해요!")),
-    //                     );
-    //                     context.go('/home');
-    //                   } else {
-    //                     ScaffoldMessenger.of(context).showSnackBar(
-    //                       SnackBar(
-    //                         content: Text(result.message),
-    //                         duration: const Duration(seconds: 2),
-    //                       ),
-    //                     );
-    //                   }
-    //                 }
-    //               }
-    //             : () {
-    //                 ScaffoldMessenger.of(context).showSnackBar(
-    //                   SnackBar(
-    //                     content: Text(isLoading ? '로딩 중입니다.' : '회사명을 입력해주세요.'),
-    //                     duration: const Duration(seconds: 2),
-    //                   ),
-    //                 );
-    //               },
-    //       );
-    //     },
-    //   );
-    // }
 
     Widget _buildStartButton() {
       return Consumer<SellerSignupViewmodel>(

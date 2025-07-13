@@ -72,27 +72,53 @@ class ProductResponse {
   final int price;
   final String? thumbnailImageUrl;
   final String? storeName;
+  final Discount? discount;
 
   ProductResponse({
     required this.id,
     required this.name,
     required this.price,
     this.thumbnailImageUrl,
-    this.storeName
+    this.storeName,
+    this.discount,
   });
 
   factory ProductResponse.fromJson(Map<String, dynamic> json){
     final store = json['store'] as Map<String, dynamic>?;
+    //final discountJson = json['discount'] as Map<String, dynamic>?;
+
+    final dynamic discountJson = json['discount']; // 타입 명시 X
+
+    Discount? parsedDiscount;
+    if (discountJson != null) {
+      if (discountJson is Map<String, dynamic>) {
+        parsedDiscount = Discount.fromJson(discountJson);
+      } else if (discountJson is int) {
+        parsedDiscount = Discount(value: discountJson);
+      }
+    }
 
     return ProductResponse(
       id: json['id'] ?? '',
       name: json['name'] ?? '',
       price: json['price'] ?? 0,
       thumbnailImageUrl: json['thumbnailImageUrl'],
-      storeName: store?['name']
+      storeName: store?['name'],
+      discount: parsedDiscount
     );
   }
 }
 
+class Discount {
+  final int value;
+
+  Discount({required this.value});
+
+  factory Discount.fromJson(Map<String, dynamic> json) {
+    return Discount(
+      value: json['value'] ?? 0,
+    );
+  }
+}
 
 

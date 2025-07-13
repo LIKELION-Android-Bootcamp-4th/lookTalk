@@ -179,15 +179,14 @@ class PostDetailScreen extends StatelessWidget {
               child: const Icon(Icons.image_not_supported, color: Colors.grey),
             ),
 
-          const SizedBox(width: 16),
+          gapW16,
 
           // 상품 정보
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // TODO : 상점명, 할인율 서버에서 오는 값으로 바꾸기
-                gap4,
+                gap8,
                 Text(
                   post.product?.storeName ?? '상점 정보 없음',
                   style: context.body.copyWith(
@@ -199,15 +198,27 @@ class PostDetailScreen extends StatelessWidget {
                 gap4,
                 Row(
                   children: [
-                    Text('25%', style: context.h1.copyWith(color: AppColors.red, fontSize: 14)),
-                    gapW8,
-                    Text(
-                      '${product.price}원',
-                      style: context.h1.copyWith(fontSize: 14),
-                    ),
+                    if (product.discount != null) ...[
+                      Text(
+                        '${product.discount!.value}%',
+                        style: context.h1.copyWith(
+                          color: AppColors.red,
+                          fontSize: 14,
+                        ),
+                      ),
+                      gapW8,
+                      Text(
+                        '${_calculateDiscountedPrice(product.price, product.discount!.value)}원',
+                        style: context.h1.copyWith(fontSize: 14),
+                      ),
+                    ] else ...[
+                      Text(
+                        '${product.price}원',
+                        style: context.h1.copyWith(fontSize: 14),
+                      ),
+                    ],
                   ],
                 ),
-                
               ],
             ),
           ),
@@ -237,6 +248,10 @@ class PostDetailScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  int _calculateDiscountedPrice(int price, int discountValue) {
+    return (price * (100 - discountValue) / 100).round();
   }
 
   Widget _buildPostStats(
