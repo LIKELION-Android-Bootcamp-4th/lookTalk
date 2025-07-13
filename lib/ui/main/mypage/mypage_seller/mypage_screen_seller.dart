@@ -3,7 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:look_talk/ui/common/const/colors.dart';
 import 'package:look_talk/ui/common/const/text_sizes.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
+import 'package:provider/provider.dart';
 import '../../../common/component/common_modal.dart';
+import 'package:look_talk/view_model/auth/auth_view_model.dart';
 
 class MyPageScreenSeller extends StatelessWidget {
   const MyPageScreenSeller({super.key});
@@ -71,8 +73,21 @@ class MyPageScreenSeller extends StatelessWidget {
 
             _MyPageMenu(
               title: '로그아웃',
-              onTap: () {
-                context.go('/login'); // 로그인 화면으로 이동
+              onTap: () async {
+                final shouldLogout = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => CommonModal(
+                    title: "로그아웃",
+                    content: "정말 로그아웃 하시겠습니까?",
+                    confirmText: "로그아웃",
+                    onConfirm: () => Navigator.of(context).pop(true),
+                  ),
+                );
+
+                if (shouldLogout == true) {
+                  context.read<AuthViewModel>().logout(context);
+                  context.go('/login');
+                }
               },
             ),
             gap16,
@@ -87,6 +102,7 @@ class MyPageScreenSeller extends StatelessWidget {
                     content: "작성하신 모든 게시글 및 리뷰도\n사라지게 됩니다. 정말 탈퇴\n하시겠습니까?",
                     confirmText: "회원탈퇴 하기",
                     onConfirm: () {
+                      // TODO: 회원탈퇴 기능 추가
                     },
                   ),
                 );

@@ -13,10 +13,25 @@ abstract class BasePostListViewModel with ChangeNotifier {
 
   bool isLoading = false;
 
+  SortType sortType = SortType.createdAt;
+  SortOrder sortOrder = SortOrder.desc;
+
   BasePostListViewModel(this.repository, this.request);
 
+  void changeSort(SortType newType) {
+    sortType = newType;
+    request = request.copyWith(sortBy: newType); // 중요
+    fetchPosts(reset: true);
+  }
+
+  void changeOrder(SortOrder newOrder) {
+    sortOrder = newOrder;
+    request = request.copyWith(sortOrder: newOrder); // 중요
+    fetchPosts(reset: true);
+  }
+
   Future<void> fetchPosts({bool reset = false}) async {
-    if (isLoading || (pagination != null && !pagination!.hasNext)) return;
+    if (!reset && (pagination != null && !pagination!.hasNext)) return;
 
     isLoading = true;
     notifyListeners();
@@ -47,8 +62,4 @@ abstract class BasePostListViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void changeSort(String sortBy, String sortOrder) {
-    request = request.copyWith(sortBy: sortBy, sortOrder: sortOrder);
-    fetchPosts(reset: true);
-  }
 }

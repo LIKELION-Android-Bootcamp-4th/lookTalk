@@ -240,10 +240,13 @@ final GoRouter router = GoRouter(
               });
               return const SizedBox.shrink();
             }
+            print('유저 롤!!! : ${authViewModel.userRole}');
+            if (authViewModel.userRole == 'seller') {
 
-            return authViewModel.userRole == 'seller'
-                ? const MyPageScreenSeller()
-                : const MyPageScreenCustomer();
+              return const MyPageScreenSeller();
+            } else {
+              return const MyPageScreenCustomer();
+            }
           },
         ),
 
@@ -253,6 +256,7 @@ final GoRouter router = GoRouter(
                  provideSearchMyProductListViewmodel(),
                 child: ManageProductScreen(), );
             }),
+
 
         GoRoute(path: '/alterMember',
         builder: (context,state) {

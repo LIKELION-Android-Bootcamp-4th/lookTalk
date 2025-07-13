@@ -14,6 +14,8 @@ import 'package:look_talk/ui/main/mypage/mypage_customer/notice.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/recent_product.dart';
 import 'package:look_talk/ui/main/mypage/mypage_seller/mypage_screen_seller.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import '../../../../view_model/auth/auth_view_model.dart';
 
 class MyPageScreenCustomer extends StatefulWidget {
   const MyPageScreenCustomer({super.key});
@@ -49,10 +51,8 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 프로필 사진/ 이름 영역
             Row(
               children: [
-
                 CircleAvatar(
                   radius: 60,
                   backgroundColor: Colors.grey[400],
@@ -74,20 +74,18 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
                       ),
                       Icon(Icons.chevron_right)
                     ],
-                  ) ,
-
-
+                  ),
                 )
-
               ],
             ),
             gap32,
             GestureDetector(
-              onTap: ()=> {
-                Navigator.push(context, MaterialPageRoute(builder: (_)=> RecentProduct())),
+              onTap: () => {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => RecentProduct()))
               },
               child: _MyPageMenu(title: '최근 본 상품'),
             ),
+
             if(_hasAccessToken) ...{
 
 
@@ -147,6 +145,7 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
                 child: _MyPageMenu(title: '로그아웃'),
               ),
               gap16,
+
             GestureDetector(
               onTap: () {
                 showDialog(
@@ -155,22 +154,18 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
                     title: "회원탈퇴",
                     content: "작성하신 모든 게시글 및 리뷰도\n 사라지게 됩니다. 정말 탈퇴\n 하시겠습니까?",
                     confirmText: "회원탈퇴",
-                    onConfirm: () async{
+                    onConfirm: () async {
                       try {
-                        await dio.delete(
-                          MyPage.deleteRegister
-                        );
-                      }catch(e){
+                        await dio.delete(MyPage.deleteRegister);
+                      } catch (e) {
                         print("회원탈퇴 에러 발생$e");
                       }
-
                     },
                   ),
                 );
               },
               child: _MyPageMenu(title: '회원탈퇴'),
             ),
-            }
           ],
         ),
       ),
@@ -199,8 +194,7 @@ class _MyPageMenu extends StatelessWidget {
               fontFamily: "NanumSquareRoundB.ttf",
               fontSize: TextSizes.body,
               color: AppColors.black,
-              fontWeight: FontWeight.bold
-          ),
+              fontWeight: FontWeight.bold),
         ),
       ),
     );
