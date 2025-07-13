@@ -29,6 +29,7 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
   void initState() {
     super.initState();
     _checkAccessToken();
+
   }
 
   Future<void> _checkAccessToken() async {
