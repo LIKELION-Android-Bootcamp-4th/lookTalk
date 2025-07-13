@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:look_talk/model/entity/product_entity.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/ui/common/component/app_bar/app_bar_search_cart.dart';
+import 'package:look_talk/ui/common/component/common_loading.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
 import 'package:look_talk/ui/main/home/home_category.dart';
 import 'package:look_talk/view_model/home/home_category_viewmodel.dart';
@@ -21,7 +22,9 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBarSearchCart(leading: Image.asset('assets/images/logo.png',)),
 
-        body: Column(
+        body: viewModel.isLoading
+      ? const CommonLoading()
+       : Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             HomeCategory(),

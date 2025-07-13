@@ -95,8 +95,7 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
               GestureDetector(
                 onTap: () =>
                 {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => ManageProductScreen())),
+                  context.push('/manageProduct')
                 },
                 child: _MyPageMenu(title: '주문/교환/반품/취소'),
               ),
