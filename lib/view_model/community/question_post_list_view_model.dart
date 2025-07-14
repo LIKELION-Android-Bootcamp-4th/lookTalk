@@ -10,8 +10,8 @@ class QuestionPostListViewModel extends BasePostListViewModel {
       page: 0,
       limit: 20,
       category: 'coord_question',
-      sortBy: 'createdAt',
-      sortOrder: 'desc',
+      sortBy: SortType.createdAt,
+      sortOrder: SortOrder.desc,
     ),
   );
 }

@@ -63,8 +63,10 @@ class PostCreateScreen extends StatelessWidget {
           final postId = await vm.submitPost();
           //print('게시글 프스트 아이디!!! : $postId');
           if (postId != null) {
-            context.pop();
-            context.push('/post/$postId');
+            // context.pop(true);
+            //
+            // context.push('/post/$postId');
+            context.pop(postId);
           }else{
             //print('post id가 null 입니다.');
           }

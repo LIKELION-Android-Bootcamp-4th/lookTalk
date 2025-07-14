@@ -145,8 +145,8 @@ class _CommunityProductSearchState extends State<CommunityProductSearch> {
           ),
           gap4,
           Text(product.name, style: context.bodyBold.copyWith(fontSize: 10)),
-          const SizedBox(height: 4),
-          Text('${product.price}원', style: context.h1.copyWith(fontSize: 14)),
+          //const SizedBox(height: 4),
+          //Text('${product.price}원', style: context.h1.copyWith(fontSize: 14)),
         ],
       ),
     );

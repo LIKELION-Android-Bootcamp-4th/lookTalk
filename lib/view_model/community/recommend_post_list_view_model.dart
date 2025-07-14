@@ -10,8 +10,8 @@ class RecommendPostListViewModel extends BasePostListViewModel {
       page: 0,
       limit: 20,
       category: 'coord_recommend',
-      sortBy: 'createdAt',
-      sortOrder: 'desc',
+      sortBy: SortType.createdAt,
+      sortOrder: SortOrder.desc,
     ),
   );
 }

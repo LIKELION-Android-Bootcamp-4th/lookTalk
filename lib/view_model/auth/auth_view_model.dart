@@ -64,7 +64,7 @@ class AuthViewModel with ChangeNotifier {
     try {
       final request = SocialLoginRequest(
         provider: provider,
-        platformRole: null, // 역할 미지정
+        platformRole: 'buyer',
         authInfo: authInfo,
       );
 

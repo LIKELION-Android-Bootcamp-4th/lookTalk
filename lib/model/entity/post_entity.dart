@@ -32,6 +32,7 @@ class Post {
   final bool isLiked;
   final PostUserResponse user;
   final List<Comment> comments;
+  final ProductResponse? product;
 
   Post({
     required this.id,
@@ -45,6 +46,7 @@ class Post {
     required this.isLiked,
     required this.user,
     required this.comments,
+    this.product,
   });
 
   // factory Post.fromJson(Map<String, dynamic> json) {
@@ -69,11 +71,11 @@ class Post {
       likeCount: response.likeCount,
       commentCount: response.commentCount,
       productId: null,
-      // TODO : 상품 정보 추가 해야함
       createAt: response.createdAt,
       isLiked: response.isLiked,
       user: response.user ?? PostUserResponse.empty(),
       comments: response.comments,
+      product: response.product,
     );
   }
 
@@ -89,6 +91,7 @@ class Post {
     bool? isLiked,
     PostUserResponse? user,
     List<Comment>? comments,
+    ProductResponse? product,
   }) {
     return Post(
       id: id ?? this.id,
@@ -102,6 +105,7 @@ class Post {
       isLiked: isLiked ?? this.isLiked,
       user: user ?? this.user,
       comments: comments ?? this.comments,
+      product: product ?? this.product,
     );
   }
 }
