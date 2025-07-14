@@ -75,7 +75,6 @@ class AuthViewModel with ChangeNotifier {
       if (result.success && result.data != null) {
         final user = result.data!.user;
 
-        // ✅ 기존 가입자: 바로 로그인
         if (user.mainRole != null && user.mainRole!.isNotEmpty) {
           await _tokenStorage.saveTokens(
             accessToken: result.data!.accessToken,

@@ -1,8 +1,7 @@
-import 'package:dio/dio.dart';
 import 'package:look_talk/model/client/buyer_signup_api_client.dart';
 import 'package:look_talk/model/client/post_create_api_client.dart';
-import 'package:look_talk/model/entity/response/bring_sub_category_response.dart';
 import 'package:look_talk/model/client/seller_signup_api_client.dart';
+import 'package:look_talk/model/entity/response/bring_sub_category_response.dart';
 import 'package:look_talk/model/repository/alter_member_repository.dart';
 import 'package:look_talk/model/repository/buyer_signup_repository.dart';
 import 'package:look_talk/model/repository/category_detail_repository.dart';
@@ -12,24 +11,21 @@ import 'package:look_talk/model/repository/order_list_repository.dart';
 import 'package:look_talk/model/repository/post_repository.dart';
 import 'package:look_talk/model/repository/seller_signup_repository.dart';
 import 'package:look_talk/view_model/auth/buyer_signup_view_model.dart';
+import 'package:look_talk/view_model/auth/seller_signup_view_model.dart';
 import 'package:look_talk/view_model/category/category_data_select_viewmodel.dart';
 import 'package:look_talk/view_model/category/category_detail/detail_listview_viewmodel.dart';
-import 'package:look_talk/view_model/auth/seller_signup_view_model.dart';
 import 'package:look_talk/view_model/community/community_product_tab_view_model.dart';
 import 'package:look_talk/view_model/community/post_create_view_model.dart';
 import 'package:look_talk/view_model/community/post_detail_view_model.dart';
+import 'package:look_talk/view_model/home/home_category_viewmodel.dart';
+import 'package:look_talk/view_model/inquiry/inquiry_viewmodel.dart';
+import 'package:look_talk/view_model/mypage_view_model/alter_member_viewmodel.dart';
 import 'package:look_talk/view_model/mypage_view_model/search_my_product_list_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_detail_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_list_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_register_viewmodel.dart';
-import 'package:look_talk/view_model/home/home_category_viewmodel.dart';
-import 'package:look_talk/view_model/mypage_view_model/alter_member_viewmodel.dart';
 import 'package:look_talk/view_model/search_view_model.dart';
-import 'package:look_talk/model/client/seller_product_api_client.dart';
-import '../model/repository/product_repository.dart';
-import 'package:look_talk/view_model/inquiry/inquiry_viewmodel.dart';
 
-import 'package:look_talk/core/network/token_storage.dart';
 import '../core/network/dio_client.dart';
 import '../model/client/auth_api_client.dart';
 import '../model/client/cart_api_client.dart';
@@ -51,7 +47,6 @@ import 'community/my_post_list_view_model.dart';
 import 'community/question_post_list_view_model.dart';
 import 'community/recommend_post_list_view_model.dart';
 import 'order/order_view_model.dart';
-import 'package:look_talk/view_model/product/product_list_viewmodel.dart';
 
 
 final dio = DioClient.instance;

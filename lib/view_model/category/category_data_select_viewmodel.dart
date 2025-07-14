@@ -6,7 +6,7 @@ import 'package:look_talk/model/repository/category_repository.dart';
 class CategoryDataSelectViewmodel with ChangeNotifier {
   final CategoryRepository repository;
 
-  CategoryDataSelectViewmodel({required this.repository}){
+  CategoryDataSelectViewmodel({required this.repository}) {
     fetchMainCategories(GenderType.male);
   }
 
@@ -17,13 +17,16 @@ class CategoryDataSelectViewmodel with ChangeNotifier {
   List<BringSubCategoryResponse> _subCategories = [];
   bool _isLoading = false;
 
-
   GenderType get selectedGender => _selectedGender;
   BringSubCategoryResponse? get selectedMainCategory => _selectedMainCategory;
   BringSubCategoryResponse? get selectedSubCategory => _selectedSubCategory;
   List<BringSubCategoryResponse> get categories => _mainCategories;
   List<BringSubCategoryResponse> get subCategories => _subCategories;
   bool get isLoading => _isLoading;
+
+  //  상품 등록 선택된 서브 카테고리의 ID와 이름
+  String? get selectedCategoryId => _selectedSubCategory?.id;
+  String? get selectedCategoryName => _selectedSubCategory?.name;
 
   Future<void> fetchMainCategories(GenderType gender) async {
     _selectedGender = gender;
@@ -36,12 +39,12 @@ class CategoryDataSelectViewmodel with ChangeNotifier {
     try {
       final result = await repository.categoryResult(parentId);
       _mainCategories = result;
-    }catch (e){
+    } catch (e) {
       print('카테고리 로드 중 에러 발생 $e');
       _mainCategories = [];
     }
 
-    _isLoading =false;
+    _isLoading = false;
     notifyListeners();
   }
 
@@ -55,6 +58,7 @@ class CategoryDataSelectViewmodel with ChangeNotifier {
     _selectedSubCategory = category;
     notifyListeners();
   }
+
   void changeMainCategory(BringSubCategoryResponse category) {
     _selectedMainCategory = category;
     notifyListeners();
