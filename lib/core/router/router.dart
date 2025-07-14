@@ -172,7 +172,7 @@ final GoRouter router = GoRouter(
       ),
     ),
 
-    GoRoute(path: '/seller/orders', builder: (context, state) => const ManageProductSellerScreen()),
+    // GoRoute(path: '/seller/orders', builder: (context, state) => const ManageProductSellerScreen()),
     GoRoute(path: '/notice', builder: (context, state) => const NoticeScreen()),
 
     ShellRoute(
@@ -282,7 +282,10 @@ final GoRouter router = GoRouter(
         ),
         GoRoute(
           path: '/seller/orders',
-          builder: (context, state) => const ManageProductSellerScreen(),
+          builder: (context, state) {
+            return ChangeNotifierProvider(create: (_) =>provideSellerManageViewmodel(),
+            child: ManageProductSellerScreen(),);
+          },
         ),
       ],
     ),

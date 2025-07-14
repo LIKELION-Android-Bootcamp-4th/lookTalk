@@ -8,6 +8,7 @@ class OrderProductSummary {
   final int price;
   final String? thumbnailImage;
   final String? storeName;
+  final String? userNickName;
   final DiscountDto? discount;
   final String? size;
 
@@ -19,15 +20,17 @@ class OrderProductSummary {
     this.storeName,
     this.discount,
     this.size,
+    this.userNickName
   });
 
-  factory OrderProductSummary.fromJson(Map<String, dynamic> json, String? storeName) {
+  factory OrderProductSummary.fromJson(Map<String, dynamic> json, String? storeName, String? userNickName) {
     return OrderProductSummary(
       id: json['id'],
       name: json['productName'],
       price: json['totalPrice'],
       thumbnailImage: _extractThumbnail(json['images']),
       storeName: storeName,
+      userNickName: userNickName,
       discount: null, // 현재 discount 필드 없음
       size: json['options']['size'],
     );
