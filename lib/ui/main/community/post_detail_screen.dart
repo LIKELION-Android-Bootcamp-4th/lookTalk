@@ -90,6 +90,10 @@ class PostDetailScreen extends StatelessWidget {
   ) {
     return AppBarSearchCart(
       title: '게시글 상세',
+      leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: (){
+        viewModel.resetNewCommentFlag();
+        context.pop(viewModel.hasNewComment ? 'updated' : null);
+      },),
       actions: viewModel.isAuthor
           ? [
               PopupMenuButton<String>(
