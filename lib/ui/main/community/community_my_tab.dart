@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../model/entity/request/post_list_request.dart';
 import '../../../view_model/community/my_post_list_view_model.dart';
 import '../../common/component/community/post_list.dart';
+import '../../common/const/gap.dart';
 
 class CommunityMyTab extends StatelessWidget {
   const CommunityMyTab({super.key});
@@ -24,7 +25,7 @@ class CommunityMyTab extends StatelessWidget {
 
   Widget _buildSortDropdown(MyPostListViewModel vm) {
     return Padding(
-      padding: const EdgeInsets.only(top: 12, right: 16),
+      padding: const EdgeInsets.only(top: 24, right: 16),
       child: Align(
         alignment: Alignment.centerRight,
         child: CommonDropdown(

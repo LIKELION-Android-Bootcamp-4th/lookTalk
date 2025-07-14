@@ -20,7 +20,6 @@ class PostCreateViewModel with ChangeNotifier {
   String? _title;
   String? _content;
   String? _productId;
-  String? _mainImage;
 
   File? _imageFile;
   File? get imageFile => _imageFile;
@@ -34,7 +33,6 @@ class PostCreateViewModel with ChangeNotifier {
   void setTitle(String value) => _title = value;
   void setContent(String value) => _content = value;
   void setProductId(String id) => _productId = id;
-  void setMainImage(String imageUrl) => _mainImage = imageUrl;
 
   bool get canSubmit {
     return _category?.isNotEmpty == true &&
@@ -50,7 +48,7 @@ class PostCreateViewModel with ChangeNotifier {
       title: _title!,
       content: _content!,
       productId: _productId,
-      mainImage: _mainImage,
+      mainImage: _imageFile?.path,
     );
 
     final result = await repository.createPost(request: request);
