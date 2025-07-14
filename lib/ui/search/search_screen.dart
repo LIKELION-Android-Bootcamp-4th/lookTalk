@@ -177,7 +177,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                   communityCard(
                                       title: question.title,
                                       timeAgo: timeago.format(DateTime.parse(question.createdAt),locale: 'ko'),
-                                    thumbnailUrl: question.images
+                                      thumbnailUrl: (question.images is List && question.images?.isNotEmpty == true)
+                                          ? question.images
+                                          : null
                                   )
                                 },
 

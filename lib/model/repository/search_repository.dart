@@ -18,7 +18,7 @@ class SearchRepository {
       );
 
       return SearchResponse.fromJson(response.data);
-    }catch(e){
+    }catch (e) {
       throw Exception('검색이 되지 않습니다. $e');
     }
   }

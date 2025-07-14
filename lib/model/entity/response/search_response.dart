@@ -65,11 +65,21 @@ class CommunitySearch {
   });
 
   factory CommunitySearch.fromJson(Map<String, dynamic> json) {
+    String? extractMainImage(dynamic images) {
+      if (images is List && images.isNotEmpty) {
+        final first = images[0];
+        if (first is Map && first['url'] is Map && first['url']['main'] is String) {
+          return first['url']['main'];
+        }
+      }
+      return null;
+    }
+
     return CommunitySearch(
-      id: json['id'],
-      title: json['title'],
-      category: json['category'],
-      images : json['images']?['main'] as String?,
+        id: json['id'],
+        title: json['title'],
+        category: json['category'],
+        images: extractMainImage(json['images']),
         createdAt : json['createdAt']
     );
   }
