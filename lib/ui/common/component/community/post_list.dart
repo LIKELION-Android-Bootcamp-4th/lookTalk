@@ -9,7 +9,12 @@ class PostList extends StatelessWidget {
   final Future<void> Function()? onRefreshAfterDelete;
   final BuildContext rootContext;
 
-  const PostList({required this.posts, this.onRefreshAfterDelete, required this.rootContext, super.key});
+  const PostList({
+    required this.posts,
+    this.onRefreshAfterDelete,
+    required this.rootContext,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

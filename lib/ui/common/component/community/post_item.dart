@@ -112,13 +112,13 @@ class PostItem extends StatelessWidget {
               //mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                if (post.images?.main != null && post.images!.main!.isNotEmpty)
+                if (post.images.isNotEmpty)
                   Container(
                     width: 80,
                     height: 80,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage(post.images!.main!),
+                        image: NetworkImage(post.images.first),
                         fit: BoxFit.cover,
                       ),
                       borderRadius: BorderRadius.circular(8),

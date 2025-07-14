@@ -33,6 +33,7 @@ class Post {
   final PostUserResponse user;
   final List<Comment> comments;
   final ProductResponse? product;
+  final List<String> imageUrls;
 
   Post({
     required this.id,
@@ -47,6 +48,7 @@ class Post {
     required this.user,
     required this.comments,
     this.product,
+    required this.imageUrls,
   });
 
   // factory Post.fromJson(Map<String, dynamic> json) {
@@ -76,6 +78,7 @@ class Post {
       user: response.user ?? PostUserResponse.empty(),
       comments: response.comments,
       product: response.product,
+      imageUrls: response.images
     );
   }
 
@@ -92,6 +95,7 @@ class Post {
     PostUserResponse? user,
     List<Comment>? comments,
     ProductResponse? product,
+    List<String>? imageUrls,
   }) {
     return Post(
       id: id ?? this.id,
@@ -106,6 +110,7 @@ class Post {
       user: user ?? this.user,
       comments: comments ?? this.comments,
       product: product ?? this.product,
+      imageUrls: imageUrls ?? this.imageUrls,
     );
   }
 }
