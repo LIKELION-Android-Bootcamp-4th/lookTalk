@@ -11,7 +11,7 @@ class DioClient {
 
   Dio(
     BaseOptions(
-      baseUrl: 'http://git.hansul.kr:3000',
+      baseUrl: 'http://git.hansul.kr:2999',
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
       headers: {
@@ -34,7 +34,7 @@ class DioClient {
           if (!isExcluded) {
             final accessToken = await _tokenStorage.getAccessToken();
             if (accessToken != null) {
-              options.headers['Authorization'] = 'Bearer $accessToken';
+              options.headers['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODczNzg2MDJmZTYyZmI0MzUzZTNmZjUiLCJzdG9yZUlkIjoiNjg3Mzc4NjAyZmU2MmZiNDM1M2UzZmY3IiwiY29tcGFueUlkIjoiNjg2NmZjZWE1YjIzMGY1ZGM3MDliZGViIiwiaXNBZG1pbiI6ZmFsc2UsImlzU3VwZXJBZG1pbiI6ZmFsc2UsImlhdCI6MTc1MjQ4MDUwNSwiZXhwIjoxNzUyNTY2OTA1fQ.LJEmpYGGPUVjo-Rn2ILjfwBQYyY3hA2thwR3gc2Xx8A';
             }
           }
 

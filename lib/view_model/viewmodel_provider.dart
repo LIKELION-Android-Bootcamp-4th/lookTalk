@@ -21,6 +21,7 @@ import 'package:look_talk/view_model/home/home_category_viewmodel.dart';
 import 'package:look_talk/view_model/inquiry/inquiry_viewmodel.dart';
 import 'package:look_talk/view_model/mypage_view_model/alter_member_viewmodel.dart';
 import 'package:look_talk/view_model/mypage_view_model/search_my_product_list_viewmodel.dart';
+import 'package:look_talk/view_model/mypage_view_model/seller_manage_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_detail_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_list_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_register_viewmodel.dart';
@@ -103,6 +104,7 @@ CommunityProductTabViewModel provideCommunityProductTabViewModel() => CommunityP
 //마이페이지
 AlterMemberViewmodel provideAlterMemberViewmodel() => AlterMemberViewmodel(repository: AlterMemberRepository(dio));
 SearchMyProductListViewmodel provideSearchMyProductListViewmodel () => SearchMyProductListViewmodel(repository: OrderListRepository(dio));
+SellerManageViewmodel provideSellerManageViewmodel() => SellerManageViewmodel(repository: OrderListRepository(dio));
 //홈화면
 HomeCategoryViewModel provideHomeViewModelDefault() {
   final categoryRepository = CategoryRepository(dio);

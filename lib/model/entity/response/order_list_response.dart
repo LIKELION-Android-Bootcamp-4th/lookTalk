@@ -16,9 +16,14 @@ class OrderListResponse {
   });
 
   factory OrderListResponse.fromJson(Map<String, dynamic> json) {
-    final storeName = json['storeId']?['name'];
+    final storeName = json['storeId'] is Map
+        ? json['storeId']['name']
+        : null;
+    final userNickName = json['userId'] is Map
+        ? json['userId']['nickName']
+        : null;
     final productList = (json['items'] as List)
-        .map((item) => OrderProductSummary.fromJson(item, storeName))
+        .map((item) => OrderProductSummary.fromJson(item, storeName, userNickName))
         .toList();
 
     return OrderListResponse(
