@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/model/repository/search_repository.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
@@ -105,9 +106,15 @@ class _SearchScreenState extends State<SearchScreen> {
                             final isValidImage = imageUrl != null && imageUrl.trim().isNotEmpty;
 
 
-                            return  Column(
+                            return  GestureDetector(
+                              onTap: (){
+                                if (product.id != null) {
+                                  context.push('/product/${product.id}');
+                                }
+                              },
+                              child:                               Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
-                               crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   isValidImage
                                       ? Image.network(
@@ -128,7 +135,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   Row(
                                     children: [
                                       if (product.discount != null) ...[
-                                      // if (product.discount?.isActive == true) ...[
+                                        // if (product.discount?.isActive == true) ...[
                                         Text(
                                           "${product.discount!.value}% ",
                                           style: context.bodyBold.copyWith(fontSize: 12, color: Colors.red),
@@ -148,6 +155,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   )
 
                                 ],
+                              )
                             );
                           },
                         ),
@@ -169,7 +177,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                   communityCard(
                                       title: question.title,
                                       timeAgo: timeago.format(DateTime.parse(question.createdAt),locale: 'ko'),
-                                    thumbnailUrl: question.images
+                                      thumbnailUrl: (question.images is List && question.images?.isNotEmpty == true)
+                                          ? question.images
+                                          : null
                                   )
                                 },
 

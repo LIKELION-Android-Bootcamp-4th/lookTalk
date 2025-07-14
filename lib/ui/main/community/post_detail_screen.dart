@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
+import 'package:look_talk/ui/common/component/common_modal.dart';
 import 'package:look_talk/ui/common/component/primary_button.dart';
 import 'package:provider/provider.dart';
 import '../../../model/entity/post_entity.dart';
@@ -30,7 +31,7 @@ class PostDetailScreen extends StatelessWidget {
       return const Scaffold(body: Center(child: Text('게시글이 존재하지 않습니다.')));
     }
     return Scaffold(
-      appBar: const AppBarSearchCart(),
+      appBar: _buildAppBar(context, viewModel),
       body: ListView(
         children: [
           gap16,
@@ -83,6 +84,71 @@ class PostDetailScreen extends StatelessWidget {
     // );
   }
 
+  PreferredSizeWidget _buildAppBar(
+    BuildContext context,
+    PostDetailViewModel viewModel,
+  ) {
+    return AppBarSearchCart(
+      title: '게시글 상세',
+      actions: viewModel.isAuthor
+          ? [
+              PopupMenuButton<String>(
+                onSelected: (value) {
+                  if (value == 'delete') {
+                    _showDeleteDialog(context);
+                  }
+                },
+                itemBuilder: (context) => const [
+                  PopupMenuItem(value: 'delete', child: Text('삭제')),
+                ],
+              ),
+            ]
+          : null,
+    );
+  }
+
+  void _showDeleteDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => CommonModal(
+        title: '게시글 삭제',
+        content: '정말 이 게시글을 삭제하시겠습니까?',
+        confirmText: '삭제하기',
+        onConfirm: () async {
+          final viewModel = context.read<PostDetailViewModel>();
+          final success = await viewModel.deletePost();
+
+          Navigator.of(context).pop();
+
+          if (success) {
+            context.pop(true);
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   const SnackBar(
+            //     content: Text('게시글이 삭제되었습니다.'),
+            //     duration: Duration(seconds: 2),
+            //     behavior: SnackBarBehavior.floating,
+            //   ),
+            // );
+
+            // Future.delayed(const Duration(milliseconds: 500), () {
+            //   context.pop(true); // 게시글 목록으로 돌아가면서 true 전달 (옵션)
+            // });
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('삭제에 실패했습니다.'),
+                duration: Duration(seconds: 2),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          }
+        },
+      ),
+
+    );
+  }
+
+
   Widget _buildUserInfo(BuildContext context, Post post) {
     final hasProfileImage = post.user.profileImageUrl?.isNotEmpty == true;
     return Padding(
@@ -118,21 +184,20 @@ class PostDetailScreen extends StatelessWidget {
   }
 
   Widget _buildPhoto(Post post) {
-    final imageUrl = post.user.profileImageUrl;
-
-    if (imageUrl == null || imageUrl.isEmpty) {
+    if (post.imageUrls.isEmpty) {
       return const SizedBox.shrink();
     }
+    final imageUrl = post.imageUrls.first;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Container(
-        width: 80,
-        height: 80,
+        width: double.infinity,
+        height: 300,
         decoration: BoxDecoration(
           image: DecorationImage(
             image: NetworkImage(imageUrl),
-            fit: BoxFit.cover,
+            fit: BoxFit.fitWidth,
           ),
           borderRadius: BorderRadius.circular(8),
           color: Colors.grey[300],

@@ -63,8 +63,24 @@
 					<string>kakao2be79d6c89568bf54e78a7e7b1bc3fbc</string>
 				</array>
 			</dict>
+			<dict>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>looktalk</string>
+				</array>
+			</dict>
 		</array>
 		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<false/>
+		<key>NidUrlScheme</key>
+		<string>looktalk</string>
+		<key>NidClientID</key>
+		<string>1nkMbi6DiEpL9XqMF4On</string>
+		<key>NidClientSecret</key>
+		<string>hTztR3PCNL</string>
+		<key>NidAppName</key>
+		<string>Look Talk</string>
 	</dict>
 </plist>

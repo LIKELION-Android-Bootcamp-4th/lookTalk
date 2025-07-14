@@ -41,7 +41,7 @@ class PostItem extends StatelessWidget {
                     SizedBox(
                       width: 200.0,
                       child: Text(
-                        hasUser ? user!.nickName : '알 수 없음',
+                          hasUser ? user!.nickName : '알 수 없음',
                         style: TextStyle(fontWeight: FontWeight.bold),
                         softWrap: false,
                         overflow: hasProfileImage ? TextOverflow.visible : TextOverflow.ellipsis,
@@ -112,13 +112,13 @@ class PostItem extends StatelessWidget {
               //mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                if (post.images?.main != null && post.images!.main!.isNotEmpty)
+                if (post.images.isNotEmpty)
                   Container(
                     width: 80,
                     height: 80,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage(post.images!.main!),
+                        image: NetworkImage(post.images.first),
                         fit: BoxFit.cover,
                       ),
                       borderRadius: BorderRadius.circular(8),

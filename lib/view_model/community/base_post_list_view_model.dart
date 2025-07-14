@@ -20,13 +20,13 @@ abstract class BasePostListViewModel with ChangeNotifier {
 
   void changeSort(SortType newType) {
     sortType = newType;
-    request = request.copyWith(sortBy: newType); // 중요
+    request = request.copyWith(sortBy: newType);
     fetchPosts(reset: true);
   }
 
   void changeOrder(SortOrder newOrder) {
     sortOrder = newOrder;
-    request = request.copyWith(sortOrder: newOrder); // 중요
+    request = request.copyWith(sortOrder: newOrder);
     fetchPosts(reset: true);
   }
 

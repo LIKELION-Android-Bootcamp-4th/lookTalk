@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:look_talk/model/entity/response/discount_dto.dart';
+
 class Product {
   final String? productId;
   final String name;
@@ -7,7 +11,7 @@ class Product {
   final String? categoryId; // 카테고리 ID
   final String? category;   // 카테고리 이름
   final Map<String, dynamic>? options;
-  final Map<String, dynamic>? discount;
+  final DiscountDto? discount;
   final String? status;
   final String? thumbnailImagePath;
   final String? contentImagePath;
@@ -61,6 +65,20 @@ class Product {
       }
     }
 
+    DiscountDto? parsedDiscount;
+    final rawDiscount = json['discount'];
+
+    try {
+      if (rawDiscount is String && rawDiscount.isNotEmpty) {
+        parsedDiscount = DiscountDto.fromjson(jsonDecode(rawDiscount));
+      } else if (rawDiscount is Map<String, dynamic>) {
+        parsedDiscount = DiscountDto.fromjson(rawDiscount);
+      }
+    } catch (e) {
+      print('discount 파싱 실패: $e');
+      parsedDiscount = null;
+    }
+
     return Product(
       productId: json['id']?.toString(),
       name: json['name'] ?? '',
@@ -69,13 +87,13 @@ class Product {
       stock: json['stock'],
       categoryId: json['categoryId'],
       category: json['category'], // 카테고리 필드
-      options: json['options'] as Map<String, dynamic>?,
-      discount: json['discount'] as Map<String, dynamic>?,
+      options: _parseJsonField(json['options']),
+      discount: parsedDiscount,
       status: json['status'],
       thumbnailImagePath: json['thumbnailImageUrl'],
       contentImagePath: json['contentImageUrl'],
-      images: json['images'] as Map<String, dynamic>?,
-      attributes: json['attributes'] as Map<String, dynamic>?,
+      images: _parseJsonField(json['images']),
+      attributes: _parseJsonField(json['attributes']),
       dynamicFields: dynamicFieldMap.isNotEmpty ? dynamicFieldMap : null,
       storeName: json['store']?['name'],
     );
@@ -103,10 +121,7 @@ class Product {
 
   /// ✅ 할인률 (percent), 할인된 최종 가격, 원래 가격
   int get discountPercent {
-    if (discount != null && discount!['rate'] != null) {
-      return discount!['rate'];
-    }
-    return 0;
+    return discount?.value ?? 0;
   }
 
   int get originalPrice => price;
@@ -117,4 +132,17 @@ class Product {
 
   /// ✅ 이미지 URL getter
   String get imageUrl => thumbnailImagePath ?? '';
+  static Map<String, dynamic>? _parseJsonField(dynamic field) {
+    try {
+      if (field == null) return null;
+      if (field is String && field.isNotEmpty) {
+        return jsonDecode(field) as Map<String, dynamic>;
+      } else if (field is Map<String, dynamic>) {
+        return field;
+      }
+    } catch (e) {
+      print('필드 파싱 실패: $e');
+    }
+    return null;
+  }
 }

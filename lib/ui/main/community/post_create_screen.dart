@@ -63,6 +63,8 @@ class PostCreateScreen extends StatelessWidget {
           final postId = await vm.submitPost();
           //print('게시글 프스트 아이디!!! : $postId');
           if (postId != null) {
+            context.read<SelectedProductViewModel>().deselectProduct();
+            context.read<PostCreateViewModel>().clearImage();
             // context.pop(true);
             //
             // context.push('/post/$postId');
@@ -211,9 +213,6 @@ class PostCreateScreen extends StatelessWidget {
                   onTap: () async {
                     Navigator.pop(context);
                     await viewModel.takePhoto();
-                    if(viewModel.imageFile != null){
-                      viewModel.setMainImage(viewModel.imageFile!.path);
-                    }
                   },
                 ),
               ],
