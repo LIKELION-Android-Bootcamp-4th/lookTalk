@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:look_talk/model/entity/response/post_response.dart';
 import '../../../../model/entity/post_entity.dart';
 import 'post_item.dart';
 
 class PostList extends StatelessWidget {
   final List<PostResponse> posts;
+  final Future<void> Function()? onRefreshAfterDelete;
+  final BuildContext rootContext;
 
-  const PostList({required this.posts, super.key});
+  const PostList({required this.posts, this.onRefreshAfterDelete, required this.rootContext, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +22,23 @@ class PostList extends StatelessWidget {
       child: ListView.separated(
         itemCount: posts.length,
         itemBuilder: (context, index) {
-          return PostItem(post: posts[index]);
+          return GestureDetector(
+            onTap: () async {
+              final result = await context.push('/post/${posts[index].id}');
+              if (result == true && onRefreshAfterDelete != null) {
+                await onRefreshAfterDelete!();
+
+                ScaffoldMessenger.of(rootContext).showSnackBar(
+                  const SnackBar(
+                    content: Text('게시글이 삭제되었습니다.'),
+                    duration: Duration(seconds: 2),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              }
+            },
+            child: PostItem(post: posts[index]),
+          );
         },
         separatorBuilder: (context, index) => const Divider(
           color: Colors.grey,
@@ -28,7 +47,7 @@ class PostList extends StatelessWidget {
           indent: 16,
           endIndent: 16,
         ),
-      )
+      ),
     );
   }
 }

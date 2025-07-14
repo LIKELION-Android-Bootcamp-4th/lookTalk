@@ -33,7 +33,7 @@ class PostRepository {
     return _apiClient.addComment(postId: postId, request: request);
   }
 
-  Future<void> deletePost(String postId) async{
-    await _apiClient.deletePost(postId);
+  Future<ApiResult<void>> deletePost(String postId) async{
+    return await _apiClient.deletePost(postId);
   }
 }

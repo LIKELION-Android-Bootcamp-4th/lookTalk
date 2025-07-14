@@ -17,18 +17,21 @@ class PostDetailViewModel with ChangeNotifier {
   bool _isLiked = false;
 
   Post? get post => _post;
+
   bool get isLoading => _isLoading;
+
   String? get errorMessage => _error;
+
   bool get isLiked => _isLiked;
 
   final TextEditingController commentController = TextEditingController();
   final List<CommentResponse> comments = [];
 
-  PostDetailViewModel(this._repository, this._tokenStorage, String postId){
+  PostDetailViewModel(this._repository, this._tokenStorage, String postId) {
     _init(postId);
   }
 
-  Future<void> _init(String postId) async{
+  Future<void> _init(String postId) async {
     await _fetchCurrentUserId();
     await fetchPost(postId);
   }
@@ -38,8 +41,7 @@ class PostDetailViewModel with ChangeNotifier {
     print('현재 로그인된 유저 ID: $_currentUserId');
   }
 
-  bool get isAuthor => _post?.user.id  == _currentUserId;
-
+  bool get isAuthor => _post?.user.id == _currentUserId;
 
   Future<void> fetchPost(String id) async {
     _isLoading = true;
@@ -64,13 +66,13 @@ class PostDetailViewModel with ChangeNotifier {
   }
 
   Future<void> toggleLike() async {
-    if(_post == null ) return;
+    if (_post == null) return;
 
     final postId = _post!.id;
 
     _isLiked = !_isLiked;
     _post = _post!.copyWith(
-      likeCount: _isLiked ? _post!.likeCount + 1 : _post!.likeCount - 1
+      likeCount: _isLiked ? _post!.likeCount + 1 : _post!.likeCount - 1,
     );
     notifyListeners();
 
@@ -91,12 +93,16 @@ class PostDetailViewModel with ChangeNotifier {
     if (content.isEmpty) return;
 
     final request = CommentRequest(content: content);
-    final result = await _repository.addComment(postId: postId, request: request);
+    final result = await _repository.addComment(
+      postId: postId,
+      request: request,
+    );
 
     if (result.success && result.data != null) {
       final newComment = Comment.fromResponse(result.data!);
 
-      final updatedComments = List<Comment>.from(post!.comments)..add(newComment);
+      final updatedComments = List<Comment>.from(post!.comments)
+        ..add(newComment);
 
       _post = _post!.copyWith(comments: updatedComments);
       commentController.clear();
@@ -106,11 +112,13 @@ class PostDetailViewModel with ChangeNotifier {
     }
   }
 
-  Future<void> deletePost() async{
-    if(_post == null) _error = '게시글 정보가 없습니다.';
+  Future<bool> deletePost() async {
+    if (_post == null) {
+      _error = '게시글 정보가 없습니다.';
+      return false;
+    }
 
     final result = await _repository.deletePost(_post!.id);
-    return result;
+    return result.success;
   }
-
 }

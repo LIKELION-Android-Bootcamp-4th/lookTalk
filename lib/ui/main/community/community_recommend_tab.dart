@@ -17,7 +17,7 @@ class CommunityRecommendTab extends StatelessWidget {
     return Column(
       children: [
         _buildSortDropdown(vm),
-        Expanded(child: _buildPostList(vm)),
+        Expanded(child: _buildPostList(vm, context)),
       ],
     );
   }
@@ -40,7 +40,7 @@ class CommunityRecommendTab extends StatelessWidget {
     );
   }
 
-  Widget _buildPostList(RecommendPostListViewModel vm) {
+  Widget _buildPostList(RecommendPostListViewModel vm, BuildContext context) {
     if (vm.isLoading && vm.posts.isEmpty) {
       return const Center(child: CommonLoading());
     }
@@ -49,6 +49,8 @@ class CommunityRecommendTab extends StatelessWidget {
       return const Center(child: Text('게시글이 없습니다.'));
     }
 
-    return PostList(posts: vm.posts);
+    return PostList(posts: vm.posts, onRefreshAfterDelete: () async {
+      await vm.fetchPosts(reset: true);
+    }, rootContext: context,);
   }
 }
