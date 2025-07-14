@@ -12,7 +12,7 @@ class PostResponse {
   final int commentCount;
   final DateTime createdAt;
   final PostUserResponse? user;
-  final PostImageUrls? images;
+  final List<String> images;
   final bool isLiked;
   final List<Comment> comments;
   final ProductResponse? product;
@@ -26,7 +26,7 @@ class PostResponse {
     required this.commentCount,
     required this.createdAt,
     required this.user,
-    this.images,
+    required this.images,
     required this.isLiked,
     required this.comments,
     this.product,
@@ -44,9 +44,11 @@ class PostResponse {
       commentCount: json['commentCount'] ?? 0,
       createdAt: DateTime.parse(json['createdAt']),
       user: json['user'] != null ? PostUserResponse.fromJson(json['user']) : null,
-      images: json['images'] is List
-          ? PostImageUrls.fromList(json['images'] as List)
-          : null,
+      images: (json['images'] as List<dynamic>?)
+          ?.whereType<Map<String, dynamic>>()
+          .map((e) => e['url'])
+          .whereType<String>()
+          .toList() ?? [],
       isLiked: json['isLiked'],
       comments: (json['comments'] as List<dynamic>?) ?.map((e) => Comment.fromJson(e)).toList() ?? [],
       product: json['product'] != null ? ProductResponse.fromJson(json['product']) : null,
@@ -54,26 +56,6 @@ class PostResponse {
   }
 }
 
-class PostImageUrls {
-  final String? main;
-  final List<String>? sub;
-
-  PostImageUrls({this.main, this.sub});
-
-  factory PostImageUrls.fromList(List<dynamic> jsonList) {
-    final urls = jsonList
-        .whereType<Map<String, dynamic>>()
-        .map((e) => e['path'] as String?)
-        .where((path) => path != null)
-        .cast<String>()
-        .toList();
-
-    return PostImageUrls(
-      main: urls.isNotEmpty ? urls.first : null,
-      sub: urls.length > 1 ? urls.sublist(1) : [],
-    );
-  }
-}
 
 class ProductResponse {
   final String id;

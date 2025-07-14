@@ -28,25 +28,21 @@ class PostCreateRequest {
   };
 
   Future<FormData> toFormData() async {
-    print('[디버그] toFormData() 진입');
-    print('mainImage: $mainImage');
-    final Map<String, dynamic> data = {
-      'category': category,
+    final formData = FormData.fromMap({
       'title': title,
       'content': content,
+      'category': category,
       if (productId != null) 'productId': productId,
-    };
+    });
 
     if (mainImage != null && mainImage!.isNotEmpty) {
-      final fileName = path.basename(mainImage!);
-
-      data['images.main'] = await MultipartFile.fromFile(
-        mainImage!,
-        filename: fileName,
-      );
+      formData.files.add(MapEntry(
+        'images',
+        await MultipartFile.fromFile(mainImage!),
+      ));
     }
 
-    return FormData.fromMap(data);
+    return formData;
   }
 
 }

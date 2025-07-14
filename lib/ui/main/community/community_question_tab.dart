@@ -49,9 +49,13 @@ class CommunityQuestionTab extends StatelessWidget {
       return const Center(child: Text('게시글이 없습니다.'));
     }
 
-    return PostList(posts: vm.posts, onRefreshAfterDelete: () async {
-      await vm.fetchPosts(reset: true);
-    }, rootContext: context);
+    return PostList(
+      posts: vm.posts,
+      onRefreshAfterDelete: () async {
+        await vm.fetchPosts(reset: true);
+      },
+      rootContext: context,
+    );
   }
 }
 
