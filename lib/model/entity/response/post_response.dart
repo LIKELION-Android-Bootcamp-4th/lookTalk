@@ -44,7 +44,9 @@ class PostResponse {
       commentCount: json['commentCount'] ?? 0,
       createdAt: DateTime.parse(json['createdAt']),
       user: json['user'] != null ? PostUserResponse.fromJson(json['user']) : null,
-      images: json['images'] != null ? PostImageUrls.fromJson(json['images']) : null,
+      images: json['images'] is List
+          ? PostImageUrls.fromList(json['images'] as List)
+          : null,
       isLiked: json['isLiked'],
       comments: (json['comments'] as List<dynamic>?) ?.map((e) => Comment.fromJson(e)).toList() ?? [],
       product: json['product'] != null ? ProductResponse.fromJson(json['product']) : null,
@@ -58,10 +60,17 @@ class PostImageUrls {
 
   PostImageUrls({this.main, this.sub});
 
-  factory PostImageUrls.fromJson(Map<String, dynamic> json) {
+  factory PostImageUrls.fromList(List<dynamic> jsonList) {
+    final urls = jsonList
+        .whereType<Map<String, dynamic>>()
+        .map((e) => e['path'] as String?)
+        .where((path) => path != null)
+        .cast<String>()
+        .toList();
+
     return PostImageUrls(
-      main: json['main'] as String?,
-      sub: (json['sub'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      main: urls.isNotEmpty ? urls.first : null,
+      sub: urls.length > 1 ? urls.sublist(1) : [],
     );
   }
 }

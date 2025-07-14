@@ -27,6 +27,7 @@ import 'package:look_talk/view_model/product/product_register_viewmodel.dart';
 import 'package:look_talk/view_model/search_view_model.dart';
 
 import '../core/network/dio_client.dart';
+import '../core/network/token_storage.dart';
 import '../model/client/auth_api_client.dart';
 import '../model/client/cart_api_client.dart';
 import '../model/client/nickname_api_client.dart';
@@ -50,6 +51,7 @@ import 'order/order_view_model.dart';
 
 
 final dio = DioClient.instance;
+final tokenStorage = TokenStorage();
 
 // 로그인 & 회원가입
 final authViewModel = provideAuthViewModel();
@@ -83,7 +85,7 @@ QuestionPostListViewModel provideQuestionPostListViewModel() => QuestionPostList
 RecommendPostListViewModel provideRecommendPostListViewModel() => RecommendPostListViewModel(PostRepository(PostApiClient(dio)));
 MyPostListViewModel provideMyPostListViewModel(String userId) => MyPostListViewModel(PostRepository(PostApiClient(dio)), userId);
 PostCreateViewModel providePostCreateViewModel() =>  PostCreateViewModel(PostCreateRepository(PostCreateApiClient(dio)));
-PostDetailViewModel providerPostDetailViewModel(String postId) => PostDetailViewModel(PostRepository(PostApiClient(dio)), postId);
+PostDetailViewModel providerPostDetailViewModel(String postId) => PostDetailViewModel(PostRepository(PostApiClient(dio)), tokenStorage, postId);
 
 
 
