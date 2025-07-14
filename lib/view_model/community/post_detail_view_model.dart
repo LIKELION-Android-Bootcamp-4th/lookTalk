@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/network/token_storage.dart';
 import '../../model/entity/comment.dart';
 import '../../model/entity/post_entity.dart';
 import '../../model/entity/request/comment_request.dart';
@@ -7,24 +8,38 @@ import '../../model/repository/post_repository.dart';
 
 class PostDetailViewModel with ChangeNotifier {
   final PostRepository _repository;
+  final TokenStorage _tokenStorage;
 
   Post? _post;
   bool _isLoading = false;
   String? _error;
+  String? _currentUserId;
+  bool _isLiked = false;
 
   Post? get post => _post;
   bool get isLoading => _isLoading;
   String? get errorMessage => _error;
-
-  bool _isLiked = false;
   bool get isLiked => _isLiked;
 
   final TextEditingController commentController = TextEditingController();
   final List<CommentResponse> comments = [];
 
-  PostDetailViewModel(this._repository, String postId){
-    fetchPost(postId);
+  PostDetailViewModel(this._repository, this._tokenStorage, String postId){
+    _init(postId);
   }
+
+  Future<void> _init(String postId) async{
+    await _fetchCurrentUserId();
+    await fetchPost(postId);
+  }
+
+  Future<void> _fetchCurrentUserId() async {
+    _currentUserId = await _tokenStorage.getUserId();
+    print('현재 로그인된 유저 ID: $_currentUserId');
+  }
+
+  bool get isAuthor => _post?.user.id  == _currentUserId;
+
 
   Future<void> fetchPost(String id) async {
     _isLoading = true;
