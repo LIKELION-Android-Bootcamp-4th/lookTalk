@@ -14,6 +14,7 @@ class Product {
   final Map<String, dynamic>? images;
   final Map<String, dynamic>? attributes;
   final Map<String, dynamic>? dynamicFields;
+  final String? storeName;
 
   Product({
     this.productId,
@@ -31,6 +32,7 @@ class Product {
     this.images,
     this.attributes,
     this.dynamicFields,
+    this.storeName
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -49,6 +51,7 @@ class Product {
       'contentImageUrl',   // ✅ 수정
       'images',
       'attributes',
+      'storeName',
     };
 
     final dynamicFieldMap = <String, dynamic>{};
@@ -69,11 +72,12 @@ class Product {
       options: json['options'] as Map<String, dynamic>?,
       discount: json['discount'] as Map<String, dynamic>?,
       status: json['status'],
-      thumbnailImagePath: json['thumbnailImageUrl'], // ✅ 수정
-      contentImagePath: json['contentImageUrl'],     // ✅ 수정
+      thumbnailImagePath: json['thumbnailImageUrl'],
+      contentImagePath: json['contentImageUrl'],
       images: json['images'] as Map<String, dynamic>?,
       attributes: json['attributes'] as Map<String, dynamic>?,
       dynamicFields: dynamicFieldMap.isNotEmpty ? dynamicFieldMap : null,
+      storeName: json['store']?['name'],
     );
   }
 

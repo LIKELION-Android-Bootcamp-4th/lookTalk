@@ -23,7 +23,6 @@ class ProductDetailViewModel extends ChangeNotifier {
       final result = await repository.fetchProductDetail(productId);
       product = result;
 
-      // dynamicFields에서 찜 수 가져오기 (예: 서버에서 제공 시)
       wishlistCount = result.dynamicFields?['wishlistCount'] ?? 0;
 
       notifyListeners();
@@ -32,7 +31,6 @@ class ProductDetailViewModel extends ChangeNotifier {
     }
   }
 
-  /// UI 연동용 Getter들
   int get discountPercent => product?.discountPercent ?? 0;
   int get originalPrice => product?.originalPrice ?? 0;
   int get finalPrice => product?.finalPrice ?? 0;
@@ -40,6 +38,7 @@ class ProductDetailViewModel extends ChangeNotifier {
   String get imageUrl => product?.thumbnailImagePath ?? '';
   int get price => product?.price ?? 0;
   String get category => product?.category ?? '';
+  String get storeName => product?.storeName ?? '판매자 정보 없음';
 
   void selectTab(int index) {
     if (selectedIndex != index) {

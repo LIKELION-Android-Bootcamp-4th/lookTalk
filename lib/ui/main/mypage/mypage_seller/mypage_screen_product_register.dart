@@ -2,7 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:look_talk/view_model/product/product_register_viewmodel.dart';
+import 'package:look_talk/view_model/category/category_data_select_viewmodel.dart';
 import 'package:look_talk/ui/common/component/common_text_field.dart';
+
+import '../../../../model/entity/response/gender_category_id.dart';
 
 class ProductRegisterScreen extends StatelessWidget {
   const ProductRegisterScreen({super.key});
@@ -19,6 +22,7 @@ class _ProductRegisterForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<ProductRegisterViewModel>();
+    final catVm = context.watch<CategoryDataSelectViewmodel>();
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -54,26 +58,36 @@ class _ProductRegisterForm extends StatelessWidget {
           ),
           const SizedBox(height: 16),
 
-          _buildDropdown(
+          _buildDropdown<GenderType>(
             hint: '성별',
-            value: vm.selectedGender,
-            items: ['남성', '여성'],
-            onChanged: vm.setGender,
+            value: catVm.selectedGender,
+            items: GenderType.values,
+            itemBuilder: (e) => e.name,
+            onChanged: (g) => catVm.fetchMainCategories(g!),
           ),
           const SizedBox(height: 16),
 
           _buildDropdown(
             hint: '상위 카테고리',
-            value: vm.selectedTopCategoryEntity?.mainCategory,
-            items: vm.topCategoryNames,
-            onChanged: vm.selectedGender == null ? null : vm.setTopCategory,
+            value: catVm.selectedMainCategory?.name,
+            items: catVm.categories.map((e) => e.name).toList(),
+            itemBuilder: (e) => e,
+            onChanged: (name) {
+              final cat = catVm.categories.firstWhere((e) => e.name == name);
+              catVm.selectMainCategory(cat);
+            },
           ),
           const SizedBox(height: 16),
+
           _buildDropdown(
             hint: '하위 카테고리',
-            value: vm.selectedSubCategory,
-            items: vm.subCategoryNames,
-            onChanged: vm.selectedTopCategoryEntity == null ? null : vm.setSubCategory,
+            value: catVm.selectedSubCategory?.name,
+            items: catVm.subCategories.map((e) => e.name).toList(),
+            itemBuilder: (e) => e,
+            onChanged: (name) {
+              final cat = catVm.subCategories.firstWhere((e) => e.name == name);
+              catVm.changeSubCategory(cat);
+            },
           ),
           const SizedBox(height: 16),
 
@@ -118,7 +132,6 @@ class _ProductRegisterForm extends StatelessWidget {
             child: ElevatedButton(
               onPressed: vm.isLoading ? null : () async {
                 final success = await vm.registerAndNotify(context);
-
                 if (!context.mounted) return;
 
                 if (success) {
@@ -142,21 +155,21 @@ class _ProductRegisterForm extends StatelessWidget {
     );
   }
 
-  Widget _buildDropdown({
+  Widget _buildDropdown<T>({
     required String hint,
-    required String? value,
-    required List<String> items,
-    ValueChanged<String?>? onChanged,
+    required T? value,
+    required List<T> items,
+    required String Function(T) itemBuilder,
+    ValueChanged<T?>? onChanged,
   }) {
-    return DropdownButtonFormField<String>(
+    return DropdownButtonFormField<T>(
       value: value,
       decoration: InputDecoration(
         labelText: hint,
         border: const OutlineInputBorder(),
       ),
-      items: items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+      items: items.map((e) => DropdownMenuItem(value: e, child: Text(itemBuilder(e)))).toList(),
       onChanged: onChanged,
-      disabledHint: const Text('이전 단계를 먼저 선택해주세요'),
     );
   }
 }

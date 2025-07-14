@@ -74,6 +74,18 @@ class ProductDetailScreen extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                     const SizedBox(height: 16),
+                    if (vm.storeName.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text(
+                          '${vm.storeName} >',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                    const SizedBox(height: 4),
                     // 상품명
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),

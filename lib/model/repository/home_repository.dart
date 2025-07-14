@@ -40,7 +40,7 @@ Future<List<Home>> fetchProduct(String categoryName) async{
   }
   final detailList = await _categoryDetailRepository.categoryResultDetail(categoryId);
   return detailList.map((e) => Home(
-    id: e.id,
+    productId: e.id,
     name: e.name,
     price: e.price,
     description: e.description,
