@@ -28,7 +28,7 @@ class SearchViewModel extends ChangeNotifier {
       
       notifyListeners();
     } catch (e) {
-      print('검색에 오류 발생: $e');
+    print(' 검색중 오류 발생: $e');
     }
   }
 }
