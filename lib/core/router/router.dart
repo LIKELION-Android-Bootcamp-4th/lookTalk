@@ -34,12 +34,12 @@ import '../../ui/main/mypage/mypage_seller/mypage_screen_product_manage.dart';
 import '../../ui/main/mypage/mypage_seller/mypage_screen_seller.dart';
 import '../../ui/product/product_detail/product_detail_screen.dart';
 import 'package:look_talk/ui/product/inquiry/inquiry_screen.dart';
+
 // 뷰모델 및 프로바이더
 import '../../view_model/viewmodel_provider.dart';
 import '../../view_model/auth/auth_view_model.dart';
 
 final authViewModel = provideAuthViewModel();
-
 
 final _categoryDetailRepository = CategoryDetailRepository(dio);
 final _categoryRepository = CategoryRepository(dio);
@@ -109,8 +109,8 @@ final GoRouter router = GoRouter(
       builder: (context, state) {
         final productId = state.pathParameters['id']!;
         return ChangeNotifierProvider(
-          create: (_) => provideInquiryViewModel(),  // InquiryViewModel 제공
-          child:  InquiryScreen(),  // InquiryScreen을 해당 경로에 연결
+          create: (_) => provideInquiryViewModel(), // InquiryViewModel 제공
+          child: InquiryScreen(), // InquiryScreen을 해당 경로에 연결
         );
       },
     ),
@@ -132,14 +132,18 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/community/write',
 
-      builder: (context, state) =>  PostCreateScreen(),
+      builder: (context, state) => PostCreateScreen(),
       routes: [
         GoRoute(
           path: 'product-register',
           builder: (context, state) => MultiProvider(
             providers: [
-              ChangeNotifierProvider(create: (_) => provideCommunityProductTabViewModel()),
-              ChangeNotifierProvider(create: (_) => provideSearchScreenViewModel()),
+              ChangeNotifierProvider(
+                create: (_) => provideCommunityProductTabViewModel(),
+              ),
+              ChangeNotifierProvider(
+                create: (_) => provideSearchScreenViewModel(),
+              ),
             ],
             child: const ProductRegistrationScreen(),
           ),
@@ -158,10 +162,13 @@ final GoRouter router = GoRouter(
       },
     ),
 
-    GoRoute(path: '/search', builder: (context, state) => ChangeNotifierProvider(
-      create: (_) => provideSearchScreenViewModel(),
-      child: SearchScreen(),
-    )),
+    GoRoute(
+      path: '/search',
+      builder: (context, state) => ChangeNotifierProvider(
+        create: (_) => provideSearchScreenViewModel(),
+        child: SearchScreen(),
+      ),
+    ),
 
     GoRoute(path: '/cart', builder: (context, state) => CartScreen()),
 
@@ -181,7 +188,9 @@ final GoRouter router = GoRouter(
       builder: (context, state) => MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => provideProductViewModel()),
-          ChangeNotifierProvider(create: (_) => provideProductRegisterViewModel()),
+          ChangeNotifierProvider(
+            create: (_) => provideProductRegisterViewModel(),
+          ),
         ],
         child: const MyPageProductManageScreen(),
       ),
@@ -198,38 +207,40 @@ final GoRouter router = GoRouter(
         ),
       ),
       routes: [
-
-        GoRoute(path: '/home', builder: (context, state){
-          return ChangeNotifierProvider(
-              create:(_) => provideHomeViewModelDefault(),
-          child: const HomeScreen(),);
-
-} ),
-         GoRoute(
-           path: '/category',
-           builder: (context, state) {
-             return ChangeNotifierProvider(
-               create: (_) => provideCategoryDataSelectViewmodel(),
-               child: CategoryScreen(),
-             );
-           }
-         ),
+        GoRoute(
+          path: '/home',
+          builder: (context, state) {
+            return ChangeNotifierProvider(
+              create: (_) => provideHomeViewModelDefault(),
+              child: const HomeScreen(),
+            );
+          },
+        ),
+        GoRoute(
+          path: '/category',
+          builder: (context, state) {
+            return ChangeNotifierProvider(
+              create: (_) => provideCategoryDataSelectViewmodel(),
+              child: CategoryScreen(),
+            );
+          },
+        ),
         GoRoute(
           path: '/categoryDetail',
           name: 'categoryDetail',
           builder: (context, state) {
             final extra = state.extra as Map<String, dynamic>;
-            final subCategories = extra['subCategories'] as List<BringSubCategoryResponse>;
-            final selected = extra['selectedSubCategory'] as BringSubCategoryResponse;
-            final mainCategory = extra['mainCategory'] ;
-
+            final subCategories =
+                extra['subCategories'] as List<BringSubCategoryResponse>;
+            final selected =
+                extra['selectedSubCategory'] as BringSubCategoryResponse;
+            final mainCategory = extra['mainCategory'];
 
             return ChangeNotifierProvider(
               create: (_) => provideCategoryDetailViewModel(
                 subCategories: subCategories,
                 initialSubCategory: selected,
-                mainCategory: mainCategory
-
+                mainCategory: mainCategory,
               ),
               child: CategoryDetailScreen(),
             );
@@ -237,7 +248,7 @@ final GoRouter router = GoRouter(
         ),
         GoRoute(
           path: '/community',
-          builder: (context, state) => const CommunityEntryPoint()
+          builder: (context, state) => const CommunityEntryPoint(),
         ),
 
         GoRoute(
@@ -269,23 +280,32 @@ final GoRouter router = GoRouter(
           },
         ),
 
-        GoRoute(path: '/manageProduct',
-            builder: (context,state) {
-              return ChangeNotifierProvider(create: (_) =>
-                 provideSearchMyProductListViewmodel(),
-                child: ManageProductScreen(), );
-            }),
+        GoRoute(
+          path: '/manageProduct',
+          builder: (context, state) {
+            return ChangeNotifierProvider(
+              create: (_) => provideSearchMyProductListViewmodel(),
+              child: ManageProductScreen(),
+            );
+          },
+        ),
 
-
-        GoRoute(path: '/alterMember',
-        builder: (context,state) {
-          return MultiProvider(
-              providers :[
-              ChangeNotifierProvider(create: (_) => provideAlterMemberViewmodel()),
-              ChangeNotifierProvider(create: (_) => provideBuyerSignupViewModel()),
+        GoRoute(
+          path: '/alterMember',
+          builder: (context, state) {
+            return MultiProvider(
+              providers: [
+                ChangeNotifierProvider(
+                  create: (_) => provideAlterMemberViewmodel(),
+                ),
+                ChangeNotifierProvider(
+                  create: (_) => provideBuyerSignupViewModel(),
+                ),
               ],
-            child: AlterMember(), );
-        }),
+              child: AlterMember(),
+            );
+          },
+        ),
 
         GoRoute(
           path: '/notice',
@@ -298,8 +318,10 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '/seller/orders',
           builder: (context, state) {
-            return ChangeNotifierProvider(create: (_) =>provideSellerManageViewmodel(),
-            child: ManageProductSellerScreen(),);
+            return ChangeNotifierProvider(
+              create: (_) => provideSellerManageViewmodel(),
+              child: ManageProductSellerScreen(),
+            );
           },
         ),
       ],
