@@ -24,7 +24,7 @@ class CommunityQuestionTab extends StatelessWidget {
 
   Widget _buildSortDropdown(QuestionPostListViewModel vm) {
     return Padding(
-      padding: const EdgeInsets.only(top: 12, right: 16),
+      padding: const EdgeInsets.only(top: 24, right: 16),
       child: Align(
         alignment: Alignment.centerRight,
         child: CommonDropdown(

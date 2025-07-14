@@ -1,3 +1,6 @@
+import 'package:dio/dio.dart';
+import 'package:path/path.dart' as path;
+
 class PostCreateRequest {
   final String category;
   final String title;
@@ -23,4 +26,27 @@ class PostCreateRequest {
         'main': mainImage,
       },
   };
+
+  Future<FormData> toFormData() async {
+    print('[디버그] toFormData() 진입');
+    print('mainImage: $mainImage');
+    final Map<String, dynamic> data = {
+      'category': category,
+      'title': title,
+      'content': content,
+      if (productId != null) 'productId': productId,
+    };
+
+    if (mainImage != null && mainImage!.isNotEmpty) {
+      final fileName = path.basename(mainImage!);
+
+      data['images.main'] = await MultipartFile.fromFile(
+        mainImage!,
+        filename: fileName,
+      );
+    }
+
+    return FormData.fromMap(data);
+  }
+
 }

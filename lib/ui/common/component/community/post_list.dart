@@ -15,7 +15,7 @@ class PostList extends StatelessWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      padding: const EdgeInsets.only(bottom: 16, top: 12),
       child: ListView.separated(
         itemCount: posts.length,
         itemBuilder: (context, index) {
