@@ -32,7 +32,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => provideAuthViewModel()),
         ChangeNotifierProvider(create: (_) => provideCheckNameViewModel()),
         ChangeNotifierProvider(create: (_) => provideCategoryDataSelectViewmodel()),
-
+        ChangeNotifierProvider(create: (_) => provideSearchMyProductListViewmodel()),
 
         // [✅ CartViewModel Provider를 함수 호출로 변경]
         ChangeNotifierProvider(create: (_) => provideCartViewModel()),

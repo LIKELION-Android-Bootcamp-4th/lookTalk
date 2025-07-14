@@ -103,7 +103,7 @@ class _CommunityProductSearchState extends State<CommunityProductSearch> {
 
     return GestureDetector(
       onTap: () {
-        context.read<SelectedProductViewModel>().selectProduct(product);
+        context.read<SelectedProductViewModel>().selectFromProductSearch(product);
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

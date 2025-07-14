@@ -1,24 +1,26 @@
-// view_model/selected_product_view_model.dart
-import 'package:flutter/material.dart';
-import 'package:look_talk/model/entity/response/search_response.dart';
+import 'package:flutter/cupertino.dart';
+
+import '../../model/entity/response/order_product_summary.dart';
+import '../../model/entity/response/search_response.dart';
+import '../../model/entity/selected_product.dart';
 
 class SelectedProductViewModel extends ChangeNotifier {
-  ProductSearch? _selectedProduct;
+  SelectedProduct? _selected;
 
-  ProductSearch? get selectedProduct => _selectedProduct;
+  SelectedProduct? get selectedProduct => _selected;
 
-  void selectProduct(ProductSearch? product) {
-    _selectedProduct = product;
+  void selectFromProductSearch(ProductSearch product) {
+    _selected = SelectedProduct.fromProductSearch(product);
     notifyListeners();
   }
 
-  void deselectProduct(){
-    _selectedProduct = null;
+  void selectFromOrderSummary(OrderProductSummary item) {
+    _selected = SelectedProduct.fromOrderSummary(item);
     notifyListeners();
   }
 
-  void clear() {
-    _selectedProduct = null;
+  void deselectProduct() {
+    _selected = null;
     notifyListeners();
   }
 }
