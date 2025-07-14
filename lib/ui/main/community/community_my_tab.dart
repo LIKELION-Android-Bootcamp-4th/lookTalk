@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../model/entity/request/post_list_request.dart';
 import '../../../view_model/community/my_post_list_view_model.dart';
 import '../../common/component/community/post_list.dart';
+import '../../common/const/gap.dart';
 
 class CommunityMyTab extends StatelessWidget {
   const CommunityMyTab({super.key});
@@ -17,14 +18,14 @@ class CommunityMyTab extends StatelessWidget {
     return Column(
       children: [
         _buildSortDropdown(vm),
-        Expanded(child: _buildPostList(vm)),
+        Expanded(child: _buildPostList(vm, context)),
       ],
     );
   }
 
-  Widget _buildSortDropdown(MyPostListViewModel vm) {
+  Widget _buildSortDropdown(MyPostListViewModel vm,) {
     return Padding(
-      padding: const EdgeInsets.only(top: 12, right: 16),
+      padding: const EdgeInsets.only(top: 24, right: 16),
       child: Align(
         alignment: Alignment.centerRight,
         child: CommonDropdown(
@@ -40,7 +41,7 @@ class CommunityMyTab extends StatelessWidget {
     );
   }
 
-  Widget _buildPostList(MyPostListViewModel vm) {
+  Widget _buildPostList(MyPostListViewModel vm, BuildContext context) {
     if (vm.isLoading && vm.posts.isEmpty) {
       return const Center(child: CommonLoading());
     }
@@ -49,6 +50,8 @@ class CommunityMyTab extends StatelessWidget {
       return const Center(child: Text('게시글이 없습니다.'));
     }
 
-    return PostList(posts: vm.posts);
+    return PostList(posts: vm.posts, onRefreshAfterDelete: () async {
+      await vm.fetchPosts(reset: true);
+    }, rootContext: context,);
   }
 }

@@ -21,10 +21,12 @@ import 'package:look_talk/view_model/home/home_category_viewmodel.dart';
 import 'package:look_talk/view_model/inquiry/inquiry_viewmodel.dart';
 import 'package:look_talk/view_model/mypage_view_model/alter_member_viewmodel.dart';
 import 'package:look_talk/view_model/mypage_view_model/search_my_product_list_viewmodel.dart';
+import 'package:look_talk/view_model/product/product_community_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_detail_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_list_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_register_viewmodel.dart';
 import 'package:look_talk/view_model/search_view_model.dart';
+import 'package:look_talk/view_model/community/community_board_view_model.dart';
 
 import '../core/network/dio_client.dart';
 import '../model/client/auth_api_client.dart';
@@ -47,6 +49,8 @@ import 'community/my_post_list_view_model.dart';
 import 'community/question_post_list_view_model.dart';
 import 'community/recommend_post_list_view_model.dart';
 import 'order/order_view_model.dart';
+import 'package:look_talk/view_model/product/product_post_list_viewmodel.dart';
+
 
 
 final dio = DioClient.instance;
@@ -84,7 +88,17 @@ RecommendPostListViewModel provideRecommendPostListViewModel() => RecommendPostL
 MyPostListViewModel provideMyPostListViewModel(String userId) => MyPostListViewModel(PostRepository(PostApiClient(dio)), userId);
 PostCreateViewModel providePostCreateViewModel() =>  PostCreateViewModel(PostCreateRepository(PostCreateApiClient(dio)));
 PostDetailViewModel providerPostDetailViewModel(String postId) => PostDetailViewModel(PostRepository(PostApiClient(dio)), postId);
-
+ProductPostListViewModel provideProductPostListViewModel(String productId) {
+  final repository = PostRepository(PostApiClient(dio));
+  return ProductPostListViewModel(repository, productId);
+}
+CommunityBoardViewModel provideCommunityBoardViewModel(String category, {String? productId}) {
+  return CommunityBoardViewModel(
+    repository: PostRepository(PostApiClient(dio)),
+    category: category,
+    productId: productId,
+  );
+}
 
 
 ProductViewModel provideProductViewModel() {
@@ -95,6 +109,12 @@ ProductRegisterViewModel provideProductRegisterViewModel() => ProductRegisterVie
 ProductDetailViewModel provideProductDetailViewModel(String productId) =>
     ProductDetailViewModel(ProductRepository(dio), productId);
 InquiryViewModel provideInquiryViewModel() => InquiryViewModel();
+ProductCommunityViewModel provideProductCommunityViewModel(String productId) {
+  return ProductCommunityViewModel(
+    repository: PostRepository(PostApiClient(dio)),
+    productId: productId,
+  );
+}
 
 CommunityProductTabViewModel provideCommunityProductTabViewModel() => CommunityProductTabViewModel();
 

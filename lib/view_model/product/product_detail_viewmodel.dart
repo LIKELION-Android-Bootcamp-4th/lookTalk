@@ -47,7 +47,6 @@ class ProductDetailViewModel extends ChangeNotifier {
     }
   }
 
-  /// 찜 상태 변경 (실제 서버 요청 필요 시 API 호출 추가)
   void toggleWishlist() {
     isWishlist = !isWishlist;
     wishlistCount += isWishlist ? 1 : -1;

@@ -23,10 +23,13 @@ class PostApiClient {
 
   Future<ApiResult<PostListResponse>> fetchPostsList(
       PostListRequest request) async {
+    print('[PostApiClient] fetchPostsList 호출됨'); // ✅ 추가
+
     final response = await _dio.get(
       CommunityEndpoints.allPosts,
       queryParameters: request.toQueryParameters(),
     );
+    print('[PostApiClient] 응답 받음: ${response.data}'); // ✅ 추가
 
     return ApiResult.fromResponse(
       response,

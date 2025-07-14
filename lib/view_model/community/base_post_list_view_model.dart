@@ -31,6 +31,7 @@ abstract class BasePostListViewModel with ChangeNotifier {
   }
 
   Future<void> fetchPosts({bool reset = false}) async {
+    print('[ProductPostListViewModel] fetchPosts 호출됨');
     if (!reset && (pagination != null && !pagination!.hasNext)) return;
 
     isLoading = true;

@@ -17,14 +17,14 @@ class CommunityQuestionTab extends StatelessWidget {
     return Column(
       children: [
         _buildSortDropdown(vm),
-        Expanded(child: _buildPostList(vm)),
+        Expanded(child: _buildPostList(vm, context)),
       ],
     );
   }
 
   Widget _buildSortDropdown(QuestionPostListViewModel vm) {
     return Padding(
-      padding: const EdgeInsets.only(top: 12, right: 16),
+      padding: const EdgeInsets.only(top: 24, right: 16),
       child: Align(
         alignment: Alignment.centerRight,
         child: CommonDropdown(
@@ -40,7 +40,7 @@ class CommunityQuestionTab extends StatelessWidget {
     );
   }
 
-  Widget _buildPostList(QuestionPostListViewModel vm) {
+  Widget _buildPostList(QuestionPostListViewModel vm, BuildContext context) {
     if (vm.isLoading && vm.posts.isEmpty) {
       return const Center(child: CommonLoading());
     }
@@ -49,7 +49,13 @@ class CommunityQuestionTab extends StatelessWidget {
       return const Center(child: Text('게시글이 없습니다.'));
     }
 
-    return PostList(posts: vm.posts);
+    return PostList(
+      posts: vm.posts,
+      onRefreshAfterDelete: () async {
+        await vm.fetchPosts(reset: true);
+      },
+      rootContext: context,
+    );
   }
 }
 
