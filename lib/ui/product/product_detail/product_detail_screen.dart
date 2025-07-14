@@ -6,11 +6,12 @@ import 'package:look_talk/ui/common/const/colors.dart';
 import 'package:look_talk/ui/common/const/text_sizes.dart';
 import 'package:look_talk/view_model/product/product_detail_viewmodel.dart';
 import 'package:look_talk/ui/product/inquiry/inquiry_screen.dart';
-import 'package:look_talk/model/repository/post_repository.dart';
 import '../../../view_model/product/product_post_list_viewmodel.dart';
-import 'package:look_talk/view_model/product/product_list_viewmodel.dart';
 import '../../../view_model/viewmodel_provider.dart';
-import 'package:look_talk/view_model/product/product_post_list_viewmodel.dart';
+import '../../../model/repository/post_repository.dart';
+import '../../../model/client/post_api_client.dart';
+import '../../../core/network/dio_client.dart';
+import 'community_section_widget.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   const ProductDetailScreen({super.key});
@@ -22,8 +23,24 @@ class ProductDetailScreen extends StatelessWidget {
       case 1:
         return const Text('리뷰 페이지');
       case 2:
-        print('[ProductDetailScreen] 커뮤니티 탭 진입, productId: ${vm.productId}');
-        return const ProductPostListView(); // ⬅️ Provider는 외부에서 감싸줌
+        return Provider<PostRepository>(
+          create: (_) => PostRepository(PostApiClient(DioClient.instance)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CommunitySectionWidget(
+                category: 'coord_question',
+                title: '코디 질문',
+                productId: vm.productId,
+              ),
+              CommunitySectionWidget(
+                category: 'coord_recommend',
+                title: '코디 추천',
+                productId: vm.productId,
+              ),
+            ],
+          ),
+        );
       case 3:
         return InquiryScreen();
       default:
@@ -65,7 +82,6 @@ class ProductDetailScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // 상품 이미지
                       Image.network(
                         vm.imageUrl,
                         width: double.infinity,
@@ -84,7 +100,6 @@ class ProductDetailScreen extends StatelessWidget {
                           ),
                         ),
                       const SizedBox(height: 4),
-                      // 상품명
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Text(
@@ -97,7 +112,6 @@ class ProductDetailScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      // 할인율, 원가
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Row(
@@ -122,7 +136,6 @@ class ProductDetailScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      // 최종 가격
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Text(
@@ -135,7 +148,6 @@ class ProductDetailScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      // 탭바
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Row(
@@ -157,7 +169,6 @@ class ProductDetailScreen extends StatelessWidget {
                         ),
                       ),
                       const Divider(height: 20),
-                      // 탭 내용
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: _buildTabContent(context, vm, vm.selectedIndex),
@@ -178,7 +189,6 @@ class ProductDetailScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
-                // ❤️ 찜 아이콘 + 숫자
                 GestureDetector(
                   onTap: vm.toggleWishlist,
                   child: Row(
@@ -199,8 +209,6 @@ class ProductDetailScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 12),
-
-                // ⬛ 구매하기 버튼
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {

@@ -13,7 +13,14 @@ class CommunityBoardViewModel extends ChangeNotifier {
   bool isLoading = false;
   String? errorMessage;
 
-  CommunityBoardViewModel({required this.repository, required this.category, this.productId,}) {
+  CommunityBoardViewModel({
+    required this.repository,
+    required this.category,
+    this.productId,
+  }) {
+    print('[CommunityBoardViewModel] 생성됨');
+    print('  category: $category');
+    print('  productId: $productId');
     fetchPosts();
   }
 
@@ -21,30 +28,41 @@ class CommunityBoardViewModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
+    print('[fetchPosts] 게시글 요청 시작');
+    print('  category: $category');
+    print('  productId: $productId');
+
+    print('[검사] category isEmpty: ${category.isEmpty}');
+    print('[검사] productId isEmpty: ${productId?.isEmpty}');
+
     try {
-      final result = await repository.fetchPostList(
-        PostListRequest(
-          page: 0,
-          limit: 30,
-          category: category,
-          productId: productId,
-          sortBy: SortType.createdAt,
-          sortOrder: SortOrder.desc,
-        ),
+      final request = PostListRequest(
+        page: 0,
+        limit: 30,
+        category: category,
+        productId: productId,
+        sortBy: SortType.createdAt,
+        sortOrder: SortOrder.desc,
       );
+
+
+      final result = await repository.fetchPostList(request);
 
       if (result.success && result.data != null) {
         posts = result.data!.items;
         errorMessage = null;
+        print('  ✅ 게시글 ${posts.length}개 불러옴');
       } else {
         errorMessage = result.message;
+        print('  ⚠️ 게시글 요청 실패: ${result.message}');
       }
     } catch (e) {
       errorMessage = '게시글을 불러오는 데 실패했습니다.';
-      print('Error fetching community board posts: $e');
+      print('❌ 예외 발생: $e');
     } finally {
       isLoading = false;
       notifyListeners();
+      print('[fetchPosts] 게시글 요청 종료');
     }
   }
 }

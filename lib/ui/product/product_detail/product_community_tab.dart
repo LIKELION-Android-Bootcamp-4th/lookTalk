@@ -7,11 +7,13 @@ import 'package:look_talk/core/extension/text_style_extension.dart';
 class ProductCommunityTab extends StatelessWidget {
   final List<PostResponse> questionPosts;
   final List<PostResponse> recommendPosts;
+  final String productId; // ✅ productId 추가
 
   const ProductCommunityTab({
     super.key,
     required this.questionPosts,
     required this.recommendPosts,
+    required this.productId, // ✅ 생성자에도 추가
   });
 
   @override
@@ -36,11 +38,12 @@ class ProductCommunityTab extends StatelessWidget {
     );
   }
 
-  Widget _buildSection(BuildContext context, {
-    required String title,
-    required List<PostResponse> posts,
-    required String category,
-  }) {
+  Widget _buildSection(
+      BuildContext context, {
+        required String title,
+        required List<PostResponse> posts,
+        required String category,
+      }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -53,7 +56,7 @@ class ProductCommunityTab extends StatelessWidget {
               Text(title, style: context.h2),
               TextButton(
                 onPressed: () {
-                  context.push('/community-board?category=$category');
+                  context.push('/community/board/$category?productId=$productId'); // ✅ productId 포함
                 },
                 child: const Text('>'),
               ),
