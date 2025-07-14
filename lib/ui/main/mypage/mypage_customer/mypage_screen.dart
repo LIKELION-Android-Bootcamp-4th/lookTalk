@@ -13,6 +13,7 @@ import 'package:look_talk/ui/main/mypage/mypage_customer/recent_product.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../view_model/mypage_view_model/alter_member_viewmodel.dart';
+import '../mypage_seller/mypage_screen_seller.dart';
 
 class MyPageScreenCustomer extends StatefulWidget {
   const MyPageScreenCustomer({super.key});
@@ -98,7 +99,8 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
               GestureDetector(
                 onTap: () =>
                 {
-                  context.push('/manageProduct')
+                  // context.push('/manageProduct')
+                  Navigator.push(context, MaterialPageRoute(builder: (_)=>MyPageScreenSeller())),
                 },
                 child: _MyPageMenu(title: '주문/교환/반품/취소'),
               ),

@@ -11,5 +11,9 @@ class MyPage {
 
   static const cancelOrder = '/api/orders/';
 
+  static const orderSellerSearch = '/api/seller/orders';
+
+  static const orderChangeStatus ='/api/seller/orders';
+
 
 }
