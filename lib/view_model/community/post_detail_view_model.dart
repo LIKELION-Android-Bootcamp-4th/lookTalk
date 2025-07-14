@@ -106,5 +106,11 @@ class PostDetailViewModel with ChangeNotifier {
     }
   }
 
+  Future<void> deletePost() async{
+    if(_post == null) _error = '게시글 정보가 없습니다.';
+
+    final result = await _repository.deletePost(_post!.id);
+    return result;
+  }
 
 }

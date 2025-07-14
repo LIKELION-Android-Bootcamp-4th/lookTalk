@@ -75,9 +75,9 @@ final GoRouter router = GoRouter(
           builder: (context, state) {
             return MultiProvider(
               providers: [
-                ChangeNotifierProvider(
-                  create: (_) => provideCheckNameViewModel(),
-                ),
+                // ChangeNotifierProvider(
+                //   create: (_) => provideCheckNameViewModel(),
+                // ),
                 ChangeNotifierProvider(
                   create: (_) => provideBuyerSignupViewModel(),
                 ),
@@ -91,7 +91,7 @@ final GoRouter router = GoRouter(
           builder: (context, state) {
             return MultiProvider(
               providers: [
-                ChangeNotifierProvider(create: (_) => provideCheckNameViewModel()),
+                // ChangeNotifierProvider(create: (_) => provideCheckNameViewModel()),
                 ChangeNotifierProvider(
                   create: (_) => provideSellerSignupViewModel(),
                 ),
