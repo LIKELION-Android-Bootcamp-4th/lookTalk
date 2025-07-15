@@ -72,7 +72,7 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
                   child: Row(
                     children: [
                       Text(
-                        "${viewModel.alterMember?.member.nickName ?? '로그인을 해주세요'}",
+                        "${viewModel.alterMember?.member.nickName}",
                         style: TextStyle(
                           fontSize: TextSizes.headline,
                           fontWeight: FontWeight.bold,
@@ -91,10 +91,6 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
               },
               child: _MyPageMenu(title: '최근 본 상품'),
             ),
-
-            if(_hasAccessToken) ...{
-
-
               gap16,
               GestureDetector(
                 onTap: () =>
@@ -167,6 +163,9 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
                           onConfirm: () async {
                             try {
                               await dio.delete(MyPage.deleteRegister);
+                              if (mounted) {
+                                Navigator.pop(context);
+                              }
                             } catch (e) {
                               print("회원탈퇴 에러 발생$e");
                             }
@@ -176,7 +175,7 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
                 },
                 child: _MyPageMenu(title: '회원탈퇴'),
               ),
-            },
+
           ],
         ),
       ),

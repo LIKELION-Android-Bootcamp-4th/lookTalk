@@ -18,6 +18,9 @@ class SearchMyProductListViewmodel with ChangeNotifier {
     _orders = response;
     notifyListeners();
   }
+  void refresh(){
+    _init();
+  }
 
   Future<void> cancelOrder(String orderId) async{
     try{
