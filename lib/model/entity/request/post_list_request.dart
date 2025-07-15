@@ -3,6 +3,7 @@ class PostListRequest {
   final int limit;
   final String? category;
   final String? userId;
+  final String? productId;
   final SortType sortBy;
   final SortOrder sortOrder;
 
@@ -11,6 +12,7 @@ class PostListRequest {
     required this.limit,
     this.category,
     this.userId,
+    this.productId,
     this.sortBy = SortType.createdAt,
     this.sortOrder = SortOrder.desc,
   });
@@ -20,6 +22,7 @@ class PostListRequest {
     int? limit,
     String? category,
     String? userId,
+    String? productId,
     SortType? sortBy,
     SortOrder? sortOrder,
   }) {
@@ -28,6 +31,7 @@ class PostListRequest {
       limit: limit ?? this.limit,
       category: category ?? this.category,
       userId: userId ?? this.userId,
+      productId: productId ?? this.productId,
       sortBy: sortBy ?? this.sortBy,
       sortOrder: sortOrder ?? this.sortOrder,
     );
@@ -39,6 +43,7 @@ class PostListRequest {
       'limit': limit,
       if (category != null) 'category': category,
       if (userId != null) 'userId': userId,
+      if (productId != null) 'productId': productId,
       'sortBy': sortBy.value,
       'sortOrder': sortOrder.value,
     };
