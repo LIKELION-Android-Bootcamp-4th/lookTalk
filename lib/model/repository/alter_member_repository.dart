@@ -14,7 +14,8 @@ class AlterMemberRepository {
       );
 
       return AlterMemberResponse.fromJson(response.data);
-    }catch(e){
+    }catch(e, stack){
+      print("스택 값 찾기.${stack}");
       print("값을 불러올 수 없습니다.${e}");
       throw Exception("AlterMember 불러오기 실패: $e");
     }

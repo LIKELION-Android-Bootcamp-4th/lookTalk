@@ -36,7 +36,7 @@ class DioClient {
             if (accessToken != null) {
 
 
-              options.headers['Authorization'] = 'Bearer $accessToken';
+              options.headers['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODc2ODE1NWVkNmIxNGE1ZjI5MDUwMjMiLCJjb21wYW55SWQiOiI2ODY2ZmNlYTViMjMwZjVkYzcwOWJkZWIiLCJpc0FkbWluIjpmYWxzZSwiaXNTdXBlckFkbWluIjpmYWxzZSwiaWF0IjoxNzUyNjAwMTIxLCJleHAiOjE3NTI2ODY1MjF9.6AW7WEF28cyQKyLK9e_rE1xRIdAQS0zv4xNsaOLNejY';
 
             }
           }
@@ -114,7 +114,5 @@ class DioClient {
   Future<Response> delete(String path, {Map<String, dynamic>? queryParameters}) async {
     return await _dio.delete(path, queryParameters: queryParameters);
   }
-
-
 
 }

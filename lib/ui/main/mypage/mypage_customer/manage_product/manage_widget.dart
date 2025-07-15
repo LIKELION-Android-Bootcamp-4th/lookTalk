@@ -26,7 +26,6 @@ class ManageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final imageUrl = orderItem.thumbnailImage;
     final isValidImage = imageUrl != null && imageUrl.trim().isNotEmpty;
-
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
@@ -60,7 +59,7 @@ class ManageWidget extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text('옵션: ${orderItem.size ?? "옵션 없음"}'),
                     const SizedBox(height: 4),
-                    Text('${orderItem.price}원  수량: ${totalAmount ?? 0}개'),
+                    Text('${orderItem.price}원  수량: ${orderItem.quantity ?? 0}개'),
                   ],
                 ),
               ),
