@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 
 import '../../../model/entity/post_entity.dart';
 import '../../../model/entity/response/search_response.dart';
+import '../../../model/entity/selected_product.dart';
 import '../../../view_model/community/post_create_view_model.dart';
 import '../../common/const/colors.dart';
 
@@ -26,26 +27,35 @@ class PostCreateScreen extends StatelessWidget {
       context.read<PostCreateViewModel>().setProductId(selectedProduct.id);
     }
 
-    return Scaffold(
-      appBar: _buildRegisterButton(context),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildCategoryDropdown(context),
-              gap24,
-              _buildTitleField(context),
-              gap24,
-              _buildContentField(context),
-              gap24,
-              _buildProductButton(context),
-              gap12,
-              if(selectedProduct != null) _buildSelectedProductPreview(context, selectedProduct),
-              gap24,
-              _buildPictureField(context),
-            ],
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (bool didPop, dynamic result) {
+        if (didPop) {
+          context.read<PostCreateViewModel>().clearImage();
+          context.read<SelectedProductViewModel>().deselectProduct();
+        }
+      },
+      child: Scaffold(
+        appBar: _buildRegisterButton(context),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildCategoryDropdown(context),
+                gap24,
+                _buildTitleField(context),
+                gap24,
+                _buildContentField(context),
+                gap24,
+                _buildProductButton(context),
+                gap12,
+                if(selectedProduct != null) _buildSelectedProductPreview(context, selectedProduct),
+                gap24,
+                _buildPictureField(context),
+              ],
+            ),
           ),
         ),
       ),
@@ -128,7 +138,7 @@ class PostCreateScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSelectedProductPreview(BuildContext context, ProductSearch product) {
+  Widget _buildSelectedProductPreview(BuildContext context, SelectedProduct product) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
@@ -141,7 +151,7 @@ class PostCreateScreen extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(6),
             child: Image.network(
-              product.thumbnailImage ?? '',
+              product.imageUrl ?? '',
               width: 60,
               height: 60,
               fit: BoxFit.cover,
@@ -154,8 +164,7 @@ class PostCreateScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(product.storeName ?? '', style: const TextStyle(fontSize: 12)),
-                Text(product.name, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                Text('${product.price}원', style: const TextStyle(fontSize: 12)),
+                Text(product.name ?? '', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
               ],
             ),
           ),

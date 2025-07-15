@@ -15,17 +15,20 @@ class PostDetailViewModel with ChangeNotifier {
   String? _error;
   String? _currentUserId;
   bool _isLiked = false;
+  bool _hasNewComment = false;
 
   Post? get post => _post;
-
   bool get isLoading => _isLoading;
-
   String? get errorMessage => _error;
-
   bool get isLiked => _isLiked;
+  bool get hasNewComment => _hasNewComment;
 
   final TextEditingController commentController = TextEditingController();
   final List<CommentResponse> comments = [];
+
+  void resetNewCommentFlag() {
+    _hasNewComment = false;
+  }
 
   PostDetailViewModel(this._repository, this._tokenStorage, String postId) {
     _init(postId);
@@ -88,9 +91,9 @@ class PostDetailViewModel with ChangeNotifier {
     }
   }
 
-  Future<void> submitComment(String postId) async {
+  Future<bool> submitComment(String postId) async {
     final content = commentController.text.trim();
-    if (content.isEmpty) return;
+    if (content.isEmpty) return false;
 
     final request = CommentRequest(content: content);
     final result = await _repository.addComment(
@@ -104,11 +107,13 @@ class PostDetailViewModel with ChangeNotifier {
       final updatedComments = List<Comment>.from(post!.comments)
         ..add(newComment);
 
-      _post = _post!.copyWith(comments: updatedComments);
+      _post = _post!.copyWith(comments: updatedComments, commentCount: _post!.commentCount + 1);
       commentController.clear();
       notifyListeners();
+      return true;
     } else {
       print('댓글 작성 실패: ${result.message}');
+      return false;
     }
   }
 
