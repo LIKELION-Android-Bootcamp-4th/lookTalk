@@ -212,7 +212,12 @@ class ProductDetailScreen extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      showOptionBottomSheet(context);
+                      showOptionBottomSheet(
+                        context: context,
+                        options: vm.options,
+                        originalPrice: vm.originalPrice,
+                        discountRate: vm.discountPercent,
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.btnPrimary,

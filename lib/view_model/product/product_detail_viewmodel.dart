@@ -31,15 +31,22 @@ class ProductDetailViewModel extends ChangeNotifier {
     }
   }
 
+  // 가격 관련 정보
   int get discountPercent => product?.discountPercent ?? 0;
   int get originalPrice => product?.originalPrice ?? 0;
   int get finalPrice => product?.finalPrice ?? 0;
+
+  // 상품 정보
   String get productName => product?.name ?? '';
   String get imageUrl => product?.thumbnailImagePath ?? '';
   int get price => product?.price ?? 0;
   String get category => product?.category ?? '';
   String get storeName => product?.storeName ?? '판매자 정보 없음';
 
+  // ✅ 옵션 정보 추가
+  Map<String, dynamic> get options => product?.options ?? {};
+
+  // 탭 이동
   void selectTab(int index) {
     if (selectedIndex != index) {
       selectedIndex = index;
@@ -47,6 +54,7 @@ class ProductDetailViewModel extends ChangeNotifier {
     }
   }
 
+  // 찜 토글
   void toggleWishlist() {
     isWishlist = !isWishlist;
     wishlistCount += isWishlist ? 1 : -1;
