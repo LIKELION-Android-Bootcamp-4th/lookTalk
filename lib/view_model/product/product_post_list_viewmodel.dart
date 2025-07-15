@@ -26,9 +26,10 @@ class _ProductPostListViewState extends State<ProductPostListView> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!_initialized) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
         final vm = context.read<ProductPostListViewModel>();
-        vm.fetchPosts();
+        await vm.fetchPosts(); // 데이터를 불러온 다음
+        setState(() {});       // UI를 갱신해줘야 PostList가 반영됨
       });
       _initialized = true;
     }
@@ -36,51 +37,50 @@ class _ProductPostListViewState extends State<ProductPostListView> {
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.watch<ProductPostListViewModel>();
+    return Consumer<ProductPostListViewModel>(
+      builder: (context, vm, _) {
+        final questionPosts = vm.posts
+            .where((post) => post.category == 'coord_question')
+            .toList();
 
-    if (vm.isLoading && vm.posts.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
-    }
+        final recommendPosts = vm.posts
+            .where((post) => post.category == 'coord_recommend')
+            .toList();
 
-    final questionPosts = vm.posts
-        .where((post) => post.category == 'coord_question')
-        .toList();
-
-    final recommendPosts = vm.posts
-        .where((post) => post.category == 'coord_recommend')
-        .toList();
-
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildSection(
-            title: "코디 질문",
-            category: "coord_question",
-            posts: questionPosts,
-            visibleCount: questionPostCount,
-            onMorePressed: () {
-              setState(() {
-                questionPostCount += 2;
-              });
-            },
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildSection(
+                title: "코디 질문",
+                category: "coord_question",
+                posts: questionPosts,
+                visibleCount: questionPostCount,
+                onMorePressed: () {
+                  setState(() {
+                    questionPostCount += 2;
+                  });
+                },
+              ),
+              const Divider(),
+              _buildSection(
+                title: "코디 추천",
+                category: "coord_recommend",
+                posts: recommendPosts,
+                visibleCount: recommendPostCount,
+                onMorePressed: () {
+                  setState(() {
+                    recommendPostCount += 2;
+                  });
+                },
+              ),
+            ],
           ),
-          const Divider(),
-          _buildSection(
-            title: "코디 추천",
-            category: "coord_recommend",
-            posts: recommendPosts,
-            visibleCount: recommendPostCount,
-            onMorePressed: () {
-              setState(() {
-                recommendPostCount += 2;
-              });
-            },
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
+
 
   Widget _buildSection({
     required String title,
