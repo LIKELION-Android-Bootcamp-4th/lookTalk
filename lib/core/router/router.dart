@@ -253,8 +253,15 @@ final GoRouter router = GoRouter(
 
         GoRoute(
           path: '/wishlist',
-          builder: (context, state) => const WishlistScreen(),
+          builder: (context, state) {
+            return ChangeNotifierProvider(
+              // [✅ 수정] ..init() 호출 부분을 제거합니다.
+              create: (_) => provideWishlistViewModel(),
+              child: const WishlistScreen(),
+            );
+          },
         ),
+
         GoRoute(
           path: '/mypage',
           builder: (context, state) {
