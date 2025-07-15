@@ -27,26 +27,35 @@ class PostCreateScreen extends StatelessWidget {
       context.read<PostCreateViewModel>().setProductId(selectedProduct.id);
     }
 
-    return Scaffold(
-      appBar: _buildRegisterButton(context),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildCategoryDropdown(context),
-              gap24,
-              _buildTitleField(context),
-              gap24,
-              _buildContentField(context),
-              gap24,
-              _buildProductButton(context),
-              gap12,
-              if(selectedProduct != null) _buildSelectedProductPreview(context, selectedProduct),
-              gap24,
-              _buildPictureField(context),
-            ],
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (bool didPop, dynamic result) {
+        if (didPop) {
+          context.read<PostCreateViewModel>().clearImage();
+          context.read<SelectedProductViewModel>().deselectProduct();
+        }
+      },
+      child: Scaffold(
+        appBar: _buildRegisterButton(context),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildCategoryDropdown(context),
+                gap24,
+                _buildTitleField(context),
+                gap24,
+                _buildContentField(context),
+                gap24,
+                _buildProductButton(context),
+                gap12,
+                if(selectedProduct != null) _buildSelectedProductPreview(context, selectedProduct),
+                gap24,
+                _buildPictureField(context),
+              ],
+            ),
           ),
         ),
       ),
