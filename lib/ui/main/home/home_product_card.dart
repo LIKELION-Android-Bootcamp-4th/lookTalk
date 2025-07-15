@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:look_talk/model/entity/product_entity.dart';
 
 class HomeProductCard extends StatelessWidget {
-  final Product product;
+  final ProductEntity product;
   final VoidCallback? onTap;
 
   const HomeProductCard({
@@ -29,7 +29,7 @@ class HomeProductCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
                 child: Image.network(
-                  product.thumbnailImagePath ?? product.imageUrl,
+                  product.thumbnailUrl ?? product.imageUrl,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => Container(
                     color: Colors.grey[200],

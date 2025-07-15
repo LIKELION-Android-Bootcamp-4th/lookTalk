@@ -34,7 +34,10 @@ class DioClient {
           if (!isExcluded) {
             final accessToken = await _tokenStorage.getAccessToken();
             if (accessToken != null) {
-              options.headers['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODZmNGZhOWRiM2U4MjdhNWU1MzhkMDUiLCJjb21wYW55SWQiOiI2ODY2ZmNlYTViMjMwZjVkYzcwOWJkZWIiLCJpc0FkbWluIjpmYWxzZSwiaXNTdXBlckFkbWluIjpmYWxzZSwiaWF0IjoxNzUyNTgzMTM4LCJleHAiOjE3NTI2Njk1Mzh9.F6jp33-dh73befOgVctV-dFx561FBdDmguSFx1L0Nu8';
+
+
+              options.headers['Authorization'] = 'Bearer $accessToken';
+
             }
           }
 
@@ -58,10 +61,10 @@ class DioClient {
 
                 // 새 토큰 저장
                 await _tokenStorage.saveTokens(
-                    accessToken: newAccessToken,
-                    refreshToken: newRefreshToken,
-                    userId: userId,
-                    companyCode: '6866fcea5b230f5dc709bdeb',
+                  accessToken: newAccessToken,
+                  refreshToken: newRefreshToken,
+                  userId: userId,
+                  companyCode: '6866fcea5b230f5dc709bdeb',
                 );
 
 

@@ -1,6 +1,7 @@
-// lib/ui/main/cart/cart_screen.dart
+// lib/ui/cart/cart_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:look_talk/model/entity/response/product_response.dart'; // [수정] product_response import
 import 'package:look_talk/view_model/cart/cart_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -82,6 +83,7 @@ class _CartScreenState extends State<CartScreen> {
               itemCount: viewModel.cartItems.length,
               itemBuilder: (context, i) {
                 final item = viewModel.cartItems[i];
+                // [수정] discountInfo 변수는 그대로 사용합니다.
                 final discountInfo = item.product.discount;
 
                 return Card(
@@ -99,7 +101,7 @@ class _CartScreenState extends State<CartScreen> {
                       children: [
                         Checkbox(
                           value: viewModel.selectedItemIds.contains(item.id),
-                          onChanged: (v) => viewModel.toggleItemSelection(item.id, v ?? false),
+                          onChanged: (v) => viewModel.toggleItemSelection(item.id!, v ?? false),
                           activeColor: AppColors.primary,
                         ),
                         gapW8,
@@ -109,14 +111,16 @@ class _CartScreenState extends State<CartScreen> {
                           decoration: BoxDecoration(
                             color: AppColors.boxGrey,
                             borderRadius: BorderRadius.circular(8),
-                            image: item.product.thumbnailImage != null
+                            // [수정] thumbnailImageUrl을 사용하고, null일 경우를 대비합니다.
+                            image: item.product.thumbnailImageUrl != null
                                 ? DecorationImage(
-                              image: NetworkImage(item.product.thumbnailImage!),
+                              image: NetworkImage(item.product.thumbnailImageUrl!),
                               fit: BoxFit.cover,
                             )
                                 : null,
                           ),
-                          child: item.product.thumbnailImage == null
+                          // [수정] thumbnailImageUrl이 null일 때 아이콘을 표시합니다.
+                          child: item.product.thumbnailImageUrl == null
                               ? Icon(Icons.image_not_supported_outlined, color: AppColors.textGrey, size: 30)
                               : null,
                         ),
@@ -128,10 +132,13 @@ class _CartScreenState extends State<CartScreen> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(item.companyName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
+                                  // [수정] store의 name을 사용하고, null일 경우를 대비합니다.
+                                  Text(item.product.store?.name ?? '스토어 없음', style: TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
                                   InkWell(
                                     onTap: () {
-                                      viewModel.toggleItemSelection(item.id, true);
+                                      if (item.id != null) {
+                                        viewModel.toggleItemSelection(item.id!, true);
+                                      }
                                       viewModel.removeSelectedItems();
                                     },
                                     child: Icon(Icons.close, color: AppColors.textGrey, size: 20),
@@ -141,7 +148,8 @@ class _CartScreenState extends State<CartScreen> {
                               gap4,
                               Text(item.product.name, style: TextStyle(fontSize: TextSizes.body), maxLines: 1, overflow: TextOverflow.ellipsis,),
                               gap4,
-                              _buildPriceWidget(discountInfo, item.totalPrice),
+                              // [수정] _buildPriceWidget에 product 객체와 최종 가격을 함께 전달합니다.
+                              _buildPriceWidget(item.product, item.totalPrice),
                               gap4,
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -149,8 +157,10 @@ class _CartScreenState extends State<CartScreen> {
                                   color: AppColors.boxGrey,
                                   borderRadius: BorderRadius.circular(4),
                                 ),
+                                // [수정] options는 List이므로, 여기서는 수량만 표시하도록 단순화합니다.
+                                // 옵션을 표시하려면 별도의 로직이 필요합니다.
                                 child: Text(
-                                    '옵션  ${item.product.options['color'] ?? 'N/A'} / ${item.quantity}개',
+                                    '수량 ${item.quantity}개',
                                     style: TextStyle(fontSize: TextSizes.caption, color: Colors.grey[600])
                                 ),
                               ),
@@ -188,12 +198,10 @@ class _CartScreenState extends State<CartScreen> {
                   text: '구매하기',
                   onPressed: viewModel.selectedItemIds.isNotEmpty
                       ? () {
-                    // [✅ 선택된 상품 목록을 여기서 필터링]
                     final productsToOrder = viewModel.cartItems
                         .where((item) => viewModel.selectedItemIds.contains(item.id))
                         .toList();
 
-                    // [✅ 필터링된 목록을 OrderScreen에 직접 전달]
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -211,33 +219,39 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Widget _buildPriceWidget(Discount? discountInfo, int finalPrice) {
-    if (discountInfo == null) {
+  // [수정] Price 위젯의 로직을 새로운 데이터 모델에 맞게 변경합니다.
+  Widget _buildPriceWidget(Product product, int finalPrice) {
+    final discountInfo = product.discount;
+
+    // 할인이 없거나, 할인율이 0이면 최종 가격만 표시합니다.
+    if (discountInfo == null || discountInfo.value == 0) {
       return Text(
         '${numberFormat.format(finalPrice)}원',
-        style: const TextStyle(fontWeight: FontWeight.bold),
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body),
       );
     }
     else {
+      // 할인 적용 시, 원가 계산 (할인율이 0이 아닐 때만)
+      final originalPrice = (finalPrice / (1 - (discountInfo.value / 100))).round();
+
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '${numberFormat.format(discountInfo.originalPrice)}원',
+            '${numberFormat.format(originalPrice)}원',
             style: const TextStyle(
               fontSize: TextSizes.caption,
               color: AppColors.textGrey,
               decoration: TextDecoration.lineThrough,
             ),
           ),
-          gap4,
+          // gap4,  // 간격이 너무 넓어 보일 수 있어 조절
           Row(
             children: [
-              if (discountInfo.amount > 0)
-                Text('${discountInfo.amount}%', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
+              Text('${discountInfo.value}%', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
               gapW8,
               Text(
-                '${numberFormat.format(discountInfo.discountedPrice)}원',
+                '${numberFormat.format(finalPrice)}원',
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body),
               ),
             ],

@@ -91,8 +91,12 @@ class PostDetailScreen extends StatelessWidget {
     return AppBarSearchCart(
       title: '게시글 상세',
       leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: (){
-        viewModel.resetNewCommentFlag();
-        context.pop(viewModel.hasNewComment ? 'updated' : null);
+        final shouldUpdate =
+            viewModel.hasNewComment || viewModel.hasLikedChanged;
+        viewModel.markNewComment();
+        viewModel.markLikedChanged();
+        context.pop(shouldUpdate ? 'updated' : null);
+        //context.pop(viewModel.post);
       },),
       actions: viewModel.isAuthor
           ? [
@@ -125,7 +129,7 @@ class PostDetailScreen extends StatelessWidget {
           Navigator.of(context).pop();
 
           if (success) {
-            context.pop(true);
+            context.pop('deleted');
             // ScaffoldMessenger.of(context).showSnackBar(
             //   const SnackBar(
             //     content: Text('게시글이 삭제되었습니다.'),

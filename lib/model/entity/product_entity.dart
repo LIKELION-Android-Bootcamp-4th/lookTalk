@@ -2,25 +2,25 @@ import 'dart:convert';
 
 import 'package:look_talk/model/entity/response/discount_dto.dart';
 
-class Product {
+class ProductEntity {
   final String? productId;
   final String name;
   final String? description;
   final int? stock;
   final int price;
-  final String? categoryId; // 카테고리 ID
-  final String? category;   // 카테고리 이름
+  final String? categoryId;
+  final String? category;
   final Map<String, dynamic>? options;
   final DiscountDto? discount;
   final String? status;
-  final String? thumbnailImagePath;
+  final String? thumbnailUrl; // ✅ 변경된 필드명
   final String? contentImagePath;
   final Map<String, dynamic>? images;
   final Map<String, dynamic>? attributes;
   final Map<String, dynamic>? dynamicFields;
   final String? storeName;
 
-  Product({
+  ProductEntity({
     this.productId,
     required this.name,
     required this.price,
@@ -31,15 +31,15 @@ class Product {
     this.options,
     this.discount,
     this.status,
-    this.thumbnailImagePath,
+    this.thumbnailUrl, // ✅ 변경
     this.contentImagePath,
     this.images,
     this.attributes,
     this.dynamicFields,
-    this.storeName
+    this.storeName,
   });
 
-  factory Product.fromJson(Map<String, dynamic> json) {
+  factory ProductEntity.fromJson(Map<String, dynamic> json) {
     const knownKeys = {
       'id',
       'name',
@@ -51,8 +51,8 @@ class Product {
       'options',
       'discount',
       'status',
-      'thumbnailImageUrl', // ✅ 수정
-      'contentImageUrl',   // ✅ 수정
+      'thumbnailImageUrl', // ✅ 백엔드 필드는 유지
+      'contentImageUrl',
       'images',
       'attributes',
       'storeName',
@@ -67,7 +67,6 @@ class Product {
 
     DiscountDto? parsedDiscount;
     final rawDiscount = json['discount'];
-
     try {
       if (rawDiscount is String && rawDiscount.isNotEmpty) {
         parsedDiscount = DiscountDto.fromjson(jsonDecode(rawDiscount));
@@ -79,18 +78,18 @@ class Product {
       parsedDiscount = null;
     }
 
-    return Product(
+    return ProductEntity(
       productId: json['id']?.toString(),
       name: json['name'] ?? '',
       price: json['price'] ?? 0,
       description: json['description'],
       stock: json['stock'],
       categoryId: json['categoryId'],
-      category: json['category'], // 카테고리 필드
+      category: json['category'],
       options: _parseJsonField(json['options']),
       discount: parsedDiscount,
       status: json['status'],
-      thumbnailImagePath: json['thumbnailImageUrl'],
+      thumbnailUrl: json['thumbnailImageUrl'], // ✅ 수정
       contentImagePath: json['contentImageUrl'],
       images: _parseJsonField(json['images']),
       attributes: _parseJsonField(json['attributes']),
@@ -107,10 +106,12 @@ class Product {
 
     if (description != null) data['description'] = description;
     if (stock != null) data['stock'] = stock;
-    if (categoryId != null) data['categoryId'] = categoryId;  // categoryId 추가
-    if (category != null) data['category'] = category;        // category 추가
+    if (categoryId != null) data['categoryId'] = categoryId;
+    if (category != null) data['category'] = category;
     if (options != null) data['options'] = options;
-    if (discount != null) data['discount'] = discount;
+    if (discount != null) {
+      data['discount'] = jsonEncode(discount!.toJson());
+    }
     if (status != null) data['status'] = status;
     if (images != null) data['images'] = images;
     if (attributes != null) data['attributes'] = attributes;
@@ -119,19 +120,14 @@ class Product {
     return data;
   }
 
-  /// ✅ 할인률 (percent), 할인된 최종 가격, 원래 가격
-  int get discountPercent {
-    return discount?.value ?? 0;
-  }
+  int get discountPercent => discount?.value ?? 0;
 
   int get originalPrice => price;
 
-  int get finalPrice {
-    return (price * (100 - discountPercent) / 100).round();
-  }
+  int get finalPrice => (price * (100 - discountPercent) / 100).round();
 
-  /// ✅ 이미지 URL getter
-  String get imageUrl => thumbnailImagePath ?? '';
+  String get imageUrl => thumbnailUrl ?? ''; // ✅ 필드명 변경 반영
+
   static Map<String, dynamic>? _parseJsonField(dynamic field) {
     try {
       if (field == null) return null;

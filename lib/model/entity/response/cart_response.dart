@@ -1,141 +1,95 @@
-// lib/model/entity/response/cart_response.dart
+import 'package:look_talk/model/entity/response/product_response.dart';
 
+/// ===================================================================
+/// 장바구니 전체 응답 클래스
+/// ===================================================================
 class CartResponse {
   final List<CartItem> items;
-  final CartPagination pagination;
+  final Pagination? pagination;
 
-  CartResponse({required this.items, required this.pagination});
+  CartResponse({required this.items, this.pagination});
 
-  // [✅ 수정된 부분]
-  // ApiResult에서 이미 'data' 객체를 넘겨주므로, 여기서는 바로 'items'와 'pagination'을 파싱합니다.
   factory CartResponse.fromJson(Map<String, dynamic> json) {
+    final itemsList = json['items'] as List<dynamic>? ?? [];
     return CartResponse(
-      items: (json['items'] as List<dynamic>? ?? [])
-          .map((e) => CartItem.fromJson(e as Map<String, dynamic>))
+      items: itemsList
+          .map((item) => CartItem.fromJson(item as Map<String, dynamic>))
           .toList(),
-      pagination: CartPagination.fromJson(json['pagination'] ?? {}),
-    );
-  }
-}
-
-class CartItem {
-  final String id;
-  final String companyName;
-  final CartProduct product;
-  final int quantity;
-  final int cartPrice;
-  final int totalPrice;
-
-  CartItem({
-    required this.id,
-    required this.companyName,
-    required this.product,
-    required this.quantity,
-    required this.cartPrice,
-    required this.totalPrice,
-  });
-
-  factory CartItem.fromJson(Map<String, dynamic> json) {
-    return CartItem(
-      id: json['id'] ?? '',
-      companyName: json['companyName'] ?? '브랜드 없음',
-      product: CartProduct.fromJson(json['product'] ?? {}),
-      quantity: json['quantity'] ?? 0,
-      cartPrice: json['cartPrice'] ?? 0,
-      totalPrice: json['totalPrice'] ?? 0,
-    );
-  }
-}
-
-class CartProduct {
-  final String id;
-  final String name;
-  final String? thumbnailImage;
-  final Map<String, dynamic> options;
-  final String status;
-  final Discount? discount;
-
-  CartProduct({
-    required this.id,
-    required this.name,
-    this.thumbnailImage,
-    required this.options,
-    required this.status,
-    this.discount,
-  });
-
-  factory CartProduct.fromJson(Map<String, dynamic> json) {
-    return CartProduct(
-      id: json['id'] ?? '',
-      name: json['name'] ?? '',
-      thumbnailImage: json['thumbnailImage'],
-      options: json['options'] ?? {},
-      status: json['status'] ?? '',
-      // 서버에서 discount 필드가 null일 수 있으므로, null 체크 후 파싱
-      discount: json['discount'] != null
-          ? Discount.fromJson(json['discount'])
+      pagination: json['pagination'] != null
+          ? Pagination.fromJson(json['pagination'] as Map<String, dynamic>)
           : null,
     );
   }
 }
 
-class Discount {
-  final String type;
-  final int amount;
-  final int originalPrice;
-  final int discountedPrice;
+/// ===================================================================
+/// 장바구니 개별 아이템 클래스
+/// ===================================================================
+class CartItem {
+  final String? id; // 장바구니 아이디 (nullable: 직접 생성 시 없음)
+  final int quantity;
+  final int cartPrice; // 단가
+  final int totalPrice; // 수량 * 단가
+  final Product product; // product_response.dart 기준 Product
+  final Map<String, String>? selectedOptions;
 
-  Discount({
-    required this.type,
-    required this.amount,
-    required this.originalPrice,
-    required this.discountedPrice,
+  CartItem({
+    this.id,
+    required this.quantity,
+    required this.cartPrice,
+    required this.totalPrice,
+    required this.product,
+    this.selectedOptions,
   });
 
-  factory Discount.fromJson(Map<String, dynamic> json) {
-    return Discount(
-      type: json['type'] ?? '',
-      amount: json['amount'] ?? 0,
-      originalPrice: json['originalPrice'] ?? 0,
-      discountedPrice: json['discountedPrice'] ?? 0,
+  factory CartItem.fromJson(Map<String, dynamic> json) {
+    return CartItem(
+      id: json['id'] as String?,
+      quantity: json['quantity'] as int? ?? 0,
+      cartPrice: json['cartPrice'] as int? ?? 0,
+      totalPrice: json['totalPrice'] as int? ?? 0,
+      product: Product.fromJson(json['product'] as Map<String, dynamic>? ?? {}),
+      selectedOptions: (json['selectedOptions'] as Map?)?.map(
+            (key, value) => MapEntry(key.toString(), value.toString()),
+      ),
     );
   }
 }
 
-class CartPagination {
+/// ===================================================================
+/// 장바구니 아이템 삭제 결과 클래스
+/// ===================================================================
+class RemoveCartResult {
+  final int deletedCount;
+
+  RemoveCartResult({required this.deletedCount});
+
+  factory RemoveCartResult.fromJson(Map<String, dynamic> json) {
+    return RemoveCartResult(
+      deletedCount: json['deletedCount'] as int? ?? 0,
+    );
+  }
+}
+
+/// ===================================================================
+/// 페이지네이션 정보 클래스 (재사용 가능)
+/// ===================================================================
+class Pagination {
   final int currentPage;
   final int totalPages;
   final int total;
 
-  CartPagination({
+  Pagination({
     required this.currentPage,
     required this.totalPages,
     required this.total,
   });
 
-  factory CartPagination.fromJson(Map<String, dynamic> json) {
-    return CartPagination(
-      currentPage: json['currentPage'] ?? 1,
-      totalPages: json['totalPages'] ?? 1,
-      total: json['total'] ?? 0,
-    );
-  }
-}
-
-// 삭제 응답을 위한 클래스 (API 연동 시 필요)
-class RemoveCartResult {
-  final int removedCount;
-  final int remainingItems;
-
-  RemoveCartResult({
-    required this.removedCount,
-    required this.remainingItems,
-  });
-
-  factory RemoveCartResult.fromJson(Map<String, dynamic> json) {
-    return RemoveCartResult(
-      removedCount: json['removedCount'] ?? 0,
-      remainingItems: json['remainingItems'] ?? 0,
+  factory Pagination.fromJson(Map<String, dynamic> json) {
+    return Pagination(
+      currentPage: json['currentPage'] as int? ?? 1,
+      totalPages: json['totalPages'] as int? ?? 1,
+      total: json['total'] as int? ?? 0,
     );
   }
 }

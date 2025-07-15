@@ -52,16 +52,20 @@ class OrderListRepository {
     }
   }
 
-  Future<void> changeStatus(String orderId, String status) async{
-    try{
+  Future<void> changeStatus(String orderId, String status, {String? trackingNumber}) async {
+    try {
+      final data = {
+        "status": status,
+        "note": "판매자 처리중",
+        if (status == "shipped" && trackingNumber != null)
+          "trackingNumber": trackingNumber,
+      };
+
       await _dio.patch(
-        "${MyPage.orderChangeStatus}/${orderId}/status",
-        data: {
-          "status": "${status}",
-          "note": "판매자 처리중"
-        },
+        "${MyPage.orderChangeStatus}/$orderId/status",
+        data: data,
       );
-    }catch(e){
+    } catch (e) {
       print("에러발생${e}");
     }
   }

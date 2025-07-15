@@ -7,7 +7,7 @@ import 'package:look_talk/ui/common/component/common_loading.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
 import 'package:look_talk/ui/main/home/home_category.dart';
 import 'package:look_talk/view_model/home/home_category_viewmodel.dart';
-import 'package:look_talk/view_model/product/product_list_viewmodel.dart';
+import 'package:look_talk/view_model/product/product_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:look_talk/view_model/viewmodel_provider.dart';
 

@@ -10,7 +10,6 @@ class Managesellerwidget extends StatelessWidget {
   final int? totalAmount;
   final SellerManageViewmodel viewModel;
 
-
   const Managesellerwidget({
     super.key,
     required this.orderId,
@@ -23,9 +22,7 @@ class Managesellerwidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final imageUrl = orderItem.thumbnailImage;
-    final isValidImage = imageUrl != null && imageUrl
-        .trim()
-        .isNotEmpty;
+    final isValidImage = imageUrl != null && imageUrl.trim().isNotEmpty;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -67,13 +64,11 @@ class Managesellerwidget extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-
-
           Row(
             children: [
               Spacer(),
-              _buildStateChangeStatus(status, (newStatus) {
-                viewModel.changeStatus(orderId, newStatus);
+              _buildStateChangeStatus(status, (newStatus, {trackingNumber}) {
+                viewModel.changeStatus(orderId, newStatus, trackingNumber: trackingNumber);
               }),
             ],
           )
@@ -82,7 +77,10 @@ class Managesellerwidget extends StatelessWidget {
     );
   }
 
-  Widget _buildStateChangeStatus(String status, Function(String) newStatus) {
+  Widget _buildStateChangeStatus(
+      String status,
+      Function(String, {String? trackingNumber}) newStatus,
+      ) {
     final Map<String, List<String>> statusTransitions = {
       'pending': ['confirmed', 'cancelled'],
       'confirmed': ['preparing', 'cancelled'],
@@ -100,25 +98,65 @@ class Managesellerwidget extends StatelessWidget {
         hint: Text(_statusToText(status)),
         value: selected,
         items: nextStatuses
-            .map((status) =>
-            DropdownMenuItem(value: status,
-                child: Text(_statusToText(status))
-            )).toList(),
-        onChanged: (value) {
+            .map((status) => DropdownMenuItem(
+          value: status,
+          child: Text(_statusToText(status)),
+        ))
+            .toList(),
+        onChanged: (value) async {
           if (value != null) {
             setState(() {
               selected = value;
             });
-            newStatus(value);
+
+            if (value == "shipped") {
+              final trackingNumber = await showDialog<String>(
+                context: context,
+                builder: (context) {
+                  final controller = TextEditingController();
+                  return AlertDialog(
+                    title: Text("송장 번호 입력"),
+                    content: TextField(
+                      controller: controller,
+                      decoration: InputDecoration(hintText: "송장 번호를 입력하세요"),
+                    ),
+                    actions: [
+                      TextButton(
+                        child: Text("취소"),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                      ElevatedButton(
+                        child: Text("확인"),
+                        onPressed: () {
+                          final input = controller.text.trim();
+                          Navigator.of(context).pop(input);
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+
+              if (trackingNumber != null && trackingNumber.isNotEmpty) {
+                newStatus(value, trackingNumber: trackingNumber);
+              } else {
+                setState(() {
+                  selected = null;
+                });
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("송장 번호가 입력되지 않았습니다.")),
+                );
+              }
+            } else {
+              newStatus(value);
+            }
           }
         },
         style: const TextStyle(fontSize: 13, color: Colors.black),
-        underline: Container(height: 0,),
+        underline: Container(height: 0),
         borderRadius: BorderRadius.circular(15),
-
       );
-    }
-    );
+    });
   }
 
   String _statusToText(String status) {

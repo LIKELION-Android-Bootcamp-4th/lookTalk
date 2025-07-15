@@ -19,14 +19,21 @@ class ProductRegisterScreen extends StatelessWidget {
 class _ProductRegisterForm extends StatelessWidget {
   const _ProductRegisterForm({super.key});
 
+  static const sizeOptions = ['S', 'M', 'L'];
+  static const colorOptions = ['흰색', '검정색', '파란색', '빨간색', '초록색'];
+
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<ProductRegisterViewModel>();
     final catVm = context.watch<CategoryDataSelectViewmodel>();
 
+    final selectedSizes = vm.selectedSizes;
+    final selectedColors = vm.selectedColors;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           GestureDetector(
             onTap: vm.pickImage,
@@ -124,13 +131,63 @@ class _ProductRegisterForm extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 24),
 
+          const SizedBox(height: 24),
+          const Text('사이즈 선택', style: TextStyle(fontWeight: FontWeight.bold)),
+          Wrap(
+            spacing: 8,
+            children: sizeOptions.map((size) {
+              final isSelected = vm.selectedSizes.contains(size);
+              return FilterChip(
+                label: Text(size),
+                selected: isSelected,
+                onSelected: (_) => vm.toggleSize(size),
+              );
+            }).toList(),
+          ),
+
+          const SizedBox(height: 16),
+          const Text('색상 선택', style: TextStyle(fontWeight: FontWeight.bold)),
+          Wrap(
+            spacing: 8,
+            children: colorOptions.map((color) {
+              final isSelected = vm.selectedColors.contains(color);
+              return FilterChip(
+                label: Text(color),
+                selected: isSelected,
+                onSelected: (_) => vm.toggleColor(color),
+              );
+            }).toList(),
+          ),
+
+          const SizedBox(height: 24),
+          if (selectedColors.isNotEmpty && selectedSizes.isNotEmpty) ...[
+            const Text('재고 수량 입력', style: TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            Column(
+              children: [
+                for (final color in selectedColors)
+                  for (final size in selectedSizes)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: CommonTextField(
+                        hintText: '$color - $size 재고',
+                        keyboardType: TextInputType.number,
+                        controller: vm.getStockController('${color}_$size'),
+                      ),
+                    ),
+              ],
+            ),
+          ],
+
+          const SizedBox(height: 24),
           SizedBox(
             width: double.infinity,
             height: 48,
             child: ElevatedButton(
-              onPressed: vm.isLoading ? null : () async {
+              onPressed: vm.isLoading
+                  ? null
+                  : () async {
                 final success = await vm.registerAndNotify(context);
                 if (!context.mounted) return;
 
@@ -168,7 +225,9 @@ class _ProductRegisterForm extends StatelessWidget {
         labelText: hint,
         border: const OutlineInputBorder(),
       ),
-      items: items.map((e) => DropdownMenuItem(value: e, child: Text(itemBuilder(e)))).toList(),
+      items: items
+          .map((e) => DropdownMenuItem(value: e, child: Text(itemBuilder(e))))
+          .toList(),
       onChanged: onChanged,
     );
   }

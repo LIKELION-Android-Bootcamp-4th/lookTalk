@@ -1,5 +1,3 @@
-// lib/main.dart
-
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
@@ -16,7 +14,6 @@ import 'view_model/viewmodel_provider.dart';
 
 // 기존 Provider import들
 import 'view_model/community/community_tab_view_model.dart';
-import 'model/repository/post_repository.dart';
 
 
 void main() async {
@@ -32,6 +29,10 @@ void main() async {
         ChangeNotifierProvider(create: (_) => provideAuthViewModel()),
         ChangeNotifierProvider(create: (_) => provideCheckNameViewModel()),
         ChangeNotifierProvider(create: (_) => provideCategoryDataSelectViewmodel()),
+        ChangeNotifierProvider(create: (_) => provideOrderViewModel()),
+        ChangeNotifierProvider(create: (_) => provideWishlistViewModel()),
+
+
         ChangeNotifierProvider(create: (_) => provideSearchMyProductListViewmodel()),
 
         // [✅ CartViewModel Provider를 함수 호출로 변경]
@@ -42,16 +43,15 @@ void main() async {
         ChangeNotifierProxyProvider<SelectedProductViewModel, PostCreateViewModel>(
           create: (_) => providePostCreateViewModel(),
           update: (_, selectedVM, postVM) {
-            final selected = selectedVM.selectedProduct;
-            if (selected != null) {
-              postVM!.setProductId(selected.id);
-            }
-            return postVM!;
-          },
+        final selected = selectedVM.selectedProduct;
+        if (selected != null) {
+        postVM!.setProductId(selected.id);
+        }
+        return postVM!;
+        },
         ),
       ],
       child: const MyApp(),
     ),
   );
 }
-
