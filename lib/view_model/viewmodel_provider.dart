@@ -26,6 +26,7 @@ import 'package:look_talk/view_model/product/product_detail_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_list_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_register_viewmodel.dart';
 import 'package:look_talk/view_model/search_view_model.dart';
+import 'package:look_talk/view_model/wishlist/wishlist_view_model.dart';
 
 import '../core/network/dio_client.dart';
 import '../core/network/token_storage.dart';
@@ -41,6 +42,7 @@ import '../model/repository/order_repository.dart';
 import '../model/repository/post_create_repository.dart';
 import '../model/repository/product_repository.dart';
 import '../model/repository/search_repository.dart';
+import '../model/repository/wishlist_repository.dart';
 import 'auth/auth_view_model.dart';
 import 'auth/nickname_check_view_model.dart';
 import 'cart/cart_view_model.dart';
@@ -78,7 +80,7 @@ DetailListviewViewmodel provideCategoryDetailViewModel({
 CartViewModel provideCartViewModel() => CartViewModel(CartRepository(CartApiClient(dio)));
 
 // 주문
-OrderViewModel provideOrderViewModel() => OrderViewModel(OrderRepository(OrderApiClient(DioClient())));
+OrderViewModel provideOrderViewModel() => OrderViewModel(OrderRepository(OrderApiClient(dio)));
 
 // 커뮤니티
 CommunityTabViewModel provideCommunityTabViewModel() => CommunityTabViewModel();
@@ -89,7 +91,7 @@ PostCreateViewModel providePostCreateViewModel() =>  PostCreateViewModel(PostCre
 PostDetailViewModel providerPostDetailViewModel(String postId) => PostDetailViewModel(PostRepository(PostApiClient(dio)), tokenStorage, postId);
 
 
-
+WishlistViewModel provideWishlistViewModel() => WishlistViewModel(WishlistRepository(dio));
 ProductViewModel provideProductViewModel() {
   return ProductViewModel(ProductRepository(dio));
 }

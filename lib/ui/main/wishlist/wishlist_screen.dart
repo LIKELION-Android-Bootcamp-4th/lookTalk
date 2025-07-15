@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
+import 'package:look_talk/ui/common/component/common_modal.dart';
 import 'package:look_talk/ui/common/const/colors.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
 import 'package:look_talk/ui/common/const/text_sizes.dart';
@@ -33,13 +34,28 @@ class _WishlistScreenState extends State<WishlistScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('찜', style: TextStyle(fontSize: TextSizes.headline, color: AppColors.black)),
+        title: const Text(
+          '찜',
+          style: TextStyle(
+            fontSize: TextSizes.headline,
+            color: AppColors.black,
+          ),
+        ),
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
         actions: [
-          IconButton(onPressed: () => context.push('/search'), icon: const Icon(Icons.search, color: AppColors.black)),
-          IconButton(onPressed: () => context.push('/cart'), icon: const Icon(Icons.shopping_cart_outlined, color: AppColors.black)),
+          IconButton(
+            onPressed: () => context.push('/search'),
+            icon: const Icon(Icons.search, color: AppColors.black),
+          ),
+          IconButton(
+            onPressed: () => context.push('/cart'),
+            icon: const Icon(
+              Icons.shopping_cart_outlined,
+              color: AppColors.black,
+            ),
+          ),
         ],
       ),
       body: _buildBody(context, viewModel),
@@ -54,7 +70,12 @@ class _WishlistScreenState extends State<WishlistScreen> {
       return Center(child: Text('오류가 발생했습니다.\n${viewModel.error}'));
     }
     if (viewModel.items.isEmpty) {
-      return const Center(child: Text('찜한 상품이 없습니다.', style: TextStyle(fontSize: TextSizes.body, color: AppColors.textGrey)));
+      return const Center(
+        child: Text(
+          '찜한 상품이 없습니다.',
+          style: TextStyle(fontSize: TextSizes.body, color: AppColors.textGrey),
+        ),
+      );
     }
 
     return RefreshIndicator(
@@ -76,28 +97,45 @@ class _WishlistScreenState extends State<WishlistScreen> {
     );
   }
 
+  // void _showDeleteConfirmDialog(var item) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext dialogContext) {
+  //       return AlertDialog(
+  //         title: const Text("찜 삭제"),
+  //         content: Text("'${item.name}' 상품을 찜 목록에서 삭제하시겠습니까?"),
+  //         actions: [
+  //           TextButton(
+  //             child: const Text("취소"),
+  //             onPressed: () {
+  //               Navigator.of(dialogContext).pop();
+  //             },
+  //           ),
+  //           TextButton(
+  //             child: Text("삭제", style: TextStyle(color: Colors.red[600])),
+  //             onPressed: () {
+  //               context.read<WishlistViewModel>().removeItem(item.productId);
+  //               Navigator.of(dialogContext).pop();
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+
   void _showDeleteConfirmDialog(var item) {
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: const Text("찜 삭제"),
-          content: Text("'${item.name}' 상품을 찜 목록에서 삭제하시겠습니까?"),
-          actions: [
-            TextButton(
-              child: const Text("취소"),
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-              },
-            ),
-            TextButton(
-              child: Text("삭제", style: TextStyle(color: Colors.red[600])),
-              onPressed: () {
-                context.read<WishlistViewModel>().removeItem(item.productId);
-                Navigator.of(dialogContext).pop();
-              },
-            ),
-          ],
+        return CommonModal(
+          title: "찜 삭제",
+          content: "'${item.name}' 상품을 찜 목록에서 삭제하시겠습니까?",
+          confirmText: "삭제",
+          onConfirm: () {
+            context.read<WishlistViewModel>().removeItem(item.productId);
+            Navigator.of(dialogContext).pop();
+          },
         );
       },
     );
@@ -119,7 +157,10 @@ class _WishlistScreenState extends State<WishlistScreen> {
               },
             ),
             TextButton(
-              child: Text("추가", style: TextStyle(color: Theme.of(context).primaryColor)),
+              child: Text(
+                "추가",
+                style: TextStyle(color: Theme.of(context).primaryColor),
+              ),
               onPressed: () {
                 // CartViewModel의 addItem 메소드를 호출
                 context.read<CartViewModel>().addItem(
@@ -143,9 +184,13 @@ class _WishlistScreenState extends State<WishlistScreen> {
     );
   }
 
-
-  Widget _buildGridItem(BuildContext context, var item, NumberFormat numberFormat) {
-    final bool hasImage = item.thumbnailImageUrl != null && item.thumbnailImageUrl!.isNotEmpty;
+  Widget _buildGridItem(
+    BuildContext context,
+    var item,
+    NumberFormat numberFormat,
+  ) {
+    final bool hasImage =
+        item.thumbnailImageUrl != null && item.thumbnailImageUrl!.isNotEmpty;
 
     return InkWell(
       onTap: () {
@@ -166,11 +211,17 @@ class _WishlistScreenState extends State<WishlistScreen> {
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(8),
                     image: hasImage
-                        ? DecorationImage(image: NetworkImage(item.thumbnailImageUrl!), fit: BoxFit.cover)
+                        ? DecorationImage(
+                            image: NetworkImage(item.thumbnailImageUrl!),
+                            fit: BoxFit.cover,
+                          )
                         : null,
                   ),
                   child: !hasImage
-                      ? const Icon(Icons.image_not_supported_outlined, color: Colors.grey)
+                      ? const Icon(
+                          Icons.image_not_supported_outlined,
+                          color: Colors.grey,
+                        )
                       : null,
                 ),
               ),
@@ -183,7 +234,11 @@ class _WishlistScreenState extends State<WishlistScreen> {
                   },
                   child: Container(
                     padding: const EdgeInsets.all(2),
-                    child: const Icon(Icons.favorite, color: Colors.red, size: 20),
+                    child: const Icon(
+                      Icons.favorite,
+                      color: Colors.red,
+                      size: 20,
+                    ),
                   ),
                 ),
               ),
@@ -211,15 +266,31 @@ class _WishlistScreenState extends State<WishlistScreen> {
           ),
           gap8,
           if (item.storeName != null) ...[
-            Text(item.storeName!, style: context.h1.copyWith(fontSize: 12), maxLines: 1, overflow: TextOverflow.ellipsis),
+            Text(
+              item.storeName!,
+              style: context.h1.copyWith(fontSize: 12),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
             gap4,
           ],
-          Text(item.name, style: context.bodyBold.copyWith(fontSize: 10), maxLines: 2, overflow: TextOverflow.ellipsis),
+          Text(
+            item.name,
+            style: context.bodyBold.copyWith(fontSize: 10),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
           gap4,
           Row(
             children: [
               if (item.discountRate != null && item.discountRate! > 0) ...[
-                Text("${item.discountRate}% ", style: context.bodyBold.copyWith(fontSize: 12, color: Colors.red)),
+                Text(
+                  "${item.discountRate}% ",
+                  style: context.bodyBold.copyWith(
+                    fontSize: 12,
+                    color: Colors.red,
+                  ),
+                ),
                 gapW4,
                 Flexible(
                   child: Text(
@@ -238,7 +309,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                 ),
               ],
             ],
-          )
+          ),
         ],
       ),
     );
