@@ -3,7 +3,7 @@ import 'package:look_talk/model/entity/product_entity.dart';
 import 'package:look_talk/model/repository/product_repository.dart';
 
 class ProductEditViewModel extends ChangeNotifier {
-  final Product product;
+  final ProductEntity product;
   final ProductRepository repository;
 
   final stockController = TextEditingController();

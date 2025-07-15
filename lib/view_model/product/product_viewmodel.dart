@@ -10,10 +10,10 @@ class ProductViewModel extends ChangeNotifier {
     fetchProducts();
   }
 
-  List<Product> _products = [];
+  List<ProductEntity> _products = [];
   bool _isLoading = false;
 
-  List<Product> get products => _products;
+  List<ProductEntity> get products => _products;
   bool get isLoading => _isLoading;
 
   Future<void> fetchProducts() async {

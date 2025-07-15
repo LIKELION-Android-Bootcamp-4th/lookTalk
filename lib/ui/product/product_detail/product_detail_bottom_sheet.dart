@@ -2,19 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:look_talk/view_model/product/product_detail_bottom_sheet_viewmodel.dart';
 import 'package:look_talk/view_model/cart/cart_view_model.dart';
+import 'package:look_talk/view_model/order/order_view_model.dart';
 import 'package:look_talk/ui/common/component/primary_button.dart';
 import 'package:look_talk/ui/common/const/colors.dart';
 import 'package:look_talk/ui/common/const/text_sizes.dart';
+import 'package:look_talk/ui/cart/order_screen.dart';
+import 'package:look_talk/model/entity/response/cart_response.dart';
+import 'package:look_talk/model/entity/product_entity.dart' as entity;
+import 'package:look_talk/model/entity/response/product_response.dart';
 
 class ProductDetailBottomSheet extends StatelessWidget {
   final String productId;
+  final entity.ProductEntity product;
 
-  const ProductDetailBottomSheet({super.key, required this.productId});
+
+  const ProductDetailBottomSheet({
+    super.key,
+    required this.productId,
+    required this.product,
+  });
 
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<OptionSelectionViewModel>();
     final cartVM = context.read<CartViewModel>();
+    final orderVM = context.read<OrderViewModel>();
 
     return Padding(
       padding: MediaQuery.of(context).viewInsets.add(const EdgeInsets.all(16)),
@@ -86,13 +98,6 @@ class ProductDetailBottomSheet extends StatelessWidget {
                       return;
                     }
 
-                    final payload = {
-                      'productId': productId,
-                      'color': vm.selectedColor,
-                      'size': vm.selectedSize,
-                      'quantity': vm.quantity,
-                    };
-
                     final result = await cartVM.addCartItem(
                       productId: productId,
                       color: vm.selectedColor!,
@@ -123,8 +128,31 @@ class ProductDetailBottomSheet extends StatelessWidget {
                 child: PrimaryButton(
                   text: "구매하기",
                   onPressed: () {
-                    // 구매 처리 예정
-                    Navigator.pop(context);
+                    if (vm.selectedColor == null || vm.selectedSize == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('색상과 사이즈를 선택해주세요.')),
+                      );
+                      return;
+                    }
+
+                    final cartItem = CartItem(
+                      product: Product.fromEntity(product),
+                      quantity: vm.quantity,
+                      cartPrice: vm.discountedPrice,
+                      totalPrice: vm.discountedPrice * vm.quantity,
+                      selectedOptions: {
+                        'size': vm.selectedSize!,
+                        'color': vm.selectedColor!,
+                      },
+                    );
+
+                    Navigator.pop(context); // 바텀시트 닫기
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => OrderScreen(productsToOrder: [cartItem]),
+                      ),
+                    );
                   },
                 ),
               ),

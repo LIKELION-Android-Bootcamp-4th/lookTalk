@@ -101,7 +101,7 @@ class _CartScreenState extends State<CartScreen> {
                       children: [
                         Checkbox(
                           value: viewModel.selectedItemIds.contains(item.id),
-                          onChanged: (v) => viewModel.toggleItemSelection(item.id, v ?? false),
+                          onChanged: (v) => viewModel.toggleItemSelection(item.id!, v ?? false),
                           activeColor: AppColors.primary,
                         ),
                         gapW8,
@@ -136,7 +136,9 @@ class _CartScreenState extends State<CartScreen> {
                                   Text(item.product.store?.name ?? '스토어 없음', style: TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
                                   InkWell(
                                     onTap: () {
-                                      viewModel.toggleItemSelection(item.id, true);
+                                      if (item.id != null) {
+                                        viewModel.toggleItemSelection(item.id!, true);
+                                      }
                                       viewModel.removeSelectedItems();
                                     },
                                     child: Icon(Icons.close, color: AppColors.textGrey, size: 20),

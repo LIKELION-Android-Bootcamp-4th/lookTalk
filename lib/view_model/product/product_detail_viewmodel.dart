@@ -12,7 +12,7 @@ class ProductDetailViewModel extends ChangeNotifier {
 
   final List<String> tabs = ['상품정보', '리뷰', '커뮤니티', '문의'];
 
-  Product? product;
+  ProductEntity? product;
 
   ProductDetailViewModel(this.repository, this.productId) {
     fetchProductDetail();

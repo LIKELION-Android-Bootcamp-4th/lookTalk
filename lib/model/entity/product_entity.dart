@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:look_talk/model/entity/response/discount_dto.dart';
 
-class Product {
+class ProductEntity {
   final String? productId;
   final String name;
   final String? description;
@@ -20,7 +20,7 @@ class Product {
   final Map<String, dynamic>? dynamicFields;
   final String? storeName;
 
-  Product({
+  ProductEntity({
     this.productId,
     required this.name,
     required this.price,
@@ -39,7 +39,7 @@ class Product {
     this.storeName,
   });
 
-  factory Product.fromJson(Map<String, dynamic> json) {
+  factory ProductEntity.fromJson(Map<String, dynamic> json) {
     const knownKeys = {
       'id',
       'name',
@@ -78,7 +78,7 @@ class Product {
       parsedDiscount = null;
     }
 
-    return Product(
+    return ProductEntity(
       productId: json['id']?.toString(),
       name: json['name'] ?? '',
       price: json['price'] ?? 0,

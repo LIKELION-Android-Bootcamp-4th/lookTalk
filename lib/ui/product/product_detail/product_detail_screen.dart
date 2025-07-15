@@ -1,4 +1,4 @@
-// ... 기존 import는 그대로 유지
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:look_talk/ui/product/product_detail/product_detail_bottom_sheet.dart';
@@ -18,6 +18,10 @@ import 'community_section_widget.dart';
 import '../../../view_model/cart/cart_view_model.dart';
 import '../../../view_model/wishlist/wishlist_view_model.dart';
 
+// 여기서 alias를 지정해 타입 충돌 방지
+import '../../../model/entity/response/product_response.dart' as response;
+import '../../../model/entity/product_entity.dart' as entity;
+
 class ProductDetailScreen extends StatefulWidget {
   const ProductDetailScreen({super.key});
 
@@ -31,7 +35,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
     if (!_hasLoadedWishlist) {
       final vm = context.read<ProductDetailViewModel>();
       final wishlistVm = context.read<WishlistViewModel>();
@@ -185,7 +188,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
                             child: Text(
-                              '${vm.finalPrice.toString().replaceAllMapped(RegExp(r"(\d)(?=(\d{3})+(?!\d))"), (match) => "${match[1]},")}원~',
+                              '${vm.finalPrice.toString().replaceAllMapped(RegExp(r"(\d)(?=(\d{3})+(?!\d))"), (match) => "${match[1]},")}원',
                               style: const TextStyle(
                                 fontSize: TextSizes.body,
                                 fontWeight: FontWeight.w700,
@@ -260,6 +263,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           showOptionBottomSheet(
                             context: context,
                             productId: vm.productId,
+                            product: vm.product!,
                             colorOptions: List<String>.from(vm.options['color'] ?? []),
                             sizeOptions: List<String>.from(vm.options['size'] ?? []),
                             originalPrice: vm.originalPrice,
@@ -297,6 +301,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 void showOptionBottomSheet({
   required BuildContext context,
   required String productId,
+  required entity.ProductEntity product,
   required List<String> colorOptions,
   required List<String> sizeOptions,
   required int originalPrice,
@@ -321,7 +326,7 @@ void showOptionBottomSheet({
           ChangeNotifierProvider.value(value: viewModel),
           ChangeNotifierProvider.value(value: context.read<CartViewModel>()),
         ],
-        child: ProductDetailBottomSheet(productId: productId),
+        child: ProductDetailBottomSheet(productId: productId, product: product),
       );
     },
   );

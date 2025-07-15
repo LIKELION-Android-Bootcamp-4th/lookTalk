@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:look_talk/model/entity/product_entity.dart';
 
 class HomeProductCard extends StatelessWidget {
-  final Product product;
+  final ProductEntity product;
   final VoidCallback? onTap;
 
   const HomeProductCard({
