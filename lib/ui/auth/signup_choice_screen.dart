@@ -33,11 +33,11 @@ class SignupChoiceScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildRoundedButton(context, '판매자로\n시작하기', () {
-                  authViewModel.completeSignup(context, 'seller');
+                  context.push('/signup/seller');
                 }),
                 gapW32,
                 _buildRoundedButton(context, '쇼핑하러\n가기', () {
-                  authViewModel.completeSignup(context, 'buyer');
+                  context.push('/signup/user');
                 }),
               ],
             ),

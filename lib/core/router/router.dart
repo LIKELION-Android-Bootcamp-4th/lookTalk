@@ -290,6 +290,8 @@ final GoRouter router = GoRouter(
                     context.go('/login');
                   });
                   return const SizedBox.shrink();
+                }else{
+                  print('여기!!!!');
                 }
 
                 print('유저 롤!!! : ${authViewModel.userRole}');
