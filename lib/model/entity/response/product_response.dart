@@ -1,10 +1,7 @@
-// lib/model/entity/response/product_response.dart
+import 'package:look_talk/model/entity/product_entity.dart' as entity;
 
 import 'dart:convert';
 
-// ===================================================================
-// 유틸리티 함수: JSON 파싱을 더 안전하게 처리합니다.
-// ===================================================================
 T? _parseJson<T>(dynamic jsonData, T Function(Map<String, dynamic>) fromJson) {
   if (jsonData == null) return null;
 
@@ -19,7 +16,7 @@ T? _parseJson<T>(dynamic jsonData, T Function(Map<String, dynamic>) fromJson) {
         return fromJson(decoded);
       }
     } catch (e) {
-      print('Failed to decode JSON string: $jsonData, Error: $e');
+      print('Failed to decode JSON string: \$jsonData, Error: \$e');
       return null;
     }
   }
@@ -40,7 +37,7 @@ List<T>? _parseJsonList<T>(dynamic jsonData, T Function(Map<String, dynamic>) fr
         list = decoded;
       }
     } catch (e) {
-      print('Failed to decode JSON list string: $jsonData, Error: $e');
+      print('Failed to decode JSON list string: \$jsonData, Error: \$e');
       return null;
     }
   }
@@ -54,10 +51,6 @@ List<T>? _parseJsonList<T>(dynamic jsonData, T Function(Map<String, dynamic>) fr
   return null;
 }
 
-
-// ===================================================================
-// 최상위 API 응답 클래스 (Generic)
-// ===================================================================
 class ApiResponse<T> {
   final bool success;
   final String message;
@@ -78,9 +71,6 @@ class ApiResponse<T> {
   }
 }
 
-// ===================================================================
-// 상품 목록 데이터 클래스
-// ===================================================================
 class ProductListData {
   final List<Product> items;
   final Pagination pagination;
@@ -96,9 +86,6 @@ class ProductListData {
   }
 }
 
-// ===================================================================
-// 페이지 정보 클래스
-// ===================================================================
 class Pagination {
   final int currentPage;
   final int totalPages;
@@ -119,9 +106,6 @@ class Pagination {
   }
 }
 
-// ===================================================================
-// 핵심: 통합 상품 클래스 (Product)
-// ===================================================================
 class Product {
   final String id;
   final String name;
@@ -153,7 +137,7 @@ class Product {
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      id: json['id'] as String? ?? 'unknown_id_${DateTime.now().millisecondsSinceEpoch}',
+      id: json['id'] as String? ?? 'unknown_id_\${DateTime.now().millisecondsSinceEpoch}',
       name: json['name'] as String? ?? '이름 없음',
       description: json['description'] as String?,
       price: json['price'] as int? ?? 0,
@@ -163,17 +147,29 @@ class Product {
       category: _parseJson(json['category'], (d) => Category.fromJson(d)),
       store: _parseJson(json['store'], (d) => Store.fromJson(d)),
       discount: _parseJson(json['discount'], (d) => Discount.fromJson(d)),
-      // [수정] 불필요한 .cast<OptionGroup>() 호출을 제거했습니다.
       options: _parseJsonList(json['options'], (o) => OptionGroup.fromJson(o)) ?? [],
       isFavorite: json['isFavorite'] as bool? ?? false,
     );
   }
+
+  /// ✅ ProductEntity → Product 변환용 생성자
+  factory Product.fromEntity(entity.ProductEntity e) {
+    return Product(
+      id: e.productId ?? 'unknown_id_${DateTime.now().millisecondsSinceEpoch}',
+      name: e.name,
+      description: null,
+      price: e.price,
+      stock: null,
+      thumbnailImageUrl: e.thumbnailUrl,
+      thumbnailImage: null,
+      category: e.category != null ? Category(id: e.category!, name: '') : null,
+      store: Store(id: 'unknown', name: e.storeName ?? ''),
+      discount: Discount(type: 'percent', value: e.discountPercent ?? 0),
+      options: [],
+      isFavorite: false,
+    );
+  }
 }
-
-
-// ===================================================================
-// 하위 데이터 모델 클래스들
-// ===================================================================
 
 class ImageInfo {
   final String? id;

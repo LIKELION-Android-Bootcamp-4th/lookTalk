@@ -8,7 +8,7 @@ class SellerProductApiClient {
 
   SellerProductApiClient(this._dio, this._tokenStorage);
 
-  Future<List<Product>> fetchProductList() async {
+  Future<List<ProductEntity>> fetchProductList() async {
     final token = await _tokenStorage.getAccessToken();
     final companyCode = await _tokenStorage.getCompanyCode();
 
@@ -26,7 +26,7 @@ class SellerProductApiClient {
 
       if (response.statusCode == 200) {
         final items = response.data['data']['items'] as List<dynamic>;
-        return items.map((json) => Product.fromJson(json)).toList();
+        return items.map((json) => ProductEntity.fromJson(json)).toList();
       } else {
         throw Exception('상품 목록 조회 실패: ${response.statusCode}');
       }

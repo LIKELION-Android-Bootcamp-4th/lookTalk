@@ -7,9 +7,10 @@ import 'package:look_talk/model/repository/product_repository.dart';
 import 'package:look_talk/ui/common/component/common_text_field.dart';
 import 'package:dio/dio.dart';
 import 'package:look_talk/core/network/dio_client.dart';
+import 'package:look_talk/model/entity/response/product_response.dart';
 
 class ProductEditScreen extends StatelessWidget {
-  final Product product;
+  final ProductEntity product;
   final ProductViewModel productViewModel;
 
   const ProductEditScreen({

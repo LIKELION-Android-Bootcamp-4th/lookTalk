@@ -55,7 +55,9 @@ class CartViewModel extends ChangeNotifier {
 
   void toggleSelectAll(bool isSelected) {
     if (isSelected) {
-      _selectedItemIds.addAll(cartItems.map((item) => item.id));
+      _selectedItemIds.addAll(
+        cartItems.map((item) => item.id).whereType<String>(),
+      );
     } else {
       _selectedItemIds.clear();
     }
