@@ -148,7 +148,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 16.0),
                               child: Text(
-                                '${vm.storeName} >',
+                                '${vm.storeName}',
                                 style: const TextStyle(fontSize: 12, color: Colors.grey),
                               ),
                             ),
