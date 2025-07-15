@@ -11,7 +11,7 @@ class DioClient {
 
   Dio(
     BaseOptions(
-      baseUrl: 'http://git.hansul.kr:3001',
+      baseUrl: 'http://git.hansul.kr:3000',
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
       headers: {
@@ -114,7 +114,5 @@ class DioClient {
   Future<Response> delete(String path, {Map<String, dynamic>? queryParameters}) async {
     return await _dio.delete(path, queryParameters: queryParameters);
   }
-
-
 
 }
