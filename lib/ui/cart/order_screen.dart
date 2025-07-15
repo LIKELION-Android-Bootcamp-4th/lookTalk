@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:look_talk/model/entity/response/cart_response.dart';
 import 'package:look_talk/model/entity/request/create_order_request.dart';
+import 'package:look_talk/model/entity/response/product_response.dart'; // [수정] product_response import
 import 'package:look_talk/view_model/cart/cart_view_model.dart';
 import 'package:look_talk/view_model/order/order_view_model.dart';
 import 'package:look_talk/view_model/viewmodel_provider.dart';
@@ -14,6 +15,7 @@ import '../common/component/primary_button.dart';
 import '../common/const/colors.dart';
 import '../common/const/gap.dart';
 import '../common/const/text_sizes.dart';
+
 
 class OrderScreen extends StatelessWidget {
   final List<CartItem> productsToOrder;
@@ -75,7 +77,10 @@ class _OrderScreenContentState extends State<_OrderScreenContent> {
       return OrderItemRequest(
         productId: cartItem.product.id,
         quantity: cartItem.quantity,
-        options: cartItem.product.options,
+        // [수정] OrderItemRequest는 Map<String, dynamic>을 기대하지만, product.options는 List입니다.
+        // 현재 UI에서 옵션을 선택하는 기능이 없으므로, 빈 Map을 전달하여 오류를 해결합니다.
+        // 추후 옵션 선택 기능 구현 시 이 부분을 수정해야 합니다.
+        options: {},
         unitPrice: cartItem.cartPrice,
       );
     }).toList();
@@ -93,10 +98,8 @@ class _OrderScreenContentState extends State<_OrderScreenContent> {
 
     if (mounted) {
       if (orderResponse != null) {
-        // [✅ 추가] 주문 성공 시, 디버그 콘솔에 주문 ID 출력
         print('주문 성공! Swagger 테스트용 Order ID: ${orderResponse.orderId}');
 
-        // [✅ 추가] 장바구니 목록을 새로고침합니다.
         await cartViewModel.fetchCart();
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -174,7 +177,6 @@ class _OrderScreenContentState extends State<_OrderScreenContent> {
   }
 
   Widget _buildProductCard(CartItem item) {
-    final discountInfo = item.product.discount;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
@@ -192,13 +194,15 @@ class _OrderScreenContentState extends State<_OrderScreenContent> {
             decoration: BoxDecoration(
               color: AppColors.boxGrey,
               borderRadius: BorderRadius.circular(8),
-              image: item.product.thumbnailImage != null
+              // [수정] thumbnailImageUrl을 사용하고, null일 경우를 대비합니다.
+              image: item.product.thumbnailImageUrl != null
                   ? DecorationImage(
-                  image: NetworkImage(item.product.thumbnailImage!),
+                  image: NetworkImage(item.product.thumbnailImageUrl!),
                   fit: BoxFit.cover)
                   : null,
             ),
-            child: item.product.thumbnailImage == null
+            // [수정] thumbnailImageUrl이 null일 때 아이콘을 표시합니다.
+            child: item.product.thumbnailImageUrl == null
                 ? Icon(Icons.image_not_supported_outlined,
                 color: AppColors.textGrey, size: 30)
                 : null,
@@ -209,11 +213,13 @@ class _OrderScreenContentState extends State<_OrderScreenContent> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(item.companyName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
+                // [수정] store의 name을 사용하고, null일 경우를 대비합니다.
+                Text(item.product.store?.name ?? '스토어 없음', style: TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
                 gap4,
                 Text(item.product.name, style: TextStyle(fontSize: TextSizes.body), maxLines: 1, overflow: TextOverflow.ellipsis),
                 gap4,
-                _buildPriceWidget(discountInfo, item.totalPrice),
+                // [수정] _buildPriceWidget에 product 객체와 최종 가격을 함께 전달합니다.
+                _buildPriceWidget(item.product, item.totalPrice),
                 gap4,
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -221,8 +227,9 @@ class _OrderScreenContentState extends State<_OrderScreenContent> {
                     color: AppColors.boxGrey,
                     borderRadius: BorderRadius.circular(4),
                   ),
+                  // [수정] options는 List이므로, 여기서는 수량만 표시하도록 단순화합니다.
                   child: Text(
-                      '옵션  ${item.product.options['color'] ?? 'N/A'} / ${item.quantity}개',
+                      '수량 ${item.quantity}개',
                       style: TextStyle(fontSize: TextSizes.caption, color: Colors.grey[600])),
                 ),
               ],
@@ -279,36 +286,41 @@ class _OrderScreenContentState extends State<_OrderScreenContent> {
     );
   }
 
-  Widget _buildPriceWidget(Discount? discountInfo, int finalPrice) {
-    if (discountInfo == null) {
+  // [수정] Price 위젯의 로직을 새로운 데이터 모델에 맞게 변경합니다.
+  Widget _buildPriceWidget(Product product, int finalPrice) {
+    final discountInfo = product.discount;
+
+    // 할인이 없거나, 할인율이 0이면 최종 가격만 표시합니다.
+    if (discountInfo == null || discountInfo.value == 0) {
       return Text(
         '${numberFormat.format(finalPrice)}원',
-        style: const TextStyle(fontWeight: FontWeight.bold),
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body),
       );
     } else {
+      // 할인 적용 시, 원가 계산
+      final originalPrice = (finalPrice / (1 - (discountInfo.value / 100))).round();
+
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '${numberFormat.format(discountInfo.originalPrice)}원',
+            '${numberFormat.format(originalPrice)}원',
             style: const TextStyle(
               fontSize: TextSizes.caption,
               color: AppColors.textGrey,
               decoration: TextDecoration.lineThrough,
             ),
           ),
-          gap4,
           Row(
             children: [
-              if (discountInfo.amount > 0)
-                Text('${discountInfo.amount}%',
-                    style: TextStyle(
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.bold,
-                        fontSize: TextSizes.body)),
+              Text('${discountInfo.value}%',
+                  style: TextStyle(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: TextSizes.body)),
               gapW8,
               Text(
-                '${numberFormat.format(discountInfo.discountedPrice)}원',
+                '${numberFormat.format(finalPrice)}원',
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body),
               ),
             ],

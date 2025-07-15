@@ -4,8 +4,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart';
 import 'package:look_talk/view_model/product/product_list_viewmodel.dart';
 import 'package:provider/provider.dart';
-
+import 'dart:convert';
 import '../category/category_data_select_viewmodel.dart';
+
 
 class ProductRegisterViewModel extends ChangeNotifier {
   final Dio _dio;
@@ -22,6 +23,28 @@ class ProductRegisterViewModel extends ChangeNotifier {
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+
+  // ✅ 선택된 옵션
+  final List<String> selectedSizes = [];
+  final List<String> selectedColors = [];
+
+  void toggleSize(String size) {
+    if (selectedSizes.contains(size)) {
+      selectedSizes.remove(size);
+    } else {
+      selectedSizes.add(size);
+    }
+    notifyListeners();
+  }
+
+  void toggleColor(String color) {
+    if (selectedColors.contains(color)) {
+      selectedColors.remove(color);
+    } else {
+      selectedColors.add(color);
+    }
+    notifyListeners();
+  }
 
   Future<void> pickImage() async {
     final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -45,12 +68,21 @@ class ProductRegisterViewModel extends ChangeNotifier {
 
     const path = '/api/seller/products';
 
+    final discountRate = int.tryParse(discountController.text.trim()) ?? 0;
+
+    final options = {
+      'size': selectedSizes,
+      'color': selectedColors,
+    };
+
     final formData = FormData.fromMap({
       'name': nameController.text,
       'price': int.tryParse(priceController.text) ?? 0,
       'description': descController.text,
       'categoryId': selectedCategoryId,
       'category': categoryVm.selectedSubCategory?.name,
+      'options': jsonEncode(options),
+      'discount': jsonEncode({"rate": discountRate}),
     });
 
     if (_imageFile != null) {
@@ -83,6 +115,8 @@ class ProductRegisterViewModel extends ChangeNotifier {
     descController.clear();
     priceController.clear();
     discountController.clear();
+    selectedSizes.clear();
+    selectedColors.clear();
     _imageFile = null;
     notifyListeners();
   }

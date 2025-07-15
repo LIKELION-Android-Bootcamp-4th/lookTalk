@@ -22,10 +22,14 @@ import 'package:look_talk/view_model/inquiry/inquiry_viewmodel.dart';
 import 'package:look_talk/view_model/mypage_view_model/alter_member_viewmodel.dart';
 import 'package:look_talk/view_model/mypage_view_model/search_my_product_list_viewmodel.dart';
 import 'package:look_talk/view_model/mypage_view_model/seller_manage_viewmodel.dart';
+import 'package:look_talk/view_model/product/product_community_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_detail_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_list_viewmodel.dart';
+import 'package:look_talk/view_model/product/product_post_list_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_register_viewmodel.dart';
 import 'package:look_talk/view_model/search_view_model.dart';
+import 'package:look_talk/view_model/community/category_post_list_viewmodel.dart';
+import 'package:look_talk/view_model/wishlist/wishlist_view_model.dart';
 
 import '../core/network/dio_client.dart';
 import '../core/network/token_storage.dart';
@@ -41,15 +45,16 @@ import '../model/repository/order_repository.dart';
 import '../model/repository/post_create_repository.dart';
 import '../model/repository/product_repository.dart';
 import '../model/repository/search_repository.dart';
+import '../model/repository/wishlist_repository.dart';
 import 'auth/auth_view_model.dart';
 import 'auth/nickname_check_view_model.dart';
 import 'cart/cart_view_model.dart';
+import 'community/community_board_view_model.dart';
 import 'community/community_tab_view_model.dart';
 import 'community/my_post_list_view_model.dart';
 import 'community/question_post_list_view_model.dart';
 import 'community/recommend_post_list_view_model.dart';
 import 'order/order_view_model.dart';
-
 
 final dio = DioClient.instance;
 final tokenStorage = TokenStorage();
@@ -68,44 +73,51 @@ DetailListviewViewmodel provideCategoryDetailViewModel({
   required List<BringSubCategoryResponse> subCategories,
   required BringSubCategoryResponse initialSubCategory,
   required BringSubCategoryResponse mainCategory,
-}) =>
-    DetailListviewViewmodel(
-      repository: CategoryDetailRepository(dio),
-      subCategories: subCategories,
-      initialSubCategory: initialSubCategory,
-      mainCategory: mainCategory
-    );
+}) => DetailListviewViewmodel(
+    repository: CategoryDetailRepository(dio),
+    subCategories: subCategories,
+    initialSubCategory: initialSubCategory,
+    mainCategory: mainCategory
+);
 CartViewModel provideCartViewModel() => CartViewModel(CartRepository(CartApiClient(dio)));
-
+WishlistViewModel provideWishlistViewModel() => WishlistViewModel(WishlistRepository(dio));
 // 주문
-OrderViewModel provideOrderViewModel() => OrderViewModel(OrderRepository(OrderApiClient(DioClient())));
+OrderViewModel provideOrderViewModel() => OrderViewModel(OrderRepository(OrderApiClient((dio))));
 
 // 커뮤니티
 CommunityTabViewModel provideCommunityTabViewModel() => CommunityTabViewModel();
 QuestionPostListViewModel provideQuestionPostListViewModel() => QuestionPostListViewModel(PostRepository(PostApiClient(dio)));
 RecommendPostListViewModel provideRecommendPostListViewModel() => RecommendPostListViewModel(PostRepository(PostApiClient(dio)));
 MyPostListViewModel provideMyPostListViewModel(String userId) => MyPostListViewModel(PostRepository(PostApiClient(dio)), userId);
-PostCreateViewModel providePostCreateViewModel() =>  PostCreateViewModel(PostCreateRepository(PostCreateApiClient(dio)));
+PostCreateViewModel providePostCreateViewModel() => PostCreateViewModel(PostCreateRepository(PostCreateApiClient(dio)));
 PostDetailViewModel providerPostDetailViewModel(String postId) => PostDetailViewModel(PostRepository(PostApiClient(dio)), tokenStorage, postId);
-
-
-
-ProductViewModel provideProductViewModel() {
-  return ProductViewModel(ProductRepository(dio));
+CommunityBoardViewModel provideCommunityBoardViewModel(String category, {String? productId}) =>
+    CommunityBoardViewModel(
+      repository: PostRepository(PostApiClient(dio)),
+      category: category,
+      productId: productId,
+    );
+ProductPostListViewModel provideProductPostListViewModel(String productId) =>
+    ProductPostListViewModel(PostRepository(PostApiClient(dio)), productId);
+CommunityProductTabViewModel provideCommunityProductTabViewModel() => CommunityProductTabViewModel();
+CategoryPostListViewModel provideCategoryPostListViewModel(String category, {String? productId}) {
+  return CategoryPostListViewModel(PostRepository(PostApiClient(dio)), category, productId: productId);
 }
 
+ProductViewModel provideProductViewModel() => ProductViewModel(ProductRepository(dio));
 ProductRegisterViewModel provideProductRegisterViewModel() => ProductRegisterViewModel(dio);
 ProductDetailViewModel provideProductDetailViewModel(String productId) =>
     ProductDetailViewModel(ProductRepository(dio), productId);
 InquiryViewModel provideInquiryViewModel() => InquiryViewModel();
+ProductCommunityViewModel provideProductCommunityViewModel(String productId) =>
+    ProductCommunityViewModel(repository: PostRepository(PostApiClient(dio)), productId: productId);
 
-CommunityProductTabViewModel provideCommunityProductTabViewModel() => CommunityProductTabViewModel();
-
-//마이페이지
+// 마이페이지
 AlterMemberViewmodel provideAlterMemberViewmodel() => AlterMemberViewmodel(repository: AlterMemberRepository(dio));
-SearchMyProductListViewmodel provideSearchMyProductListViewmodel () => SearchMyProductListViewmodel(repository: OrderListRepository(dio));
+SearchMyProductListViewmodel provideSearchMyProductListViewmodel() => SearchMyProductListViewmodel(repository: OrderListRepository(dio));
 SellerManageViewmodel provideSellerManageViewmodel() => SellerManageViewmodel(repository: OrderListRepository(dio));
-//홈화면
+
+// 홈화면
 HomeCategoryViewModel provideHomeViewModelDefault() {
   final categoryRepository = CategoryRepository(dio);
   final categoryDetailRepository = CategoryDetailRepository(dio);

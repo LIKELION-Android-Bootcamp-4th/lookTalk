@@ -1,5 +1,8 @@
+
+
 import 'package:dio/dio.dart';
-import 'package:look_talk/core/network/dio_client.dart';
+
+import '../../core/network/dio_client.dart';
 
 class AdminNoticeRepository {
   final Dio _dio = DioClient.instance;

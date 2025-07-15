@@ -5,8 +5,21 @@ import 'package:look_talk/ui/common/const/text_sizes.dart';
 import 'package:look_talk/view_model/product/product_detail_bottom_sheet_viewmodel.dart';
 import 'package:look_talk/ui/common/component/primary_button.dart';
 
-void showOptionBottomSheet(BuildContext context) {
-  final viewModel = OptionSelectionViewModel();
+void showOptionBottomSheet({
+  required BuildContext context,
+  required Map<String, dynamic> options,
+  required int originalPrice,
+  required int discountRate,
+}) {
+  final sizeList = List<String>.from(options['size'] ?? []);
+  final colorList = List<String>.from(options['color'] ?? []);
+
+  final viewModel = OptionSelectionViewModel(
+    sizeOptions: sizeList,
+    colorOptions: colorList,
+    originalPrice: originalPrice,
+    discountRate: discountRate,
+  );
 
   showModalBottomSheet(
     context: context,
@@ -25,23 +38,18 @@ void showOptionBottomSheet(BuildContext context) {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "색상",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: TextSizes.headline,
-                      color: AppColors.black,
-                    ),
-                  ),
+                  Text("색상",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: TextSizes.headline,
+                        color: AppColors.black,
+                      )),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
                     children: vm.colorOptions.map((color) {
                       return ChoiceChip(
-                        label: Text(
-                          color,
-                          style: TextStyle(fontSize: TextSizes.body),
-                        ),
+                        label: Text(color, style: TextStyle(fontSize: TextSizes.body)),
                         selected: vm.selectedColor == color,
                         onSelected: (_) => vm.selectColor(color),
                         selectedColor: AppColors.secondary,
@@ -49,23 +57,18 @@ void showOptionBottomSheet(BuildContext context) {
                     }).toList(),
                   ),
                   const SizedBox(height: 16),
-                  Text(
-                    "사이즈",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: TextSizes.headline,
-                      color: AppColors.black,
-                    ),
-                  ),
+                  Text("사이즈",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: TextSizes.headline,
+                        color: AppColors.black,
+                      )),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
                     children: vm.sizeOptions.map((size) {
                       return ChoiceChip(
-                        label: Text(
-                          size,
-                          style: TextStyle(fontSize: TextSizes.body),
-                        ),
+                        label: Text(size, style: TextStyle(fontSize: TextSizes.body)),
                         selected: vm.selectedSize == size,
                         onSelected: (_) => vm.selectSize(size),
                         selectedColor: AppColors.secondary,
@@ -88,10 +91,7 @@ void showOptionBottomSheet(BuildContext context) {
                               onPressed: vm.decreaseQuantity,
                               icon: const Icon(Icons.remove),
                             ),
-                            Text(
-                              "${vm.quantity}",
-                              style: TextStyle(fontSize: TextSizes.body),
-                            ),
+                            Text("${vm.quantity}", style: TextStyle(fontSize: TextSizes.body)),
                             IconButton(
                               onPressed: vm.increaseQuantity,
                               icon: const Icon(Icons.add),
@@ -115,7 +115,7 @@ void showOptionBottomSheet(BuildContext context) {
                       Expanded(
                         child: OutlinedButton(
                           onPressed: () {
-                            // 장바구니
+                            // 장바구니 처리
                             Navigator.pop(context);
                           },
                           style: OutlinedButton.styleFrom(
@@ -132,14 +132,13 @@ void showOptionBottomSheet(BuildContext context) {
                         child: PrimaryButton(
                           text: "구매하기",
                           onPressed: () {
-                            // 구매하기
+                            // 구매 처리
                             Navigator.pop(context);
                           },
                         ),
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 16),
                 ],
               ),
