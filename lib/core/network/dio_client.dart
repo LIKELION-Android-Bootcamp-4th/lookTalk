@@ -58,10 +58,10 @@ class DioClient {
 
                 // 새 토큰 저장
                 await _tokenStorage.saveTokens(
-                    accessToken: newAccessToken,
-                    refreshToken: newRefreshToken,
-                    userId: userId,
-                    companyCode: '6866fcea5b230f5dc709bdeb',
+                  accessToken: newAccessToken,
+                  refreshToken: newRefreshToken,
+                  userId: userId,
+                  companyCode: '6866fcea5b230f5dc709bdeb',
                 );
 
 
