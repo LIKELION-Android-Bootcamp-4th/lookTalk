@@ -20,6 +20,14 @@ class ManageProductScreen extends StatefulWidget {
 }
 
 class _CommunityScreenState extends State<ManageProductScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask((){ // 진입시 초기화 하기
+      context.read<SearchMyProductListViewmodel>();
+    });
+  }
 
 
 
