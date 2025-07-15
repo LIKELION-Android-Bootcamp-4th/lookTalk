@@ -34,7 +34,7 @@ class DioClient {
           if (!isExcluded) {
             final accessToken = await _tokenStorage.getAccessToken();
             if (accessToken != null) {
-              options.headers['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODczNzg2MDJmZTYyZmI0MzUzZTNmZjUiLCJzdG9yZUlkIjoiNjg3Mzc4NjAyZmU2MmZiNDM1M2UzZmY3IiwiY29tcGFueUlkIjoiNjg2NmZjZWE1YjIzMGY1ZGM3MDliZGViIiwiaXNBZG1pbiI6ZmFsc2UsImlzU3VwZXJBZG1pbiI6ZmFsc2UsImlhdCI6MTc1MjQ4MDUwNSwiZXhwIjoxNzUyNTY2OTA1fQ.LJEmpYGGPUVjo-Rn2ILjfwBQYyY3hA2thwR3gc2Xx8A';
+              options.headers['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODczZDAxYTJmZTYyZmI0MzUzZWQ0OTkiLCJjb21wYW55SWQiOiI2ODY2ZmNlYTViMjMwZjVkYzcwOWJkZWIiLCJpc0FkbWluIjpmYWxzZSwiaXNTdXBlckFkbWluIjpmYWxzZSwiaWF0IjoxNzUyNTYyMDkzLCJleHAiOjE3NTI2NDg0OTN9.utAYYrNz-sSC60I2yu-nTOXqnqC94BIbhLIlWbH5BTw';
             }
           }
 

@@ -162,7 +162,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
                         viewModel.communities.isEmpty
                             ? Center(child: Text("찾으시는 커뮤니티 글이 없습니다."))
-                            :Expanded(
+                            :SingleChildScrollView(
                           child: Column(
                             children: [
                               GestureDetector(

@@ -33,4 +33,5 @@ class SearchViewModel extends ChangeNotifier {
     print(' 검색중 오류 발생: $e');
     }
   }
+
 }

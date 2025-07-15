@@ -18,7 +18,8 @@ class OrderListRepository {
       return data
           .map((orderJson) => OrderListResponse.fromJson(orderJson))
           .toList();
-    }catch(e){
+    }catch(e,stack){
+      print("스택 1 \n${stack}");
       throw Exception('검색이 되지 않습니다. $e');
     }
   }
@@ -31,7 +32,8 @@ class OrderListRepository {
       return data
           .map((orderJson) => OrderListResponse.fromJson(orderJson))
           .toList();
-    }catch(e){
+    }catch(e,stack){
+      print("스택 1 \n${stack}");
       throw Exception('검색이 되지 않습니다. $e');
     }
   }

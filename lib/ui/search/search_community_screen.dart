@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:look_talk/ui/common/component/common_loading.dart';
-import 'package:look_talk/view_model/search_view_model.dart';
 import 'package:provider/provider.dart';
-import '../../../view_model/community/question_post_list_view_model.dart';
-import '../common/component/community/post_list.dart';
 
+import '../../view_model/search_view_model.dart';
+import '../common/component/app_bar/app_bar_search_cart.dart';
 
 class SearchCommunityScreen extends StatelessWidget {
   final String category;
 
   const SearchCommunityScreen({super.key, required this.category});
-
 
   @override
   Widget build(BuildContext context) {
@@ -19,18 +16,24 @@ class SearchCommunityScreen extends StatelessWidget {
         ? vm.questionCommunities
         : vm.recommendCommunities;
 
-    return Column(
-      children: [
-        Expanded(
-          child: PostList(
-            posts: posts,
-            onRefresh: () async {
+    return Scaffold(
+      appBar: AppBarSearchCart(),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: List.generate(
+            posts.length,
+                (index) {
+              final post = posts[index];
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Text("총 개수${posts.length}"), // 또는 Text(post.title) 등
+              );
             },
-            rootContext: context,
           ),
         ),
-      ],
+      ),
     );
   }
 }
-

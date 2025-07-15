@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-
 import 'package:look_talk/core/network/end_points/search.dart';
 import 'package:look_talk/model/entity/response/search_response.dart';
 
@@ -22,5 +21,4 @@ class SearchRepository {
       throw Exception('검색이 되지 않습니다. $e');
     }
   }
-
 }
