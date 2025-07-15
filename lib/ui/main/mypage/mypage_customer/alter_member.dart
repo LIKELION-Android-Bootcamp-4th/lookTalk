@@ -24,6 +24,7 @@ class AlterMember extends StatefulWidget {
 }
 
 class AlterMemberState extends State<AlterMember> {
+  bool isCheckedNickname = false;
   bool isLoading = false;
   String? profileImagePath;
   ImagePicker picker = ImagePicker();
@@ -53,6 +54,7 @@ class AlterMemberState extends State<AlterMember> {
         actions: [
           TextButton(
               onPressed: ()async{
+                if (!isCheckedNickname) return;
                 setState(() {
                   isLoading = true;
                 });
@@ -228,9 +230,24 @@ class AlterMemberState extends State<AlterMember> {
   Widget _buildNicknameTextField(BuildContext context,TextEditingController controller ) {
     return Consumer<CheckNameViewModel>(
       builder: (context, viewModel, child) {
+        final result = viewModel.result;
+        if (result != null && isCheckedNickname != result.available) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              setState(() {
+                isCheckedNickname = result.available;
+              });
+            }
+          });
+        }
         return CommonTextField(
           controller: controller,
           onChanged: (value) {
+            if (isCheckedNickname) {
+              setState(() {
+                isCheckedNickname = false;
+              });
+            }
             viewModel.check(CheckNameType.nickname ,value);
           },
         );

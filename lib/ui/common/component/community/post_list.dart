@@ -6,12 +6,12 @@ import 'post_item.dart';
 
 class PostList extends StatelessWidget {
   final List<PostResponse> posts;
-  final Future<void> Function()? onRefreshAfterDelete;
+  final Future<void> Function()? onRefresh;
   final BuildContext rootContext;
 
   const PostList({
     required this.posts,
-    this.onRefreshAfterDelete,
+    this.onRefresh,
     required this.rootContext,
     super.key,
   });
@@ -30,8 +30,8 @@ class PostList extends StatelessWidget {
           return GestureDetector(
             onTap: () async {
               final result = await context.push('/post/${posts[index].id}');
-              if (result == true && onRefreshAfterDelete != null) {
-                await onRefreshAfterDelete!();
+              if ((result == true || result == 'updated') && onRefresh != null) {
+                await onRefresh!();
 
                 ScaffoldMessenger.of(rootContext).showSnackBar(
                   const SnackBar(

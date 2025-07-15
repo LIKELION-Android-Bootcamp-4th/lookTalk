@@ -2,93 +2,110 @@ import 'package:flutter/material.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../model/entity/response/order_product_summary.dart';
+import '../../../../view_model/community/selected_product_view_model.dart';
 import '../../../../view_model/mypage_view_model/search_my_product_list_viewmodel.dart';
+import '../../../common/const/gap.dart';
 
-class CommunityProductHistory extends StatelessWidget{
+class CommunityProductHistory extends StatelessWidget {
   const CommunityProductHistory({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SearchMyProductListViewmodel>(
-      builder: (context, viewModel, _) {
-        final productItems = viewModel.orders
-            .expand((order) => order.items)
-            .toList();
+    final viewModel = context.watch<SearchMyProductListViewmodel>();
 
-        if (productItems.isEmpty) {
-          return const Center(child: Text("구매 내역이 없습니다."));
-        }
+    final productItems = viewModel.orders
+        .expand((order) => order.items)
+        .toList();
 
-        return _buildProductGrid(context, productItems);
-      },
-    );
+    if (productItems.isEmpty) {
+      return const Center(child: Text("구매 내역이 없습니다."));
+    }
+
+    return _buildProductGrid(context, productItems);
   }
 
-  Widget _buildProductGrid(BuildContext context, List<dynamic> items) {
+  Widget _buildProductGrid(BuildContext context,
+      List<OrderProductSummary> items,) {
     return GridView.builder(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(8),
       itemCount: items.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        mainAxisSpacing: 16,
-        crossAxisSpacing: 16,
-        childAspectRatio: 0.65,
+        crossAxisCount: 3,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+        childAspectRatio: 0.6,
       ),
       itemBuilder: (context, index) {
-        return _buildProductItem(context, items[index]);
+        return _buildProductCard(context, items[index]);
       },
     );
   }
 
-  Widget _buildProductItem(BuildContext context, dynamic item) {
-    final product = item.product;
+  Widget _buildProductCard(BuildContext context, OrderProductSummary item) {
+    final imageUrl = item.thumbnailImage;
+    final storeName = item.storeName;
+    final productName = item.name;
+    final isValidImage = imageUrl != null && imageUrl
+        .trim()
+        .isNotEmpty;
+    final selectedProductId = context
+        .watch<SelectedProductViewModel>()
+        .selectedProduct
+        ?.id;
+    final isSelected = selectedProductId == item.id;
 
-    return Column(
+    return GestureDetector(
+      onTap: () {
+        context.read<SelectedProductViewModel>().selectFromOrderSummary(item);
+      },
+      child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildProductImage(product.thumbnailImageUrl),
-        const SizedBox(height: 8),
-        _buildProductPrice(context, product.price),
-        _buildStoreName(context, product.storeName),
-      ],
-    );
-  }
-
-  Widget _buildProductImage(String? imageUrl) {
-    return AspectRatio(
-      aspectRatio: 1,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Image.network(
-          imageUrl ?? '',
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) =>
-              Container(color: Colors.grey.shade200),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: SizedBox(
+            width: 100,
+            height: 103,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                isValidImage
+                    ? Image.network(
+                  imageUrl!,
+                  width: 100,
+                  height: 103,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) =>
+                  const Icon(Icons.broken_image, size: 100),
+                )
+                    : const Icon(Icons.image, size: 100),
+                if (isSelected)
+                  Container(
+                    width: 100,
+                    height: 103,
+                    color: Colors.black.withOpacity(0.5),
+                  ),
+                if (isSelected)
+                  const Icon(Icons.check, color: Colors.white, size: 40),
+              ],
+            ),
+          ),
         ),
-      ),
-    );
+        gap8,
+
+        Text(
+          storeName ?? '',
+          style: context.h1.copyWith(fontSize: 12),
+        ),
+
+        gap4,
+
+        Text(
+          productName,
+          style: context.bodyBold.copyWith(fontSize: 12),
+        ),
+      ],
+    ),);
   }
-
-  Widget _buildProductPrice(BuildContext context, int price) {
-    return Text(
-      '${price.toString()}원',
-      style: context.bodyBold.copyWith(fontSize: 16),
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-    );
-  }
-
-  Widget _buildStoreName(BuildContext context, String? storeName) {
-    return Text(
-      storeName ?? '',
-      style: context.body.copyWith(
-        color: Colors.grey[600],
-        fontSize: 14,
-      ),
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-    );
-  }
-
-
 }

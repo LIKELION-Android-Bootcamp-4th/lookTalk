@@ -282,12 +282,7 @@ final GoRouter router = GoRouter(
 
         GoRoute(
           path: '/manageProduct',
-          builder: (context, state) {
-            return ChangeNotifierProvider(
-              create: (_) => provideSearchMyProductListViewmodel(),
-              child: ManageProductScreen(),
-            );
-          },
+          builder: (context, state) => const ManageProductScreen(),
         ),
 
         GoRoute(
