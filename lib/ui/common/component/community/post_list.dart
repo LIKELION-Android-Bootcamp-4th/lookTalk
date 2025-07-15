@@ -30,7 +30,7 @@ class PostList extends StatelessWidget {
           return GestureDetector(
             onTap: () async {
               final result = await context.push('/post/${posts[index].id}');
-              if ((result == true || result == 'updated') && onRefresh != null) {
+              if (result == 'deleted' && onRefresh != null) {
                 await onRefresh!();
 
                 ScaffoldMessenger.of(rootContext).showSnackBar(
@@ -40,6 +40,8 @@ class PostList extends StatelessWidget {
                     behavior: SnackBarBehavior.floating,
                   ),
                 );
+              } else if (result == 'updated' && onRefresh != null) {
+                await onRefresh!(); // 댓글 수/좋아요 수 갱신
               }
             },
             child: PostItem(post: posts[index]),
