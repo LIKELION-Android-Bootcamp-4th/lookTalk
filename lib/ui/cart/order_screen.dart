@@ -77,9 +77,6 @@ class _OrderScreenContentState extends State<_OrderScreenContent> {
       return OrderItemRequest(
         productId: cartItem.product.id,
         quantity: cartItem.quantity,
-        // [수정] OrderItemRequest는 Map<String, dynamic>을 기대하지만, product.options는 List입니다.
-        // 현재 UI에서 옵션을 선택하는 기능이 없으므로, 빈 Map을 전달하여 오류를 해결합니다.
-        // 추후 옵션 선택 기능 구현 시 이 부분을 수정해야 합니다.
         options: {},
         unitPrice: cartItem.cartPrice,
       );
