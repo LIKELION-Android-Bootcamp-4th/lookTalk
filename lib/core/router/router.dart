@@ -302,27 +302,8 @@ final GoRouter router = GoRouter(
           },
         ),
 
-        GoRoute(
-          path: '/manageProduct',
-          builder: (context, state) => const ManageProductScreen(),
-        ),
 
-        GoRoute(
-          path: '/alterMember',
-          builder: (context, state) {
-            return MultiProvider(
-              providers: [
-                ChangeNotifierProvider(
-                  create: (_) => provideAlterMemberViewmodel(),
-                ),
-                ChangeNotifierProvider(
-                  create: (_) => provideBuyerSignupViewModel(),
-                ),
-              ],
-              child: AlterMember(),
-            );
-          },
-        ),
+
 
         GoRoute(
           path: '/notice',
@@ -343,5 +324,27 @@ final GoRouter router = GoRouter(
         ),
       ],
     ),
+    GoRoute(
+      path: '/alterMember',
+      builder: (context, state) {
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (_) => provideAlterMemberViewmodel(),
+            ),
+            ChangeNotifierProvider(
+              create: (_) => provideBuyerSignupViewModel(),
+            ),
+          ],
+          child: AlterMember(),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/manageProduct',
+      builder: (context, state) => const ManageProductScreen(),
+    ),
   ],
+
 );
+
