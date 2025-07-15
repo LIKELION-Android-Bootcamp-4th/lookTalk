@@ -58,12 +58,15 @@ class ReviewRepository {
     try {
       final res = await _dio.get('/api/products/$productId/reviews/average');
 
-      final result = ApiResult.fromResponse<double>(res, (data) {
-        final resultMap = (res.data['message']['result'] ?? {});
-        return (resultMap['averageRating'] ?? 0).toDouble();
-      });
+      final resultMap = res.data['message']?['result'];
+      final average = (resultMap?['averageRating'] ?? 0).toDouble();
 
-      return result;
+      return ApiResult(
+        success: true,
+        message: '평균 평점 조회 성공',
+        data: average,
+        timestamp: DateTime.now(),
+      );
     } catch (e) {
       return ApiResult(
         success: false,
@@ -74,6 +77,7 @@ class ReviewRepository {
       );
     }
   }
+
 
   Future<ApiResult<void>> updateReview({
     required String reviewId,
