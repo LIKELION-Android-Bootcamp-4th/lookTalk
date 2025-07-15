@@ -14,6 +14,7 @@ import 'package:look_talk/ui/main/community/post_create_screen.dart';
 import 'package:look_talk/ui/main/community/post_detail_screen.dart';
 import 'package:look_talk/ui/main/home/home_screen.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/alter_member.dart';
+import 'package:look_talk/ui/main/mypage/mypage_customer/manage_product/manage_product_screen.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/mypage_screen.dart';
 
 import 'package:look_talk/ui/main/wishlist/wishlist_screen.dart';
@@ -74,9 +75,9 @@ final GoRouter router = GoRouter(
           builder: (context, state) {
             return MultiProvider(
               providers: [
-                ChangeNotifierProvider(
-                  create: (_) => provideCheckNameViewModel(),
-                ),
+                // ChangeNotifierProvider(
+                //   create: (_) => provideCheckNameViewModel(),
+                // ),
                 ChangeNotifierProvider(
                   create: (_) => provideBuyerSignupViewModel(),
                 ),
@@ -90,9 +91,7 @@ final GoRouter router = GoRouter(
           builder: (context, state) {
             return MultiProvider(
               providers: [
-                ChangeNotifierProvider(
-                  create: (_) => provideCheckNameViewModel(),
-                ),
+                // ChangeNotifierProvider(create: (_) => provideCheckNameViewModel()),
                 ChangeNotifierProvider(
                   create: (_) => provideSellerSignupViewModel(),
                 ),
@@ -182,10 +181,7 @@ final GoRouter router = GoRouter(
       ),
     ),
 
-    GoRoute(
-      path: '/seller/orders',
-      builder: (context, state) => const ManageProductSellerScreen(),
-    ),
+    // GoRoute(path: '/seller/orders', builder: (context, state) => const ManageProductSellerScreen()),
     GoRoute(path: '/notice', builder: (context, state) => const NoticeScreen()),
 
     ShellRoute(
@@ -239,41 +235,53 @@ final GoRouter router = GoRouter(
           path: '/community',
           builder: (context, state) => const CommunityEntryPoint(),
         ),
+
         GoRoute(
           path: '/wishlist',
-          builder: (context, state) {
-            return ChangeNotifierProvider(
-              // [✅ 수정] ..init() 호출 부분을 제거합니다.
-              create: (_) => provideWishlistViewModel(),
-              child: const WishlistScreen(),
-            );
-          },
+          builder: (context, state) => const WishlistScreen(),
         ),
         GoRoute(
           path: '/mypage',
           builder: (context, state) {
-            final authViewModel = context.watch<AuthViewModel>();
+            return ChangeNotifierProvider(
+              create: (_) => provideAlterMemberViewmodel(),
+              builder: (context, child) {
+                final authViewModel = context.watch<AuthViewModel>();
 
-            if (!authViewModel.isLoggedIn) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                context.go('/login');
-              });
-              return const SizedBox.shrink();
-            }
-            print('유저 롤!!! : ${authViewModel.userRole}');
-            if (authViewModel.userRole == 'seller') {
-              return const MyPageScreenSeller();
-            } else {
-              return const MyPageScreenCustomer();
-            }
+                if (!authViewModel.isLoggedIn) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    context.go('/login');
+                  });
+                  return const SizedBox.shrink();
+                }
+
+                print('유저 롤!!! : ${authViewModel.userRole}');
+
+                return authViewModel.userRole == 'seller'
+                    ? const MyPageScreenSeller()
+                    : const MyPageScreenCustomer();
+              },
+            );
           },
+        ),
+
+        GoRoute(
+          path: '/manageProduct',
+          builder: (context, state) => const ManageProductScreen(),
         ),
 
         GoRoute(
           path: '/alterMember',
           builder: (context, state) {
-            return ChangeNotifierProvider(
-              create: (_) => provideAlterMemberViewmodel(),
+            return MultiProvider(
+              providers: [
+                ChangeNotifierProvider(
+                  create: (_) => provideAlterMemberViewmodel(),
+                ),
+                ChangeNotifierProvider(
+                  create: (_) => provideBuyerSignupViewModel(),
+                ),
+              ],
               child: AlterMember(),
             );
           },
@@ -289,7 +297,12 @@ final GoRouter router = GoRouter(
         ),
         GoRoute(
           path: '/seller/orders',
-          builder: (context, state) => const ManageProductSellerScreen(),
+          builder: (context, state) {
+            return ChangeNotifierProvider(
+              create: (_) => provideSellerManageViewmodel(),
+              child: ManageProductSellerScreen(),
+            );
+          },
         ),
       ],
     ),

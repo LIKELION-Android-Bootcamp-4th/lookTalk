@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:look_talk/model/entity/response/discount_dto.dart';
 
 class Home {
-  final String id;
+  final String productId;
   final String name;
   final String description;
   final int price;
@@ -11,8 +11,9 @@ class Home {
   final String? storeName;
   final DiscountDto? discount;
 
+
   Home({
-    required this.id,
+    required this.productId,
     required this.name,
     required this.description,
     required this.price,
@@ -34,7 +35,7 @@ class Home {
       }
     }
     return Home(
-      id: json['id'] ?? '',
+      productId: json['id'] ?? '',
       name: json['name'] ?? '',
       description: json['description'] ?? '',
       price: json['price'] ?? 0,

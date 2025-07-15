@@ -1,56 +1,58 @@
-
-
+import 'package:look_talk/model/client/buyer_signup_api_client.dart';
+import 'package:look_talk/model/client/post_create_api_client.dart';
+import 'package:look_talk/model/client/seller_signup_api_client.dart';
+import 'package:look_talk/model/entity/response/bring_sub_category_response.dart';
+import 'package:look_talk/model/repository/alter_member_repository.dart';
+import 'package:look_talk/model/repository/buyer_signup_repository.dart';
+import 'package:look_talk/model/repository/category_detail_repository.dart';
+import 'package:look_talk/model/repository/category_repository.dart';
+import 'package:look_talk/model/repository/home_repository.dart';
+import 'package:look_talk/model/repository/order_list_repository.dart';
+import 'package:look_talk/model/repository/post_repository.dart';
+import 'package:look_talk/model/repository/seller_signup_repository.dart';
+import 'package:look_talk/view_model/auth/buyer_signup_view_model.dart';
+import 'package:look_talk/view_model/auth/seller_signup_view_model.dart';
+import 'package:look_talk/view_model/category/category_data_select_viewmodel.dart';
+import 'package:look_talk/view_model/category/category_detail/detail_listview_viewmodel.dart';
+import 'package:look_talk/view_model/community/community_product_tab_view_model.dart';
+import 'package:look_talk/view_model/community/post_create_view_model.dart';
+import 'package:look_talk/view_model/community/post_detail_view_model.dart';
+import 'package:look_talk/view_model/home/home_category_viewmodel.dart';
+import 'package:look_talk/view_model/inquiry/inquiry_viewmodel.dart';
+import 'package:look_talk/view_model/mypage_view_model/alter_member_viewmodel.dart';
+import 'package:look_talk/view_model/mypage_view_model/search_my_product_list_viewmodel.dart';
+import 'package:look_talk/view_model/mypage_view_model/seller_manage_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_detail_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_list_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_register_viewmodel.dart';
 import 'package:look_talk/view_model/search_view_model.dart';
-import 'package:look_talk/view_model/wishlist/wishlist_view_model.dart';
 
 import '../core/network/dio_client.dart';
+import '../core/network/token_storage.dart';
 import '../model/client/auth_api_client.dart';
-import '../model/client/buyer_signup_api_client.dart';
 import '../model/client/cart_api_client.dart';
 import '../model/client/nickname_api_client.dart';
 import '../model/client/order_api_client.dart';
 import '../model/client/post_api_client.dart';
-import '../model/client/post_create_api_client.dart';
-import '../model/client/seller_signup_api_client.dart';
-import '../model/entity/response/bring_sub_category_response.dart';
-import '../model/repository/alter_member_repository.dart';
 import '../model/repository/auth_repository.dart';
-import '../model/repository/buyer_signup_repository.dart';
 import '../model/repository/cart_repository.dart';
-import '../model/repository/category_detail_repository.dart';
-import '../model/repository/category_repository.dart';
-import '../model/repository/home_repository.dart';
 import '../model/repository/nickname_respository.dart';
 import '../model/repository/order_repository.dart';
 import '../model/repository/post_create_repository.dart';
-import '../model/repository/post_repository.dart';
 import '../model/repository/product_repository.dart';
 import '../model/repository/search_repository.dart';
-import '../model/repository/seller_signup_repository.dart';
-import '../model/repository/wishlist_repository.dart';
 import 'auth/auth_view_model.dart';
-import 'auth/buyer_signup_view_model.dart';
 import 'auth/nickname_check_view_model.dart';
-import 'auth/seller_signup_view_model.dart';
 import 'cart/cart_view_model.dart';
-import 'category/category_data_select_viewmodel.dart';
-import 'category/category_detail/detail_listview_viewmodel.dart';
-import 'community/community_product_tab_view_model.dart';
 import 'community/community_tab_view_model.dart';
 import 'community/my_post_list_view_model.dart';
-import 'community/post_create_view_model.dart';
-import 'community/post_detail_view_model.dart';
 import 'community/question_post_list_view_model.dart';
 import 'community/recommend_post_list_view_model.dart';
-import 'home/home_category_viewmodel.dart';
-import 'inquiry/inquiry_viewmodel.dart';
-import 'mypage_view_model/alter_member_viewmodel.dart';
 import 'order/order_view_model.dart';
 
+
 final dio = DioClient.instance;
+final tokenStorage = TokenStorage();
 
 // 로그인 & 회원가입
 final authViewModel = provideAuthViewModel();
@@ -68,15 +70,15 @@ DetailListviewViewmodel provideCategoryDetailViewModel({
   required BringSubCategoryResponse mainCategory,
 }) =>
     DetailListviewViewmodel(
-        repository: CategoryDetailRepository(dio),
-        subCategories: subCategories,
-        initialSubCategory: initialSubCategory,
-        mainCategory: mainCategory
+      repository: CategoryDetailRepository(dio),
+      subCategories: subCategories,
+      initialSubCategory: initialSubCategory,
+      mainCategory: mainCategory
     );
 CartViewModel provideCartViewModel() => CartViewModel(CartRepository(CartApiClient(dio)));
-// [✅ 수정] 다른 Provider와 일관성을 맞추기 위해 DioClient() 직접 생성 대신 공용 dio 객체를 사용합니다.
-OrderViewModel provideOrderViewModel() => OrderViewModel(OrderRepository(OrderApiClient(dio)));
-WishlistViewModel provideWishlistViewModel() => WishlistViewModel(WishlistRepository(dio));
+
+// 주문
+OrderViewModel provideOrderViewModel() => OrderViewModel(OrderRepository(OrderApiClient(DioClient())));
 
 // 커뮤니티
 CommunityTabViewModel provideCommunityTabViewModel() => CommunityTabViewModel();
@@ -84,7 +86,7 @@ QuestionPostListViewModel provideQuestionPostListViewModel() => QuestionPostList
 RecommendPostListViewModel provideRecommendPostListViewModel() => RecommendPostListViewModel(PostRepository(PostApiClient(dio)));
 MyPostListViewModel provideMyPostListViewModel(String userId) => MyPostListViewModel(PostRepository(PostApiClient(dio)), userId);
 PostCreateViewModel providePostCreateViewModel() =>  PostCreateViewModel(PostCreateRepository(PostCreateApiClient(dio)));
-PostDetailViewModel providerPostDetailViewModel(String postId) => PostDetailViewModel(PostRepository(PostApiClient(dio)), postId);
+PostDetailViewModel providerPostDetailViewModel(String postId) => PostDetailViewModel(PostRepository(PostApiClient(dio)), tokenStorage, postId);
 
 
 
@@ -101,7 +103,8 @@ CommunityProductTabViewModel provideCommunityProductTabViewModel() => CommunityP
 
 //마이페이지
 AlterMemberViewmodel provideAlterMemberViewmodel() => AlterMemberViewmodel(repository: AlterMemberRepository(dio));
-
+SearchMyProductListViewmodel provideSearchMyProductListViewmodel () => SearchMyProductListViewmodel(repository: OrderListRepository(dio));
+SellerManageViewmodel provideSellerManageViewmodel() => SellerManageViewmodel(repository: OrderListRepository(dio));
 //홈화면
 HomeCategoryViewModel provideHomeViewModelDefault() {
   final categoryRepository = CategoryRepository(dio);

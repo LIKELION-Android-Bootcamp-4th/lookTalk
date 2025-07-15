@@ -6,9 +6,75 @@ import 'package:provider/provider.dart';
 import '../../../model/entity/request/post_list_request.dart';
 import '../../../view_model/community/my_post_list_view_model.dart';
 import '../../common/component/community/post_list.dart';
+import '../../common/const/gap.dart';
 
-class CommunityMyTab extends StatelessWidget {
+// class CommunityMyTab extends StatelessWidget {
+//   const CommunityMyTab({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final vm = context.watch<MyPostListViewModel>();
+//
+//     return Column(
+//       children: [
+//         _buildSortDropdown(vm),
+//         Expanded(child: _buildPostList(vm, context)),
+//       ],
+//     );
+//   }
+//
+//   Widget _buildSortDropdown(MyPostListViewModel vm,) {
+//     return Padding(
+//       padding: const EdgeInsets.only(top: 24, right: 16),
+//       child: Align(
+//         alignment: Alignment.centerRight,
+//         child: CommonDropdown(
+//           items: SortType.values.map((e) => e.label).toList(),
+//           selectedValue: vm.sortType.label,
+//           hintText: '정렬 기준',
+//           onChanged: (label) {
+//             final newSort = SortTypeFromString.fromLabel(label ?? '');
+//             vm.changeSort(newSort);
+//           },
+//         ),
+//       ),
+//     );
+//   }
+//
+//   Widget _buildPostList(MyPostListViewModel vm, BuildContext context) {
+//     if (vm.isLoading && vm.posts.isEmpty) {
+//       return const Center(child: CommonLoading());
+//     }
+//
+//     if (!vm.isLoading && vm.posts.isEmpty) {
+//       return const Center(child: Text('게시글이 없습니다.'));
+//     }
+//
+//     return PostList(posts: vm.posts, onRefresh: () async {
+//       await vm.fetchPosts(reset: true);
+//     }, rootContext: context,);
+//   }
+// }
+class CommunityMyTab extends StatefulWidget {
   const CommunityMyTab({super.key});
+
+  @override
+  State<CommunityMyTab> createState() => _CommunityMyTabState();
+}
+
+class _CommunityMyTabState extends State<CommunityMyTab> {
+  bool _fetched = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_fetched) {
+      Future.microtask(() {
+        context.read<MyPostListViewModel>().fetchPosts(reset: true);
+      });
+      _fetched = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,14 +83,14 @@ class CommunityMyTab extends StatelessWidget {
     return Column(
       children: [
         _buildSortDropdown(vm),
-        Expanded(child: _buildPostList(vm)),
+        Expanded(child: _buildPostList(vm, context)),
       ],
     );
   }
 
   Widget _buildSortDropdown(MyPostListViewModel vm) {
     return Padding(
-      padding: const EdgeInsets.only(top: 12, right: 16),
+      padding: const EdgeInsets.only(top: 24, right: 16),
       child: Align(
         alignment: Alignment.centerRight,
         child: CommonDropdown(
@@ -33,14 +99,14 @@ class CommunityMyTab extends StatelessWidget {
           hintText: '정렬 기준',
           onChanged: (label) {
             final newSort = SortTypeFromString.fromLabel(label ?? '');
-            vm.changeSort(newSort);
+            vm.changeSort(newSort); // 내부에서 fetchPosts 실행
           },
         ),
       ),
     );
   }
 
-  Widget _buildPostList(MyPostListViewModel vm) {
+  Widget _buildPostList(MyPostListViewModel vm, BuildContext context) {
     if (vm.isLoading && vm.posts.isEmpty) {
       return const Center(child: CommonLoading());
     }
@@ -49,6 +115,12 @@ class CommunityMyTab extends StatelessWidget {
       return const Center(child: Text('게시글이 없습니다.'));
     }
 
-    return PostList(posts: vm.posts);
+    return PostList(
+      posts: vm.posts,
+      onRefresh: () async {
+        await vm.fetchPosts(reset: true);
+      },
+      rootContext: context,
+    );
   }
 }

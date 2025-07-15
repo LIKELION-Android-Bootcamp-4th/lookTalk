@@ -1,19 +1,15 @@
-import 'package:dio/dio.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:look_talk/model/entity/category_entity.dart';
-import 'package:look_talk/model/category_dummydata.dart';
+import 'package:dio/dio.dart';
 import 'package:look_talk/view_model/product/product_list_viewmodel.dart';
 import 'package:provider/provider.dart';
+
+import '../category/category_data_select_viewmodel.dart';
 
 class ProductRegisterViewModel extends ChangeNotifier {
   final Dio _dio;
   ProductRegisterViewModel(this._dio);
-
-  // --- 상태 변수, 컨트롤러 등 ---
-  String? selectedGender;
-  CategoryEntity? selectedTopCategoryEntity;
-  String? selectedSubCategory;
 
   final nameController = TextEditingController();
   final descController = TextEditingController();
@@ -27,8 +23,6 @@ class ProductRegisterViewModel extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  // --- 메서드들 ---
-
   Future<void> pickImage() async {
     final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
@@ -37,10 +31,12 @@ class ProductRegisterViewModel extends ChangeNotifier {
     }
   }
 
-  /// 상품 등록 및 API 호출 후 목록 갱신
   Future<bool> registerAndNotify(BuildContext context) async {
-    if (nameController.text.isEmpty || priceController.text.isEmpty) {
-      debugPrint('상품명과 가격은 필수입니다.');
+    final categoryVm = context.read<CategoryDataSelectViewmodel>();
+    final selectedCategoryId = categoryVm.selectedSubCategory?.id;
+
+    if (nameController.text.isEmpty || priceController.text.isEmpty || selectedCategoryId == null) {
+      debugPrint('입력값 또는 카테고리 선택이 누락되었습니다.');
       return false;
     }
 
@@ -53,8 +49,8 @@ class ProductRegisterViewModel extends ChangeNotifier {
       'name': nameController.text,
       'price': int.tryParse(priceController.text) ?? 0,
       'description': descController.text,
-      'categoryId': selectedTopCategoryEntity?.id.toString(),   // 카테고리 ID 추가
-      'category': selectedSubCategory,  // 카테고리 이름 추가
+      'categoryId': selectedCategoryId,
+      'category': categoryVm.selectedSubCategory?.name,
     });
 
     if (_imageFile != null) {
@@ -67,15 +63,12 @@ class ProductRegisterViewModel extends ChangeNotifier {
 
     try {
       final response = await _dio.post(path, data: formData);
-
-      if (response.statusCode == 201 || response.statusCode == 200) {
-        // 등록 성공 시, 상품 목록을 새로고침합니다.
+      if (response.statusCode == 200 || response.statusCode == 201) {
         await context.read<ProductViewModel>().fetchProducts();
         _clearInputs();
         return true;
-      } else {
-        return false;
       }
+      return false;
     } on DioException catch (e) {
       debugPrint('상품 등록 중 dio 오류: ${e.response?.data}');
       return false;
@@ -85,46 +78,11 @@ class ProductRegisterViewModel extends ChangeNotifier {
     }
   }
 
-  void setGender(String? gender) {
-    selectedGender = gender;
-    selectedTopCategoryEntity = null;
-    selectedSubCategory = null;
-    notifyListeners();
-  }
-
-  void setTopCategory(String? category) {
-    final list = selectedGender == '남성' ? manCategory : womanCategory;
-    selectedTopCategoryEntity = list.firstWhere(
-          (c) => c.mainCategory == category,
-      orElse: () => CategoryEntity(id: -1, mainCategory: '', subCategory: []),
-    );
-    selectedSubCategory = null;
-    notifyListeners();
-  }
-
-  void setSubCategory(String? subCategory) {
-    selectedSubCategory = subCategory;
-    notifyListeners();
-  }
-
-  List<String> get topCategoryNames {
-    if (selectedGender == null) return [];
-    final list = selectedGender == '남성' ? manCategory : womanCategory;
-    return list.map((e) => e.mainCategory).toList();
-  }
-
-  List<String> get subCategoryNames {
-    return selectedTopCategoryEntity?.subCategory ?? [];
-  }
-
   void _clearInputs() {
     nameController.clear();
     descController.clear();
     priceController.clear();
     discountController.clear();
-    selectedGender = null;
-    selectedTopCategoryEntity = null;
-    selectedSubCategory = null;
     _imageFile = null;
     notifyListeners();
   }

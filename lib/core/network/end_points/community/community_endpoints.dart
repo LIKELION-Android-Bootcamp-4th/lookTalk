@@ -6,6 +6,7 @@ class CommunityEndpoints {
   static String postManage(String postId) => '$postManageBase/$postId';
   static String postLike(String postId) => '$postManageBase/$postId/like-toggle';
   static String writeComments(String postId) => '$postManageBase/$postId/comments';
+  static String deletePost(String postId) => '$postManageBase/$postId';
 
   //글 작성 endpoints
   static const String writePost = '/api/posts'; // POST 포스트 글 작성.

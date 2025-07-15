@@ -12,7 +12,7 @@ class PostResponse {
   final int commentCount;
   final DateTime createdAt;
   final PostUserResponse? user;
-  final PostImageUrls? images;
+  final List<String> images;
   final bool isLiked;
   final List<Comment> comments;
   final ProductResponse? product;
@@ -26,7 +26,7 @@ class PostResponse {
     required this.commentCount,
     required this.createdAt,
     required this.user,
-    this.images,
+    required this.images,
     required this.isLiked,
     required this.comments,
     this.product,
@@ -44,7 +44,11 @@ class PostResponse {
       commentCount: json['commentCount'] ?? 0,
       createdAt: DateTime.parse(json['createdAt']),
       user: json['user'] != null ? PostUserResponse.fromJson(json['user']) : null,
-      images: json['images'] != null ? PostImageUrls.fromJson(json['images']) : null,
+      images: (json['images'] as List<dynamic>?)
+          ?.whereType<Map<String, dynamic>>()
+          .map((e) => e['url'])
+          .whereType<String>()
+          .toList() ?? [],
       isLiked: json['isLiked'],
       comments: (json['comments'] as List<dynamic>?) ?.map((e) => Comment.fromJson(e)).toList() ?? [],
       product: json['product'] != null ? ProductResponse.fromJson(json['product']) : null,
@@ -52,19 +56,6 @@ class PostResponse {
   }
 }
 
-class PostImageUrls {
-  final String? main;
-  final List<String>? sub;
-
-  PostImageUrls({this.main, this.sub});
-
-  factory PostImageUrls.fromJson(Map<String, dynamic> json) {
-    return PostImageUrls(
-      main: json['main'] as String?,
-      sub: (json['sub'] as List<dynamic>?)?.map((e) => e as String).toList(),
-    );
-  }
-}
 
 class ProductResponse {
   final String id;

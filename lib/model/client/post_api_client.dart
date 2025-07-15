@@ -49,4 +49,13 @@ class PostApiClient {
 
     return ApiResult.fromResponse(response, (json) => CommentResponse.fromJson(json as Map<String, dynamic>));
   }
+
+  Future<ApiResult<void>> deletePost(String postId) async {
+    final response = await _dio.delete(
+      CommunityEndpoints.deletePost(postId)
+    );
+    return ApiResult.fromVoidResponse(response);
+  }
+
+
 }

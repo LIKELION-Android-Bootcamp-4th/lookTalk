@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/network/token_storage.dart';
 import '../../model/entity/comment.dart';
 import '../../model/entity/post_entity.dart';
 import '../../model/entity/request/comment_request.dart';
@@ -7,24 +8,43 @@ import '../../model/repository/post_repository.dart';
 
 class PostDetailViewModel with ChangeNotifier {
   final PostRepository _repository;
+  final TokenStorage _tokenStorage;
 
   Post? _post;
   bool _isLoading = false;
   String? _error;
+  String? _currentUserId;
+  bool _isLiked = false;
+  bool _hasNewComment = false;
 
   Post? get post => _post;
   bool get isLoading => _isLoading;
   String? get errorMessage => _error;
-
-  bool _isLiked = false;
   bool get isLiked => _isLiked;
+  bool get hasNewComment => _hasNewComment;
 
   final TextEditingController commentController = TextEditingController();
   final List<CommentResponse> comments = [];
 
-  PostDetailViewModel(this._repository, String postId){
-    fetchPost(postId);
+  void resetNewCommentFlag() {
+    _hasNewComment = false;
   }
+
+  PostDetailViewModel(this._repository, this._tokenStorage, String postId) {
+    _init(postId);
+  }
+
+  Future<void> _init(String postId) async {
+    await _fetchCurrentUserId();
+    await fetchPost(postId);
+  }
+
+  Future<void> _fetchCurrentUserId() async {
+    _currentUserId = await _tokenStorage.getUserId();
+    print('현재 로그인된 유저 ID: $_currentUserId');
+  }
+
+  bool get isAuthor => _post?.user.id == _currentUserId;
 
   Future<void> fetchPost(String id) async {
     _isLoading = true;
@@ -49,13 +69,13 @@ class PostDetailViewModel with ChangeNotifier {
   }
 
   Future<void> toggleLike() async {
-    if(_post == null ) return;
+    if (_post == null) return;
 
     final postId = _post!.id;
 
     _isLiked = !_isLiked;
     _post = _post!.copyWith(
-      likeCount: _isLiked ? _post!.likeCount + 1 : _post!.likeCount - 1
+      likeCount: _isLiked ? _post!.likeCount + 1 : _post!.likeCount - 1,
     );
     notifyListeners();
 
@@ -71,25 +91,39 @@ class PostDetailViewModel with ChangeNotifier {
     }
   }
 
-  Future<void> submitComment(String postId) async {
+  Future<bool> submitComment(String postId) async {
     final content = commentController.text.trim();
-    if (content.isEmpty) return;
+    if (content.isEmpty) return false;
 
     final request = CommentRequest(content: content);
-    final result = await _repository.addComment(postId: postId, request: request);
+    final result = await _repository.addComment(
+      postId: postId,
+      request: request,
+    );
 
     if (result.success && result.data != null) {
       final newComment = Comment.fromResponse(result.data!);
 
-      final updatedComments = List<Comment>.from(post!.comments)..add(newComment);
+      final updatedComments = List<Comment>.from(post!.comments)
+        ..add(newComment);
 
-      _post = _post!.copyWith(comments: updatedComments);
+      _post = _post!.copyWith(comments: updatedComments, commentCount: _post!.commentCount + 1);
       commentController.clear();
       notifyListeners();
+      return true;
     } else {
       print('댓글 작성 실패: ${result.message}');
+      return false;
     }
   }
 
+  Future<bool> deletePost() async {
+    if (_post == null) {
+      _error = '게시글 정보가 없습니다.';
+      return false;
+    }
 
+    final result = await _repository.deletePost(_post!.id);
+    return result.success;
+  }
 }

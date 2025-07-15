@@ -3,10 +3,13 @@ import 'package:go_router/go_router.dart';
 import 'package:look_talk/model/entity/product_entity.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/ui/common/component/app_bar/app_bar_search_cart.dart';
+import 'package:look_talk/ui/common/component/common_loading.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
 import 'package:look_talk/ui/main/home/home_category.dart';
 import 'package:look_talk/view_model/home/home_category_viewmodel.dart';
+import 'package:look_talk/view_model/product/product_list_viewmodel.dart';
 import 'package:provider/provider.dart';
+import 'package:look_talk/view_model/viewmodel_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -19,7 +22,9 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBarSearchCart(
         leading: Image.asset('assets/images/logo.png'),
       ),
-      body: Column(
+      body: viewModel.isLoading
+          ? const CommonLoading()
+          : Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           HomeCategory(),
@@ -43,8 +48,9 @@ class HomeScreen extends StatelessWidget {
 
                 return GestureDetector(
                   onTap: () {
-                    print('✅ 상품 클릭됨: ${product.id}');
-                    context.push('/product/${product.id}');
+                    if (product.productId != null) {
+                      context.go('/product/${product.productId}');
+                    }
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -96,7 +102,7 @@ class HomeScreen extends StatelessWidget {
                 );
               },
             ),
-          )
+          ),
         ],
       ),
     );

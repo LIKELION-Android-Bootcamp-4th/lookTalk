@@ -12,7 +12,7 @@ class AlterMemberRepository {
       final response =  await _dio.get(
         MyPage.bringMember
       );
-      
+
       return AlterMemberResponse.fromJson(response.data);
     }catch(e){
       print("값을 불러올 수 없습니다.${e}");
@@ -20,14 +20,14 @@ class AlterMemberRepository {
     }
   }
 
-  Future<AlterMemberResponse> alterMember(String nickName, String? profileImage) async {
+  Future<AlterMemberResponse> alterMember(FormData formData) async {
     try{
       final response = await _dio.patch(
         MyPage.alterMember,
-            data: {
-                  'nickName' : nickName,
-                  'profileImage' : profileImage,
-      }
+        data: formData,
+        options: Options(
+          contentType:  'multipart/form-data',
+        )
       );
       return AlterMemberResponse.fromJson(response.data);
     }catch(e){
