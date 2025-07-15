@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:look_talk/model/entity/response/search_response.dart';
 import 'package:look_talk/model/repository/search_repository.dart';
 
+import '../model/entity/response/post_response.dart';
+
 class SearchViewModel extends ChangeNotifier {
   final SearchRepository repository;
 
   List<ProductSearch> products = [];
-  List<CommunitySearch> communities = [];
-  List<CommunitySearch> recommendCommunities = [];
-  List<CommunitySearch> questionCommunities = [];
+  List<PostResponse> communities = [];
+  List<PostResponse> recommendCommunities = [];
+  List<PostResponse> questionCommunities = [];
 
   SearchViewModel({required this.repository});
 
@@ -31,4 +33,5 @@ class SearchViewModel extends ChangeNotifier {
     print(' 검색중 오류 발생: $e');
     }
   }
+
 }

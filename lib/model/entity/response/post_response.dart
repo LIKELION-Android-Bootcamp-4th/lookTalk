@@ -16,6 +16,8 @@ class PostResponse {
   final bool isLiked;
   final List<Comment> comments;
   final ProductResponse? product;
+  final String? thumbnailImage;
+
 
   PostResponse({
     required this.id,
@@ -30,10 +32,23 @@ class PostResponse {
     required this.isLiked,
     required this.comments,
     this.product,
+    this.thumbnailImage,
   });
 
   factory PostResponse.fromJson(Map<String, dynamic> json) {
     print("PostResponse.fromJson 호출됨: ${json['title']}");
+    final imageList = json['images'] as List<dynamic>? ?? [];
+
+    String? mainThumbnail;
+    for (final img in imageList) {
+      if (img is Map<String, dynamic>) {
+        final url = img['url'];
+        if (url is Map<String, dynamic> && url['main'] is String) {
+          mainThumbnail = url['main'];
+          break;
+        }
+      }
+    }
 
     return PostResponse(
       id: json['id']?.toString() ?? '',
@@ -52,6 +67,7 @@ class PostResponse {
       isLiked: json['isLiked'],
       comments: (json['comments'] as List<dynamic>?) ?.map((e) => Comment.fromJson(e)).toList() ?? [],
       product: json['product'] != null ? ProductResponse.fromJson(json['product']) : null,
+      thumbnailImage: mainThumbnail,
     );
   }
 }

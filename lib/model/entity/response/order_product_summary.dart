@@ -24,6 +24,9 @@ class OrderProductSummary {
   });
 
   factory OrderProductSummary.fromJson(Map<String, dynamic> json, String? storeName, String? userNickName) {
+    final options = json['options'];
+    final size = options != null ? options['size'] ?? '' : '';
+
     return OrderProductSummary(
       id: json['id'],
       name: json['productName'],
@@ -32,7 +35,7 @@ class OrderProductSummary {
       storeName: storeName,
       userNickName: userNickName,
       discount: null, // 현재 discount 필드 없음
-      size: json['options']['size'],
+      size: size,
     );
   }
 

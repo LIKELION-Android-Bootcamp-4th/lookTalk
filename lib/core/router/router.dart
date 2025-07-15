@@ -18,8 +18,10 @@ import 'package:look_talk/ui/main/mypage/mypage_customer/manage_product/manage_p
 import 'package:look_talk/ui/main/mypage/mypage_customer/mypage_screen.dart';
 
 import 'package:look_talk/ui/main/wishlist/wishlist_screen.dart';
+import 'package:look_talk/ui/search/search_community_screen.dart';
 import 'package:look_talk/ui/search/search_screen.dart';
 import 'package:look_talk/view_model/home/home_category_viewmodel.dart';
+import 'package:look_talk/view_model/search_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../ui/auth/buyer_info_screen.dart';
@@ -168,6 +170,19 @@ final GoRouter router = GoRouter(
         create: (_) => provideSearchScreenViewModel(),
         child: SearchScreen(),
       ),
+    ),
+    GoRoute(path: '/searchCommunityDetail',
+    builder :(context,state){
+      final extras = state.extra as Map<String, dynamic>;
+      final viewModel = extras['viewModel'] as SearchViewModel;
+      final String category = extras['category'];
+      return ChangeNotifierProvider.value(
+        value: viewModel,
+        child: SearchCommunityScreen(
+          category: category,
+        ),
+      );
+        }
     ),
 
     GoRoute(path: '/cart', builder: (context, state) => CartScreen()),
