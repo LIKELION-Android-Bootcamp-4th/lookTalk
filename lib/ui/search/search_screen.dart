@@ -112,7 +112,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   context.push('/product/${product.id}');
                                 }
                               },
-                              child:                               Column(
+                              child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -162,45 +162,82 @@ class _SearchScreenState extends State<SearchScreen> {
 
                         viewModel.communities.isEmpty
                             ? Center(child: Text("찾으시는 커뮤니티 글이 없습니다."))
-                            : Expanded(
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            :Expanded(
+                          child: Column(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  context.push(
+                                    '/searchCommunityDetail',
+                                    extra: {
+                                      'viewModel': viewModel,
+                                      'category': '코디질문',
+                                    },
+                                  );
+                                },
+                                child: Column(
                                   children: [
-
-                                    Text('코디 질문',style: context.h1,),
-                                    Icon(Icons.chevron_right)
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 30),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text('코디 질문', style: context.h1),
+                                          Icon(Icons.chevron_right),
+                                        ],
+                                      ),
+                                    ),
+                                    if (question != null)
+                                      communityCard(
+                                        nickname: question.user?.nickName ?? "익명",
+                                        title: question.title,
+                                        timeAgo: timeago.format(question.createdAt, locale: 'ko'),
+                                        thumbnailUrl: (question.thumbnailImage is List && question.thumbnailImage?.isNotEmpty == true)
+                                            ? question.thumbnailImage
+                                            : null,
+                                        likes: question.likeCount,
+                                      ),
                                   ],
                                 ),
-                                if(question != null)...{
-                                  communityCard(
-                                      title: question.title,
-                                      timeAgo: timeago.format(DateTime.parse(question.createdAt),locale: 'ko'),
-                                      thumbnailUrl: (question.images is List && question.images?.isNotEmpty == true)
-                                          ? question.images
-                                          : null
-                                  )
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  context.push(
+                                    '/searchCommunityDetail',
+                                    extra: {
+                                      'viewModel': viewModel,
+                                      'category': 'coord_recommend',
+                                    },
+                                  );
                                 },
-
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                child: Column(
                                   children: [
-
-                                    Text('코디 추천',style: context.h1,),
-                                    Icon(Icons.chevron_right)
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 30),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text('코디 추천', style: context.h1),
+                                          Icon(Icons.chevron_right),
+                                        ],
+                                      ),
+                                    ),
+                                    if (recommend != null)
+                                      communityCard(
+                                        nickname: recommend.user?.nickName ?? "익명",
+                                        title: recommend.title,
+                                        timeAgo: timeago.format(recommend.createdAt, locale: 'ko'),
+                                        thumbnailUrl: (recommend.thumbnailImage is List && recommend.thumbnailImage?.isNotEmpty == true)
+                                            ? recommend.thumbnailImage
+                                            : null,
+                                        likes: recommend.likeCount,
+                                      ),
                                   ],
                                 ),
-                                if(recommend != null)...{
-                                  communityCard(
-                                      title: recommend.title,
-                                      timeAgo: timeago.format(DateTime.parse(recommend.createdAt),locale: 'ko'),
-                                      thumbnailUrl: recommend.images
-                                  )
-                                },
-
-                              ],
-                            ))
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     );
                   },
@@ -213,11 +250,11 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget communityCard({
-    String nickname = "kim",
+    required String nickname ,
     required String title,
     required String timeAgo,
     String? thumbnailUrl,
-    int likes = 0,
+    required int likes ,
     int comments = 0
 }) {
     return Padding(padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
