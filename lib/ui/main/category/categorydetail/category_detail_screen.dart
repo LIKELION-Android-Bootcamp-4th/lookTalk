@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/model/entity/response/bring_sub_category_response.dart';
 import 'package:look_talk/ui/common/component/app_bar/app_bar_home_search_cart.dart';
@@ -42,7 +43,14 @@ class CategoryDetailScreen extends StatelessWidget {
                 final imageUrl = product.thumbnailImage;
                 final isValidImage = imageUrl != null && imageUrl.trim().isNotEmpty;
 
-                return Column(
+
+                return GestureDetector(
+                  onTap: (){
+                    if(product != null){
+                      context.push('/product/${product.id}');
+                    }
+                  },
+                child:Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     isValidImage
@@ -81,6 +89,7 @@ class CategoryDetailScreen extends StatelessWidget {
                       ],
                     ),
                   ],
+                ),
                 );
               },
             ),
