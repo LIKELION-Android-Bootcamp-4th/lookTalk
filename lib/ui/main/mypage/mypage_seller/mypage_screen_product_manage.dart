@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:look_talk/view_model/product/product_list_viewmodel.dart';
+import 'package:look_talk/view_model/product/product_viewmodel.dart';
 import 'package:look_talk/ui/main/mypage/mypage_seller/mypage_screen_product_register.dart';
 import 'package:look_talk/ui/main/mypage/mypage_seller/product_screen_edit.dart';
 import 'package:look_talk/model/entity/product_entity.dart';
-import 'package:look_talk/view_model/viewmodel_provider.dart'; // ✅ 이거 꼭 필요
+import 'package:look_talk/view_model/viewmodel_provider.dart';
 
 class MyPageProductManageScreen extends StatelessWidget {
   const MyPageProductManageScreen({super.key});
@@ -13,24 +13,33 @@ class MyPageProductManageScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => provideProductViewModel()..fetchProducts(),
-      child: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text('상품 조회 / 등록'),
-            bottom: const TabBar(
-              tabs: [
-                Tab(text: '상품 조회'),
-                Tab(text: '상품 등록'),
-              ],
-            ),
-          ),
-          body: const TabBarView(
-            children: [
-              _ProductListTab(),
-              ProductRegisterScreen(),
+      child: const _ProductManageTabView(),
+    );
+  }
+}
+
+class _ProductManageTabView extends StatelessWidget {
+  const _ProductManageTabView();
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('상품 조회 / 등록'),
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: '상품 조회'),
+              Tab(text: '상품 등록'),
             ],
           ),
+        ),
+        body: const TabBarView(
+          children: [
+            _ProductListTab(),
+            ProductRegisterScreen(),
+          ],
         ),
       ),
     );
@@ -69,16 +78,22 @@ class _ProductListTab extends StatelessWidget {
               ],
             ),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => ProductEditScreen(product: product),
-                ),
-              );
-            },
-          );
+              onTap: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ProductEditScreen(
+                      product: product,
+                      productViewModel: context.read<ProductViewModel>(), // ✅ 전달
+                    ),
+                  ),
+                );
 
+                if (result == true) {
+                  context.read<ProductViewModel>().fetchProducts(); // 백업용 최신화
+                }
+              }
+          );
         },
       ),
     );

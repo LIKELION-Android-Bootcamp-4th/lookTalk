@@ -1,5 +1,3 @@
-// cart_repository.dart
-
 import 'package:look_talk/core/network/api_result.dart';
 import 'package:look_talk/model/client/cart_api_client.dart';
 import 'package:look_talk/model/entity/response/cart_response.dart';
@@ -13,17 +11,20 @@ class CartRepository {
     return _apiClient.fetchCart();
   }
 
+  /// ✅ 옵션 포함한 장바구니 추가
   Future<ApiResult<CartItem>> addCartItem({
     required String productId,
     required int unitPrice,
     required int quantity,
+    required String color,
+    required String size,
   }) {
-    // 수정된 ApiClient 함수를 직접 호출하며,
-    // 올바른 파라미터 'unitPrice'를 전달합니다.
     return _apiClient.addCartItem(
       productId: productId,
       unitPrice: unitPrice,
       quantity: quantity,
+      color: color,
+      size: size,
     );
   }
 

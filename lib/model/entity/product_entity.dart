@@ -13,7 +13,7 @@ class Product {
   final Map<String, dynamic>? options;
   final DiscountDto? discount;
   final String? status;
-  final String? thumbnailImagePath;
+  final String? thumbnailUrl; // ✅ 변경된 필드명
   final String? contentImagePath;
   final Map<String, dynamic>? images;
   final Map<String, dynamic>? attributes;
@@ -31,12 +31,12 @@ class Product {
     this.options,
     this.discount,
     this.status,
-    this.thumbnailImagePath,
+    this.thumbnailUrl, // ✅ 변경
     this.contentImagePath,
     this.images,
     this.attributes,
     this.dynamicFields,
-    this.storeName
+    this.storeName,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -51,8 +51,8 @@ class Product {
       'options',
       'discount',
       'status',
-      'thumbnailImageUrl', // ✅ 수정
-      'contentImageUrl',   // ✅ 수정
+      'thumbnailImageUrl', // ✅ 백엔드 필드는 유지
+      'contentImageUrl',
       'images',
       'attributes',
       'storeName',
@@ -67,7 +67,6 @@ class Product {
 
     DiscountDto? parsedDiscount;
     final rawDiscount = json['discount'];
-
     try {
       if (rawDiscount is String && rawDiscount.isNotEmpty) {
         parsedDiscount = DiscountDto.fromjson(jsonDecode(rawDiscount));
@@ -86,11 +85,11 @@ class Product {
       description: json['description'],
       stock: json['stock'],
       categoryId: json['categoryId'],
-      category: json['category'], // 카테고리 필드
+      category: json['category'],
       options: _parseJsonField(json['options']),
       discount: parsedDiscount,
       status: json['status'],
-      thumbnailImagePath: json['thumbnailImageUrl'],
+      thumbnailUrl: json['thumbnailImageUrl'], // ✅ 수정
       contentImagePath: json['contentImageUrl'],
       images: _parseJsonField(json['images']),
       attributes: _parseJsonField(json['attributes']),
@@ -121,17 +120,14 @@ class Product {
     return data;
   }
 
-  int get discountPercent {
-    return discount?.value ?? 0;
-  }
+  int get discountPercent => discount?.value ?? 0;
 
   int get originalPrice => price;
 
-  int get finalPrice {
-    return (price * (100 - discountPercent) / 100).round();
-  }
+  int get finalPrice => (price * (100 - discountPercent) / 100).round();
 
-  String get imageUrl => thumbnailImagePath ?? '';
+  String get imageUrl => thumbnailUrl ?? ''; // ✅ 필드명 변경 반영
+
   static Map<String, dynamic>? _parseJsonField(dynamic field) {
     try {
       if (field == null) return null;

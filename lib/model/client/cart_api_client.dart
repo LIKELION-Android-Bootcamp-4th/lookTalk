@@ -1,5 +1,3 @@
-// cart_api_client.dart
-
 import 'package:dio/dio.dart';
 import 'package:look_talk/core/network/end_points/cart/cart_endpoints.dart';
 import '../../core/network/api_result.dart';
@@ -17,23 +15,28 @@ class CartApiClient {
         response, (json) => CartResponse.fromJson(json as Map<String, dynamic>));
   }
 
+  /// ✅ 옵션 포함 요청
   Future<ApiResult<CartItem>> addCartItem({
     required String productId,
     required int unitPrice,
     required int quantity,
+    required String color,
+    required String size,
   }) async {
     final payload = {
       'productId': productId,
       'unitPrice': unitPrice,
       'quantity': quantity,
+      'color': color,
+      'size': size,
     };
+
     final response = await _dio.post(CartEndpoints.getcartList, data: payload);
     return ApiResult.fromResponse(
         response, (json) => CartItem.fromJson(json as Map<String, dynamic>));
   }
 
-  Future<ApiResult<RemoveCartResult>> removeCartItems(
-      List<String> cartIds) async {
+  Future<ApiResult<RemoveCartResult>> removeCartItems(List<String> cartIds) async {
     final response = await _dio.delete(
       CartEndpoints.cartDelete,
       data: {"cartIds": cartIds},

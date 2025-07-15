@@ -38,7 +38,7 @@ class ProductDetailViewModel extends ChangeNotifier {
 
   // 상품 정보
   String get productName => product?.name ?? '';
-  String get imageUrl => product?.thumbnailImagePath ?? '';
+  String get imageUrl => product?.thumbnailUrl ?? '';
   int get price => product?.price ?? 0;
   String get category => product?.category ?? '';
   String get storeName => product?.storeName ?? '판매자 정보 없음';
