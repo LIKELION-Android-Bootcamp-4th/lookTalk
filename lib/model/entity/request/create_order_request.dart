@@ -1,14 +1,16 @@
 // lib/model/entity/request/create_order_request.dart
 
 class CreateOrderRequest {
+  final String cartId;
   final List<OrderItemRequest> items;
   final ShippingInfoRequest shippingInfo;
 
-  CreateOrderRequest({required this.items, required this.shippingInfo});
+  CreateOrderRequest({required this.items, required this.cartId, required this.shippingInfo});
 
   Map<String, dynamic> toJson() {
     return {
-      'items': items.map((item) => item.toJson()).toList(),
+      'cartId': cartId,
+
       'shippingInfo': shippingInfo.toJson(),
     };
   }

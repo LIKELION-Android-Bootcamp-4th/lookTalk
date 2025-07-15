@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:look_talk/model/entity/request/checkout_request.dart';
 import 'package:look_talk/model/entity/response/cart_response.dart';
-import 'package:look_talk/model/entity/request/create_order_request.dart';
-import 'package:look_talk/model/entity/response/product_response.dart'; // [수정] product_response import
+import 'package:look_talk/model/entity/response/product_response.dart';
 import 'package:look_talk/view_model/cart/cart_view_model.dart';
 import 'package:look_talk/view_model/order/order_view_model.dart';
 import 'package:look_talk/view_model/viewmodel_provider.dart';
@@ -42,6 +42,7 @@ class _OrderScreenContentState extends State<_OrderScreenContent> {
   final nameController = TextEditingController();
   final phoneController = TextEditingController();
   final addressController = TextEditingController();
+  final memoController = TextEditingController();
   bool agree = false;
 
   final numberFormat = NumberFormat('###,###,###,###');
@@ -66,24 +67,23 @@ class _OrderScreenContentState extends State<_OrderScreenContent> {
     nameController.dispose();
     phoneController.dispose();
     addressController.dispose();
+    memoController.dispose();
     super.dispose();
   }
 
   void _onPaymentPressed() async {
     final orderViewModel = context.read<OrderViewModel>();
     final cartViewModel = context.read<CartViewModel>();
+    final String? cartId = cartViewModel.cartId;
 
-    final orderItems = widget.productsToOrder.map((cartItem) {
-      return OrderItemRequest(
-        productId: cartItem.product.id,
-        quantity: cartItem.quantity,
-        // [수정] OrderItemRequest는 Map<String, dynamic>을 기대하지만, product.options는 List입니다.
-        // 현재 UI에서 옵션을 선택하는 기능이 없으므로, 빈 Map을 전달하여 오류를 해결합니다.
-        // 추후 옵션 선택 기능 구현 시 이 부분을 수정해야 합니다.
-        options: {},
-        unitPrice: cartItem.cartPrice,
-      );
-    }).toList();
+    if (cartId == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('오류: 장바구니 정보를 찾을 수 없습니다.')),
+        );
+      }
+      return;
+    }
 
     final shippingInfo = ShippingInfoRequest(
       recipient: nameController.text,
@@ -91,15 +91,16 @@ class _OrderScreenContentState extends State<_OrderScreenContent> {
       address: addressController.text,
     );
 
-    final orderResponse = await orderViewModel.createOrder(
-      items: orderItems,
+    // 새로운 checkoutFromCart 함수를 호출합니다.
+    final orderResponse = await orderViewModel.checkoutFromCart(
+      cartId: cartId,
       shippingInfo: shippingInfo,
+      memo: memoController.text,
     );
 
     if (mounted) {
       if (orderResponse != null) {
-        print('주문 성공! Swagger 테스트용 Order ID: ${orderResponse.orderId}');
-
+        // 주문 성공 시 장바구니 새로고침 (리셋)
         await cartViewModel.fetchCart();
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -194,14 +195,12 @@ class _OrderScreenContentState extends State<_OrderScreenContent> {
             decoration: BoxDecoration(
               color: AppColors.boxGrey,
               borderRadius: BorderRadius.circular(8),
-              // [수정] thumbnailImageUrl을 사용하고, null일 경우를 대비합니다.
               image: item.product.thumbnailImageUrl != null
                   ? DecorationImage(
                   image: NetworkImage(item.product.thumbnailImageUrl!),
                   fit: BoxFit.cover)
                   : null,
             ),
-            // [수정] thumbnailImageUrl이 null일 때 아이콘을 표시합니다.
             child: item.product.thumbnailImageUrl == null
                 ? Icon(Icons.image_not_supported_outlined,
                 color: AppColors.textGrey, size: 30)
@@ -213,12 +212,10 @@ class _OrderScreenContentState extends State<_OrderScreenContent> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // [수정] store의 name을 사용하고, null일 경우를 대비합니다.
                 Text(item.product.store?.name ?? '스토어 없음', style: TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
                 gap4,
                 Text(item.product.name, style: TextStyle(fontSize: TextSizes.body), maxLines: 1, overflow: TextOverflow.ellipsis),
                 gap4,
-                // [수정] _buildPriceWidget에 product 객체와 최종 가격을 함께 전달합니다.
                 _buildPriceWidget(item.product, item.totalPrice),
                 gap4,
                 Container(
@@ -227,7 +224,6 @@ class _OrderScreenContentState extends State<_OrderScreenContent> {
                     color: AppColors.boxGrey,
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  // [수정] options는 List이므로, 여기서는 수량만 표시하도록 단순화합니다.
                   child: Text(
                       '수량 ${item.quantity}개',
                       style: TextStyle(fontSize: TextSizes.caption, color: Colors.grey[600])),
@@ -264,6 +260,11 @@ class _OrderScreenContentState extends State<_OrderScreenContent> {
             controller: addressController,
             decoration: InputDecoration(labelText: '주소 *'),
           ),
+          gap8,
+          TextField(
+            controller: memoController,
+            decoration: InputDecoration(labelText: '배송 메모'),
+          ),
           gap16,
           Row(
             children: [
@@ -286,18 +287,15 @@ class _OrderScreenContentState extends State<_OrderScreenContent> {
     );
   }
 
-  // [수정] Price 위젯의 로직을 새로운 데이터 모델에 맞게 변경합니다.
   Widget _buildPriceWidget(Product product, int finalPrice) {
     final discountInfo = product.discount;
 
-    // 할인이 없거나, 할인율이 0이면 최종 가격만 표시합니다.
     if (discountInfo == null || discountInfo.value == 0) {
       return Text(
         '${numberFormat.format(finalPrice)}원',
         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body),
       );
     } else {
-      // 할인 적용 시, 원가 계산
       final originalPrice = (finalPrice / (1 - (discountInfo.value / 100))).round();
 
       return Column(

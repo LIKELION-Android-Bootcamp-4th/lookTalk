@@ -82,7 +82,7 @@ DetailListviewViewmodel provideCategoryDetailViewModel({
 CartViewModel provideCartViewModel() => CartViewModel(CartRepository(CartApiClient(dio)));
 WishlistViewModel provideWishlistViewModel() => WishlistViewModel(WishlistRepository(dio));
 // 주문
-OrderViewModel provideOrderViewModel() => OrderViewModel(OrderRepository(OrderApiClient((dio))));
+OrderViewModel provideOrderViewModel() => OrderViewModel(OrderRepository(OrderApiClient(dio)));
 
 // 커뮤니티
 CommunityTabViewModel provideCommunityTabViewModel() => CommunityTabViewModel();
