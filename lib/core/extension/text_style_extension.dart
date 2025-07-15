@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 
 extension TextStyleExtension on BuildContext {
   TextStyle get h1 => Theme.of(this).textTheme.headlineLarge!; // 20, extra bold
+  TextStyle get h2 => Theme.of(this).textTheme.headlineMedium!;
+  TextStyle get h3 => Theme.of(this).textTheme.headlineSmall!;
   TextStyle get body => Theme.of(this).textTheme.bodyMedium!; // 15, regular
   TextStyle get bodyBold => Theme.of(this).textTheme.bodyLarge!; // 15, bold
   TextStyle get caption => Theme.of(this).textTheme.bodySmall!; // 13, light

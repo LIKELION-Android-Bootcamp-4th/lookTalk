@@ -23,10 +23,17 @@ class PostApiClient {
 
   Future<ApiResult<PostListResponse>> fetchPostsList(
       PostListRequest request) async {
+    print('[PostApiClient] fetchPostsList 호출됨'); // ✅ 추가
+    print('productId: ${request.productId}');
+    print('productId runtimeType: ${request.productId.runtimeType}');
+
     final response = await _dio.get(
       CommunityEndpoints.allPosts,
       queryParameters: request.toQueryParameters(),
+      options: Options(validateStatus: (status) => true), // ← 여기 추가
     );
+    print('[PostApiClient] 응답 받음 (강제 출력): ${response.data}');
+
 
     return ApiResult.fromResponse(
       response,

@@ -8,8 +8,8 @@ class Product {
   final String? description;
   final int? stock;
   final int price;
-  final String? categoryId; // 카테고리 ID
-  final String? category;   // 카테고리 이름
+  final String? categoryId;
+  final String? category;
   final Map<String, dynamic>? options;
   final DiscountDto? discount;
   final String? status;
@@ -107,10 +107,12 @@ class Product {
 
     if (description != null) data['description'] = description;
     if (stock != null) data['stock'] = stock;
-    if (categoryId != null) data['categoryId'] = categoryId;  // categoryId 추가
-    if (category != null) data['category'] = category;        // category 추가
+    if (categoryId != null) data['categoryId'] = categoryId;
+    if (category != null) data['category'] = category;
     if (options != null) data['options'] = options;
-    if (discount != null) data['discount'] = discount;
+    if (discount != null) {
+      data['discount'] = jsonEncode(discount!.toJson());
+    }
     if (status != null) data['status'] = status;
     if (images != null) data['images'] = images;
     if (attributes != null) data['attributes'] = attributes;
@@ -119,7 +121,6 @@ class Product {
     return data;
   }
 
-  /// ✅ 할인률 (percent), 할인된 최종 가격, 원래 가격
   int get discountPercent {
     return discount?.value ?? 0;
   }
@@ -130,7 +131,6 @@ class Product {
     return (price * (100 - discountPercent) / 100).round();
   }
 
-  /// ✅ 이미지 URL getter
   String get imageUrl => thumbnailImagePath ?? '';
   static Map<String, dynamic>? _parseJsonField(dynamic field) {
     try {

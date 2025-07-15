@@ -27,6 +27,7 @@ import '../../ui/auth/login_screen.dart';
 import '../../ui/auth/seller_info_screen.dart';
 import '../../ui/auth/signup_choice_screen.dart';
 import '../../ui/main/community/communication_product_registration/product_registration_screen.dart';
+import '../../ui/main/community/community_board_screen.dart';
 import '../../ui/main/mypage/mypage_customer/notice.dart';
 import '../../ui/main/mypage/mypage_seller/manage_product_seller_screen.dart';
 import '../../ui/main/mypage/mypage_seller/mypage_screen_product_manage.dart';
@@ -113,6 +114,20 @@ final GoRouter router = GoRouter(
         );
       },
     ),
+
+    GoRoute(
+      path: '/community/board/:category',
+      builder: (context, state) {
+        final category = state.pathParameters['category']!;
+        final productId = state.uri.queryParameters['productId']; // ✅ 추가
+
+        return ChangeNotifierProvider(
+          create: (_) => provideCommunityBoardViewModel(category, productId: productId),
+          child: CommunityBoardScreen(category: category),
+        );
+      },
+    ),
+
 
     GoRoute(
       path: '/community/write',
@@ -246,6 +261,7 @@ final GoRouter router = GoRouter(
             );
           },
         ),
+
         GoRoute(
           path: '/mypage',
           builder: (context, state) {
