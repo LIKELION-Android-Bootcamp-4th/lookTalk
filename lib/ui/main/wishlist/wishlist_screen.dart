@@ -188,25 +188,25 @@ class _WishlistScreenState extends State<WishlistScreen> {
                 ),
               ),
               // [추가] 오른쪽 하단에 장바구니 아이콘 배치
-              Positioned(
-                bottom: 4,
-                right: 4,
-                child: InkWell(
-                  onTap: () {
-                    _showAddToCartConfirmDialog(item);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    // [수정] 배경을 투명하게 만들기 위해 decoration 제거
-                    // decoration: BoxDecoration(...)
-                    child: const Icon(
-                      Icons.add_shopping_cart,
-                      color: Colors.black, // [수정] 아이콘 색상을 검은색으로 변경
-                      size: 20, // 아이콘 크기를 약간 키웠습니다.
-                    ),
-                  ),
-                ),
-              ),
+              // Positioned(
+              //   bottom: 4,
+              //   right: 4,
+              //   child: InkWell(
+              //     onTap: () {
+              //       _showAddToCartConfirmDialog(item);
+              //     },
+              //     child: Container(
+              //       padding: const EdgeInsets.all(4),
+              //       // [수정] 배경을 투명하게 만들기 위해 decoration 제거
+              //       // decoration: BoxDecoration(...)
+              //       child: const Icon(
+              //         Icons.add_shopping_cart,
+              //         color: Colors.black, // [수정] 아이콘 색상을 검은색으로 변경
+              //         size: 20, // 아이콘 크기를 약간 키웠습니다.
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
           gap8,
