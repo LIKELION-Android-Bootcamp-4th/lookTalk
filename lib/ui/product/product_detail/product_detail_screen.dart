@@ -17,10 +17,11 @@ import '../../../core/network/dio_client.dart';
 import 'community_section_widget.dart';
 import '../../../view_model/cart/cart_view_model.dart';
 import '../../../view_model/wishlist/wishlist_view_model.dart';
-
-// 여기서 alias를 지정해 타입 충돌 방지
+import 'package:look_talk/ui/product/product_detail//product_detail_review_tab.dart';
 import '../../../model/entity/response/product_response.dart' as response;
 import '../../../model/entity/product_entity.dart' as entity;
+import 'package:look_talk/view_model/product/review_viewmodel.dart';
+
 
 class ProductDetailScreen extends StatefulWidget {
   const ProductDetailScreen({super.key});
@@ -48,7 +49,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       case 0:
         return const Text('상품 설명 페이지 이미지로 대체 예정');
       case 1:
-        return const Text('리뷰 페이지');
+        return ChangeNotifierProvider<ReviewViewModel>(
+          create: (_) => provideReviewViewModel()..fetchReviewsAndAverage(vm.productId),
+          child: ProductDetailReviewTab(productId: vm.productId),
+        );
       case 2:
         return Provider<PostRepository>(
           create: (_) => PostRepository(PostApiClient(DioClient.instance)),

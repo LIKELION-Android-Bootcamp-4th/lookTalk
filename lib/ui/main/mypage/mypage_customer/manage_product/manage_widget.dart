@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
+import 'package:look_talk/view_model/mypage_view_model/search_my_product_list_viewmodel.dart';
+import 'package:look_talk/ui/product/review/review_write_screen.dart';
+import 'package:provider/provider.dart';
 
-import '../../../../../view_model/mypage_view_model/search_my_product_list_viewmodel.dart';
+import '../../../../../view_model/viewmodel_provider.dart';
 
 class ManageWidget extends StatelessWidget {
   final String orderId;
@@ -9,7 +12,6 @@ class ManageWidget extends StatelessWidget {
   final dynamic orderItem;
   final int? totalAmount;
   final SearchMyProductListViewmodel viewModel;
-
 
   const ManageWidget({
     super.key,
@@ -22,8 +24,6 @@ class ManageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
     final imageUrl = orderItem.thumbnailImage;
     final isValidImage = imageUrl != null && imageUrl.trim().isNotEmpty;
 
@@ -41,7 +41,7 @@ class ManageWidget extends StatelessWidget {
             children: [
               isValidImage
                   ? Image.network(
-                imageUrl!,
+                imageUrl,
                 width: 100,
                 height: 100,
                 fit: BoxFit.cover,
@@ -60,19 +60,17 @@ class ManageWidget extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text('옵션: ${orderItem.size ?? "옵션 없음"}'),
                     const SizedBox(height: 4),
-                    Text('${orderItem.price}원  수량: ${totalAmount ?? 0}개' ),
+                    Text('${orderItem.price}원  수량: ${totalAmount ?? 0}개'),
                   ],
                 ),
               ),
             ],
           ),
           const SizedBox(height: 12),
-
-
           Row(
             children: [
-              Spacer(),
-              _buildButtonsByStatus(status),
+              const Spacer(),
+              _buildButtonsByStatus(context, status),
             ],
           )
         ],
@@ -80,32 +78,25 @@ class ManageWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildButtonsByStatus(String status) {
+  Widget _buildButtonsByStatus(BuildContext context, String status) {
     switch (status) {
       case 'pending':
-        return Row(
-          children: [
-            _actionButton('반품신청'),
-            const SizedBox(width: 8),
-            _actionButton('취소하기'),
-          ],
-        );
       case 'confirmed':
       case 'preparing':
       case 'shipped':
         return Row(
           children: [
-            _actionButton('반품신청'),
+            _actionButton(context, '반품신청'),
             const SizedBox(width: 8),
-            _actionButton('취소하기'),
+            _actionButton(context, '취소하기'),
           ],
         );
       case 'delivered':
         return Row(
           children: [
-            _actionButton('반품신청'),
+            _actionButton(context, '반품신청'),
             const SizedBox(width: 8),
-            _actionButton('리뷰작성'),
+            _actionButton(context, '리뷰작성'),
           ],
         );
       default:
@@ -113,18 +104,30 @@ class ManageWidget extends StatelessWidget {
     }
   }
 
-  Widget _actionButton(String label) {
+  Widget _actionButton(BuildContext context, String label) {
     return OutlinedButton(
-      onPressed: () {
-        switch (label){
-          case '취소하기' : viewModel.cancelOrder(orderId);
-          break;
-          case '반품신청' : viewModel.refund(orderId);
-          break;
-          case '리뷰 작성' :
+      onPressed: () async {
+        switch (label) {
+          case '취소하기':
+            viewModel.cancelOrder(orderId);
+            break;
+          case '반품신청':
+            viewModel.refund(orderId);
+            break;
+          case '리뷰작성':
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ChangeNotifierProvider(
+                  create: (_) => provideReviewViewModel(),
+                  child: ReviewWriteScreen(
+                    productId: orderItem.id,
+                  ),
+                ),
+              ),
+            );
             break;
         }
-        // TODO: 버튼 동작 정의
       },
       style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -135,6 +138,4 @@ class ManageWidget extends StatelessWidget {
       child: Text(label, style: const TextStyle(fontSize: 12)),
     );
   }
-
-
 }

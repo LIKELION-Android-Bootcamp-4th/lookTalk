@@ -30,6 +30,7 @@ import 'package:look_talk/view_model/product/product_register_viewmodel.dart';
 import 'package:look_talk/view_model/search_view_model.dart';
 import 'package:look_talk/view_model/community/category_post_list_viewmodel.dart';
 import 'package:look_talk/view_model/wishlist/wishlist_view_model.dart';
+import 'package:look_talk/view_model/product/review_viewmodel.dart';
 
 import '../core/network/dio_client.dart';
 import '../core/network/token_storage.dart';
@@ -44,6 +45,7 @@ import '../model/repository/nickname_respository.dart';
 import '../model/repository/order_repository.dart';
 import '../model/repository/post_create_repository.dart';
 import '../model/repository/product_repository.dart';
+import '../model/repository/review_repository.dart';
 import '../model/repository/search_repository.dart';
 import '../model/repository/wishlist_repository.dart';
 import 'auth/auth_view_model.dart';
@@ -110,7 +112,7 @@ ProductDetailViewModel provideProductDetailViewModel(String productId) =>
 InquiryViewModel provideInquiryViewModel() => InquiryViewModel();
 ProductCommunityViewModel provideProductCommunityViewModel(String productId) =>
     ProductCommunityViewModel(repository: PostRepository(PostApiClient(dio)), productId: productId);
-
+ReviewViewModel provideReviewViewModel() => ReviewViewModel(ReviewRepository(dio));
 // 마이페이지
 AlterMemberViewmodel provideAlterMemberViewmodel() => AlterMemberViewmodel(repository: AlterMemberRepository(dio));
 SearchMyProductListViewmodel provideSearchMyProductListViewmodel() => SearchMyProductListViewmodel(repository: OrderListRepository(dio));
