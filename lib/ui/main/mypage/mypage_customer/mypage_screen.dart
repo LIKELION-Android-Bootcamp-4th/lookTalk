@@ -135,10 +135,11 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
                           content: "정말 로그아웃 하시겠습니까?",
                           confirmText: "로그아웃",
                           onConfirm: () async {
-                            await TokenStorage().saveTokens(
-                                accessToken: '', refreshToken: '', userId: '');
+                            await TokenStorage().deleteTokens();
                             if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("로그아웃이 완료되었습니다."),));
                               Navigator.pop(context);
+                              context.go('/home');
                             }
                             setState(() {
                               _hasAccessToken = false;
@@ -164,7 +165,9 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
                             try {
                               await dio.delete(MyPage.deleteRegister);
                               if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("회원탈퇴가 완료되었습니다."),));
                                 Navigator.pop(context);
+                                context.go('/home');
                               }
                             } catch (e) {
                               print("회원탈퇴 에러 발생$e");

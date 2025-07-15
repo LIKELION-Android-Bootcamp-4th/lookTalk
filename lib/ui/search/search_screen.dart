@@ -167,13 +167,14 @@ class _SearchScreenState extends State<SearchScreen> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  context.push(
-                                    '/searchCommunityDetail',
-                                    extra: {
-                                      'viewModel': viewModel,
-                                      'category': '코디질문',
-                                    },
-                                  );
+                                  context.push('/post/${viewModel.communities[0].id}');
+                                  // context.push(
+                                  //   '/searchCommunityDetail',
+                                  //   extra: {
+                                  //     'viewModel': viewModel,
+                                  //     'category': '코디질문',
+                                  //   },
+                                  // );
                                 },
                                 child: Column(
                                   children: [
@@ -202,13 +203,14 @@ class _SearchScreenState extends State<SearchScreen> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  context.push(
-                                    '/searchCommunityDetail',
-                                    extra: {
-                                      'viewModel': viewModel,
-                                      'category': 'coord_recommend',
-                                    },
-                                  );
+                                  context.push('/post/${viewModel.questionCommunities[0].id}');
+                                  // context.push(
+                                  //   '/searchCommunityDetail',
+                                  //   extra: {
+                                  //     'viewModel': viewModel,
+                                  //     'category': 'coord_recommend',
+                                  //   },
+                                  // );
                                 },
                                 child: Column(
                                   children: [
