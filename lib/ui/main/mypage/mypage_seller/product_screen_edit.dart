@@ -5,9 +5,7 @@ import 'package:look_talk/view_model/product/product_edit_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_viewmodel.dart';
 import 'package:look_talk/model/repository/product_repository.dart';
 import 'package:look_talk/ui/common/component/common_text_field.dart';
-import 'package:dio/dio.dart';
 import 'package:look_talk/core/network/dio_client.dart';
-import 'package:look_talk/model/entity/response/product_response.dart';
 
 class ProductEditScreen extends StatelessWidget {
   final ProductEntity product;
@@ -76,7 +74,10 @@ class _ProductEditForm extends StatelessWidget {
 
             DropdownButtonFormField<String>(
               value: vm.status,
-              decoration: const InputDecoration(labelText: '판매상태', border: OutlineInputBorder()),
+              decoration: const InputDecoration(
+                labelText: '판매상태',
+                border: OutlineInputBorder(),
+              ),
               items: ['판매중', '판매중지']
                   .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                   .toList(),
@@ -105,8 +106,11 @@ class _ProductEditForm extends StatelessWidget {
                     onPressed: () async {
                       final success = await vm.deleteProduct(context);
                       if (success) {
-                        productViewModel.fetchProducts(); // ✅ 삭제 후 목록 최신화
-                        if (context.mounted) Navigator.pop(context, true); // ✅ 결과 전달
+                        // ✅ 상품 목록 갱신
+                        productViewModel.fetchProducts();
+                        if (context.mounted) {
+                          Navigator.pop(context, true); // ✅ 삭제 성공 시 결과 반환
+                        }
                       }
                     },
                     child: const Text("상품 삭제하기"),

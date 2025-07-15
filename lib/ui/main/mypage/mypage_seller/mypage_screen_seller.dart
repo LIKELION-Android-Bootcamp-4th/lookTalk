@@ -1,112 +1,138 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:look_talk/core/network/dio_client.dart';
+import 'package:look_talk/core/network/end_points/mypage.dart';
+import 'package:look_talk/core/network/token_storage.dart';
+import 'package:look_talk/ui/common/component/app_bar/app_bar_search_cart.dart';
+import 'package:look_talk/ui/common/component/common_modal.dart';
 import 'package:look_talk/ui/common/const/colors.dart';
 import 'package:look_talk/ui/common/const/text_sizes.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
 import 'package:provider/provider.dart';
-import '../../../common/component/common_modal.dart';
 import 'package:look_talk/view_model/auth/auth_view_model.dart';
+
+import '../../../../view_model/mypage_view_model/alter_member_viewmodel.dart';
 
 class MyPageScreenSeller extends StatelessWidget {
   const MyPageScreenSeller({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final dio = DioClient.instance;
+    final viewModel = context.watch<AlterMemberViewmodel>();
+    final viewImageUrl = viewModel.alterMember?.member.profileImage;
+    final nickName = viewModel.alterMember?.member.nickName ?? '';
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("마이페이지"),
-        titleTextStyle: const TextStyle(
-          fontFamily: "NanumSquareRoundB.ttf",
-          fontSize: TextSizes.headline,
-          color: AppColors.black,
-          fontWeight: FontWeight.w300,
-        ),
-      ),
+      appBar: AppBarSearchCart(title: "마이페이지"),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 프로필 사진/이름
             Row(
               children: [
                 CircleAvatar(
                   radius: 60,
                   backgroundColor: Colors.grey[400],
-                  child: const Icon(Icons.person, size: 60, color: AppColors.white),
+                  backgroundImage: viewImageUrl != null && viewImageUrl.isNotEmpty
+                      ? NetworkImage(viewImageUrl)
+                      : null,
+                  child: viewImageUrl == null || viewImageUrl.isEmpty
+                      ? const Icon(Icons.person, size: 60, color: AppColors.white)
+                      : null,
                 ),
                 gapW16,
-                const Text(
-                  '회사명',
-                  style: TextStyle(
-                    fontSize: TextSizes.headline,
-                    fontWeight: FontWeight.bold,
+                GestureDetector(
+                  onTap: () {
+                    context.push('/alterMember');
+                  },
+                  child: Row(
+                    children: [
+                      Text(
+                        nickName,
+                        style: const TextStyle(
+                          fontSize: TextSizes.headline,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const Icon(Icons.chevron_right),
+                    ],
                   ),
-                ),
+                )
               ],
             ),
             gap32,
 
-            _MyPageMenu(
-              title: '상품 조회 / 등록',
-              onTap: () {
-                context.push('/seller/products');
-              },
+            // 메뉴 목록
+            GestureDetector(
+              onTap: () => context.push('/seller/products'),
+              child: const _MyPageMenu(title: '상품 조회 / 등록'),
+            ),
+            gap16,
+            GestureDetector(
+              onTap: () => context.push('/seller/orders'),
+              child: const _MyPageMenu(title: '주문 조회'),
+            ),
+            gap16,
+            GestureDetector(
+              onTap: () => context.push('/notice'),
+              child: const _MyPageMenu(title: '공지사항'),
             ),
             gap16,
 
-            _MyPageMenu(
-              title: '주문 조회',
+            // 로그아웃
+            GestureDetector(
               onTap: () {
-                context.push('/seller/orders');
-              },
-            ),
-            gap16,
-
-            _MyPageMenu(
-              title: '공지사항',
-              onTap: () {
-                context.push('/notice');
-              },
-            ),
-            gap16,
-
-            _MyPageMenu(
-              title: '로그아웃',
-              onTap: () async {
-                final shouldLogout = await showDialog<bool>(
+                showDialog(
                   context: context,
                   builder: (context) => CommonModal(
                     title: "로그아웃",
                     content: "정말 로그아웃 하시겠습니까?",
                     confirmText: "로그아웃",
-                    onConfirm: () => Navigator.of(context).pop(true),
+                    onConfirm: () async {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("로그아웃이 완료되었습니다.")),
+                      );
+                      await TokenStorage().deleteTokens();
+                      context.read<AuthViewModel>().logout(context);
+                      Navigator.pop(context); // 다이얼로그 닫기
+                      context.go('/home');
+                    },
                   ),
                 );
-
-                if (shouldLogout == true) {
-                  context.read<AuthViewModel>().logout(context);
-                  context.go('/login');
-                }
               },
+              child: const _MyPageMenu(title: '로그아웃'),
             ),
             gap16,
 
-            _MyPageMenu(
-              title: '회원탈퇴',
+            // 회원탈퇴
+            GestureDetector(
               onTap: () {
                 showDialog(
                   context: context,
                   builder: (context) => CommonModal(
                     title: "회원탈퇴",
                     content: "작성하신 모든 게시글 및 리뷰도\n사라지게 됩니다. 정말 탈퇴\n하시겠습니까?",
-                    confirmText: "회원탈퇴 하기",
-                    onConfirm: () {
-                      // TODO: 회원탈퇴 기능 추가
+                    confirmText: "회원탈퇴",
+                    onConfirm: () async {
+                      try {
+                        await dio.delete(MyPage.deleteRegister);
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("회원탈퇴가 완료되었습니다.")),
+                          );
+                          Navigator.pop(context); // 다이얼로그 닫기
+                          context.go('/home');
+                        }
+                      } catch (e) {
+                        print("회원탈퇴 에러: $e");
+                      }
                     },
                   ),
                 );
               },
+              child: const _MyPageMenu(title: '회원탈퇴'),
             ),
           ],
         ),
