@@ -309,10 +309,7 @@ final GoRouter router = GoRouter(
           path: '/notice',
           builder: (context, state) => const NoticeScreen(),
         ),
-        GoRoute(
-          path: '/seller/products',
-          builder: (context, state) => const MyPageProductManageScreen(),
-        ),
+
         GoRoute(
           path: '/seller/orders',
           builder: (context, state) {
