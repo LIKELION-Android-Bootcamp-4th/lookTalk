@@ -7,40 +7,45 @@ class SearchMyProductListViewmodel with ChangeNotifier {
 
   SearchMyProductListViewmodel({required OrderListRepository repository})
       : _repository = repository {
-    _init();
+    fetchOrderList(); // 초기화 시 데이터 로드
   }
 
   List<OrderListResponse> _orders = [];
   List<OrderListResponse> get orders => _orders;
 
-  Future<void> _init() async {
-    final response = await _repository.searchResult();
-    _orders = response;
-    notifyListeners();
-  }
-  void refresh(){
-    _init();
-  }
-
-  Future<void> cancelOrder(String orderId) async{
-    try{
-      await _repository.cancelOrder(orderId);
-
-      _orders = await _repository.searchResult();
+  /// 주문 목록 조회 (초기화 및 새로고침용)
+  Future<void> fetchOrderList() async {
+    try {
+      final response = await _repository.searchResult();
+      _orders = response;
       notifyListeners();
-    }catch(e){
-      print("에러 발생 ${e}");
+    } catch (e) {
+      print("주문 목록 불러오기 실패: $e");
     }
   }
 
-  Future<void> refund(String orderId) async{
-    try{
-      await _repository.refund(orderId);
+  /// 외부에서 강제 새로고침 호출용
+  void refresh() {
+    fetchOrderList();
+  }
 
-      _orders = await _repository.searchResult();
-      notifyListeners();
-    }catch(e){
-      print("에러 발생 ${e}");
+  /// 주문 취소
+  Future<void> cancelOrder(String orderId) async {
+    try {
+      await _repository.cancelOrder(orderId);
+      await fetchOrderList();
+    } catch (e) {
+      print("주문 취소 중 에러 발생: $e");
+    }
+  }
+
+  /// 반품 신청
+  Future<void> refund(String orderId) async {
+    try {
+      await _repository.refund(orderId);
+      await fetchOrderList();
+    } catch (e) {
+      print("반품 신청 중 에러 발생: $e");
     }
   }
 }

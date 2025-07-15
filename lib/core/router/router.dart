@@ -212,7 +212,7 @@ final GoRouter router = GoRouter(
     ),
 
     // GoRoute(path: '/seller/orders', builder: (context, state) => const ManageProductSellerScreen()),
-    GoRoute(path: '/notice', builder: (context, state) => const NoticeScreen()),
+
 
     ShellRoute(
       builder: (context, state, child) => BottomNavScreen(
@@ -284,15 +284,13 @@ final GoRouter router = GoRouter(
               create: (_) => provideAlterMemberViewmodel(),
               builder: (context, child) {
                 final authViewModel = context.watch<AuthViewModel>();
-
-                if (!authViewModel.isLoggedIn) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    context.go('/login');
-                  });
-                  return const SizedBox.shrink();
-                }else{
-                  print('여기!!!!');
-                }
+                //
+                // if (!authViewModel.isLoggedIn) {
+                //   WidgetsBinding.instance.addPostFrameCallback((_) {
+                //     context.go('/login');
+                //   });
+                //   return const SizedBox.shrink();
+                // }
 
                 print('유저 롤!!! : ${authViewModel.userRole}');
 
@@ -346,6 +344,8 @@ final GoRouter router = GoRouter(
       path: '/manageProduct',
       builder: (context, state) => const ManageProductScreen(),
     ),
+
+    GoRoute(path: '/notice', builder: (context, state) => const NoticeScreen()),
   ],
 
 );

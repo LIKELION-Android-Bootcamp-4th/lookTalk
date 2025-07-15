@@ -10,6 +10,7 @@ import 'package:look_talk/ui/common/const/gap.dart';
 import 'package:look_talk/ui/common/const/text_sizes.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/notice.dart';
 import 'package:look_talk/ui/main/mypage/mypage_customer/recent_product.dart';
+import 'package:look_talk/view_model/auth/auth_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../view_model/mypage_view_model/alter_member_viewmodel.dart';
@@ -30,14 +31,17 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
   void initState() {
     super.initState();
     _checkAccessToken();
-
   }
+
+
 
   Future<void> _checkAccessToken() async {
     final token = await _tokenStorage.getAccessToken();
-    setState(() {
-      _hasAccessToken = token != null && token.isNotEmpty;
-    });
+    if (!mounted) return;
+
+    if (token == null || token.isEmpty) {
+      context.go('/login');
+    }
   }
 
   @override
@@ -104,8 +108,7 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
               GestureDetector(
                 onTap: () =>
                 {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => NoticeScreen())),
+                 context.push('/notice')
                 },
                 child: _MyPageMenu(title: '공지사항'),
               ),
@@ -135,15 +138,11 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
                           content: "정말 로그아웃 하시겠습니까?",
                           confirmText: "로그아웃",
                           onConfirm: () async {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("로그아웃이 완료되었습니다."),));
                             await TokenStorage().deleteTokens();
-                            if (mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("로그아웃이 완료되었습니다."),));
-                              Navigator.pop(context);
-                              context.go('/home');
-                            }
-                            setState(() {
-                              _hasAccessToken = false;
-                            });
+                            context.read<AuthViewModel>().logout(context);
+                            Navigator.pop(context);
+                            context.go('/home');
                           },
                         ),
                   );

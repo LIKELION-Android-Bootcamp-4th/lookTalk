@@ -8,6 +8,7 @@ import 'package:look_talk/ui/main/mypage/mypage_customer/manage_product/order_ta
 import 'package:look_talk/ui/main/mypage/mypage_customer/manage_product/return_product_tab.dart';
 import 'package:look_talk/view_model/mypage_view_model/search_my_product_list_viewmodel.dart';
 import 'package:provider/provider.dart';
+import 'package:look_talk/ui/product/review/review_write_screen.dart';
 
 import 'manage_widget.dart';
 

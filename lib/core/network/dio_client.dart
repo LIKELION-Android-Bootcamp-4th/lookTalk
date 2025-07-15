@@ -35,6 +35,7 @@ class DioClient {
             final accessToken = await _tokenStorage.getAccessToken();
             if (accessToken != null) {
 
+
               options.headers['Authorization'] = 'Bearer $accessToken';
 
             }

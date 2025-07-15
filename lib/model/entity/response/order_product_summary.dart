@@ -20,10 +20,11 @@ class OrderProductSummary {
     this.storeName,
     this.discount,
     this.size,
-    this.userNickName
+    this.userNickName,
   });
 
-  factory OrderProductSummary.fromJson(Map<String, dynamic> json, String? storeName, String? userNickName) {
+  factory OrderProductSummary.fromJson(
+      Map<String, dynamic> json, String? storeName, String? userNickName) {
     final options = json['options'];
     final size = options != null ? options['size'] ?? '' : '';
 
@@ -34,7 +35,7 @@ class OrderProductSummary {
       thumbnailImage: _extractThumbnail(json['images']),
       storeName: storeName,
       userNickName: userNickName,
-      discount: null, // 현재 discount 필드 없음
+      discount: null, // 현재 discount 파싱 미적용
       size: size,
     );
   }
@@ -48,4 +49,7 @@ class OrderProductSummary {
     }
     return null;
   }
+
+  /// 💡 productId 라는 이름으로도 접근 가능하게 하기
+  String get productId => id;
 }
