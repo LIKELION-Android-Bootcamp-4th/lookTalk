@@ -16,12 +16,16 @@ class WishlistViewModel extends ChangeNotifier {
   List<WishlistItemEntity> _items = [];
   Pagination? _pagination;
 
+  // ✅ 상품별 찜 상태 저장
+  final Map<String, bool> _wishlistStatusMap = {};
+
   bool get isLoading => _isLoading;
   bool get isFirstLoad => _isFirstLoad;
   String? get error => _error;
   UnmodifiableListView<WishlistItemEntity> get items => UnmodifiableListView(_items);
   bool get hasNext => _pagination?.hasNext ?? false;
 
+  /// ✅ 전체 찜 목록 조회
   Future<void> fetchWishlist({bool isRefresh = false}) async {
     if (_isLoading || (!hasNext && !isRefresh && !_isFirstLoad)) return;
 
@@ -35,10 +39,8 @@ class WishlistViewModel extends ChangeNotifier {
       notifyListeners();
     }
 
-    // [수정] Repository가 Exception을 던지므로 try-catch로 감싸서 오류를 처리합니다.
     try {
       final nextPage = (isRefresh || _pagination == null) ? 1 : _pagination!.page + 1;
-      // Repository는 이제 ApiResult 대신 WishlistResponseDto를 직접 반환합니다.
       final responseDto = await _repository.fetchWishlist(page: nextPage);
 
       if (isRefresh) _items.clear();
@@ -48,11 +50,15 @@ class WishlistViewModel extends ChangeNotifier {
           .toList();
 
       _items.addAll(newItems);
-      // _pagination = responseDto.pagination; // TODO: DTO에 pagination이 있다면 주석 해제
-      _error = null;
 
+      // 찜 상태 Map에도 업데이트
+      for (var item in newItems) {
+        _wishlistStatusMap[item.productId] = true;
+      }
+
+      // _pagination = responseDto.pagination; // TODO: 필요 시 주석 해제
+      _error = null;
     } catch (e) {
-      // Repository에서 던진 오류를 여기서 처리합니다.
       _error = e.toString();
     }
 
@@ -63,8 +69,43 @@ class WishlistViewModel extends ChangeNotifier {
 
   Future<void> refresh() async => await fetchWishlist(isRefresh: true);
 
+  /// ✅ 찜 상태 개별 확인 API 호출
+  Future<void> fetchWishlistStatus(String productId) async {
+    try {
+      final isFavorite = await _repository.checkFavorite(productId);
+      _wishlistStatusMap[productId] = isFavorite;
+      notifyListeners();
+    } catch (e) {
+      _error = e.toString();
+    }
+  }
+
+  /// ✅ 현재 상품이 찜되어 있는지 확인
+  bool isWishlisted(String productId) {
+    return _wishlistStatusMap[productId] ?? false;
+  }
+
+  /// ✅ 찜 토글 (추가 또는 삭제)
+  Future<void> toggleWishlist(String productId) async {
+    try {
+      await _repository.toggleFavorite(productId);
+      final current = _wishlistStatusMap[productId] ?? false;
+      _wishlistStatusMap[productId] = !current;
+      notifyListeners();
+    } catch (e) {
+      _error = e.toString();
+    }
+  }
+
+  /// ✅ 찜 수 (단순하게 찜 여부만 표시하는 경우 1 또는 0 반환)
+  int getWishlistCount(String productId) {
+    return isWishlisted(productId) ? 1 : 0;
+  }
+
+  /// ✅ 찜 목록에서 삭제
   Future<void> removeItem(String productId) async {
     _items.removeWhere((item) => item.productId == productId);
+    _wishlistStatusMap[productId] = false;
     notifyListeners();
 
     try {
@@ -72,8 +113,7 @@ class WishlistViewModel extends ChangeNotifier {
     } catch (e) {
       _error = e.toString();
       notifyListeners();
-      // 실패 시 목록을 다시 불러와 동기화
-      await refresh();
+      await refresh(); // 실패 시 동기화
     }
   }
 }
