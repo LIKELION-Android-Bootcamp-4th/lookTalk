@@ -19,15 +19,13 @@ class SellerManageViewmodel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> changeStatus(String orderId,String status) async{
-    try{
-      await _repository.changeStatus(orderId,status);
-
+  Future<void> changeStatus(String orderId, String status, {String? trackingNumber}) async {
+    try {
+      await _repository.changeStatus(orderId, status, trackingNumber: trackingNumber);
       _orders = await _repository.searchOrderResult();
       notifyListeners();
-    }catch(e){
-      print("에러 발생 ${e}");
+    } catch (e) {
+      print("에러 발생 $e");
     }
   }
-
 }
