@@ -115,6 +115,4 @@ class DioClient {
     return await _dio.delete(path, queryParameters: queryParameters);
   }
 
-
-
 }
