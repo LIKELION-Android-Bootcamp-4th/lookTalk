@@ -30,6 +30,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => provideCheckNameViewModel()),
         ChangeNotifierProvider(create: (_) => provideCategoryDataSelectViewmodel()),
         ChangeNotifierProvider(create: (_) => provideOrderViewModel()),
+        ChangeNotifierProvider(create: (_) => provideWishlistViewModel()),
 
 
         ChangeNotifierProvider(create: (_) => provideSearchMyProductListViewmodel()),
