@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 class OptionSelectionViewModel extends ChangeNotifier {
   final List<String> colorOptions;
   final List<String> sizeOptions;
-
-  final int originalPrice;     // 원가
-  final int discountRate;      // 할인율 (예: 20)
+  final int originalPrice;
+  final int discountRate;
 
   String? selectedColor;
   String? selectedSize;

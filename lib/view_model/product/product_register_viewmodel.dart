@@ -2,11 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart';
-import 'package:look_talk/view_model/product/product_list_viewmodel.dart';
+import 'package:look_talk/view_model/product/product_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
 import '../category/category_data_select_viewmodel.dart';
-
 
 class ProductRegisterViewModel extends ChangeNotifier {
   final Dio _dio;
@@ -24,9 +23,27 @@ class ProductRegisterViewModel extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  // ✅ 선택된 옵션
   final List<String> selectedSizes = [];
   final List<String> selectedColors = [];
+
+  // ✅ 옵션 조합별 수량 입력용 컨트롤러
+  final Map<String, TextEditingController> stockControllers = {};
+
+  /// ✅ 옵션 조합 키로 재고 입력 컨트롤러 가져오기
+  TextEditingController getStockController(String key) {
+    return stockControllers.putIfAbsent(key, () => TextEditingController(text: '0'));
+  }
+
+  void updateStockControllers() {
+    stockControllers.clear();
+    for (final color in selectedColors) {
+      for (final size in selectedSizes) {
+        final key = '${color}_${size}';
+        stockControllers.putIfAbsent(key, () => TextEditingController(text: '0'));
+      }
+    }
+    notifyListeners();
+  }
 
   void toggleSize(String size) {
     if (selectedSizes.contains(size)) {
@@ -34,7 +51,7 @@ class ProductRegisterViewModel extends ChangeNotifier {
     } else {
       selectedSizes.add(size);
     }
-    notifyListeners();
+    updateStockControllers();
   }
 
   void toggleColor(String color) {
@@ -43,7 +60,7 @@ class ProductRegisterViewModel extends ChangeNotifier {
     } else {
       selectedColors.add(color);
     }
-    notifyListeners();
+    updateStockControllers();
   }
 
   Future<void> pickImage() async {
@@ -67,13 +84,19 @@ class ProductRegisterViewModel extends ChangeNotifier {
     notifyListeners();
 
     const path = '/api/seller/products';
-
     final discountRate = int.tryParse(discountController.text.trim()) ?? 0;
 
     final options = {
       'size': selectedSizes,
       'color': selectedColors,
     };
+
+    final Map<String, int> stockMap = {};
+    for (final entry in stockControllers.entries) {
+      stockMap[entry.key] = int.tryParse(entry.value.text.trim()) ?? 0;
+    }
+
+    final totalStock = stockMap.values.fold(0, (prev, curr) => prev + curr);
 
     final formData = FormData.fromMap({
       'name': nameController.text,
@@ -83,6 +106,8 @@ class ProductRegisterViewModel extends ChangeNotifier {
       'category': categoryVm.selectedSubCategory?.name,
       'options': jsonEncode(options),
       'discount': jsonEncode({"rate": discountRate}),
+      'stock': totalStock,
+      'attributes': jsonEncode(stockMap),
     });
 
     if (_imageFile != null) {
@@ -117,6 +142,7 @@ class ProductRegisterViewModel extends ChangeNotifier {
     discountController.clear();
     selectedSizes.clear();
     selectedColors.clear();
+    stockControllers.clear();
     _imageFile = null;
     notifyListeners();
   }
@@ -127,6 +153,9 @@ class ProductRegisterViewModel extends ChangeNotifier {
     descController.dispose();
     priceController.dispose();
     discountController.dispose();
+    for (final controller in stockControllers.values) {
+      controller.dispose();
+    }
     super.dispose();
   }
 }

@@ -122,9 +122,9 @@ class _WishlistScreenState extends State<WishlistScreen> {
               child: Text("추가", style: TextStyle(color: Theme.of(context).primaryColor)),
               onPressed: () {
                 // CartViewModel의 addItem 메소드를 호출
-                context.read<CartViewModel>().addItem(
+                context.read<CartViewModel>().addCartItem(
                   productId: item.productId,
-                  unitPrice: item.price,
+                  unitPrice: item.price, color: '', size: '', quantity: 1,
                 );
                 Navigator.of(dialogContext).pop();
 

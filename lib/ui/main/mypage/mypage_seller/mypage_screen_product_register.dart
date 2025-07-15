@@ -27,6 +27,9 @@ class _ProductRegisterForm extends StatelessWidget {
     final vm = context.watch<ProductRegisterViewModel>();
     final catVm = context.watch<CategoryDataSelectViewmodel>();
 
+    final selectedSizes = vm.selectedSizes;
+    final selectedColors = vm.selectedColors;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -156,6 +159,26 @@ class _ProductRegisterForm extends StatelessWidget {
               );
             }).toList(),
           ),
+
+          const SizedBox(height: 24),
+          if (selectedColors.isNotEmpty && selectedSizes.isNotEmpty) ...[
+            const Text('재고 수량 입력', style: TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            Column(
+              children: [
+                for (final color in selectedColors)
+                  for (final size in selectedSizes)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: CommonTextField(
+                        hintText: '$color - $size 재고',
+                        keyboardType: TextInputType.number,
+                        controller: vm.getStockController('${color}_$size'),
+                      ),
+                    ),
+              ],
+            ),
+          ],
 
           const SizedBox(height: 24),
           SizedBox(

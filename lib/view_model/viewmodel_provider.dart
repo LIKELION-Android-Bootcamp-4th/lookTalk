@@ -24,7 +24,7 @@ import 'package:look_talk/view_model/mypage_view_model/search_my_product_list_vi
 import 'package:look_talk/view_model/mypage_view_model/seller_manage_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_community_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_detail_viewmodel.dart';
-import 'package:look_talk/view_model/product/product_list_viewmodel.dart';
+import 'package:look_talk/view_model/product/product_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_post_list_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_register_viewmodel.dart';
 import 'package:look_talk/view_model/search_view_model.dart';

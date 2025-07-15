@@ -7,12 +7,14 @@ import 'package:look_talk/ui/common/const/text_sizes.dart';
 import 'package:look_talk/view_model/product/product_detail_viewmodel.dart';
 import 'package:look_talk/ui/product/inquiry/inquiry_screen.dart';
 import '../../../core/utils/auth_guard.dart';
+import '../../../view_model/product/product_detail_bottom_sheet_viewmodel.dart';
 import '../../../view_model/product/product_post_list_viewmodel.dart';
 import '../../../view_model/viewmodel_provider.dart';
 import '../../../model/repository/post_repository.dart';
 import '../../../model/client/post_api_client.dart';
 import '../../../core/network/dio_client.dart';
 import 'community_section_widget.dart';
+import '../../../view_model/cart/cart_view_model.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   const ProductDetailScreen({super.key});
@@ -118,10 +120,7 @@ class ProductDetailScreen extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
                             child: Text(
                               '${vm.storeName} >',
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey,
-                              ),
+                              style: const TextStyle(fontSize: 12, color: Colors.grey),
                             ),
                           ),
                         const SizedBox(height: 4),
@@ -225,10 +224,7 @@ class ProductDetailScreen extends StatelessWidget {
                         const SizedBox(width: 4),
                         Text(
                           vm.wishlistCount.toString(),
-                          style: const TextStyle(
-                            fontSize: TextSizes.body,
-                            color: AppColors.black,
-                          ),
+                          style: const TextStyle(fontSize: TextSizes.body, color: AppColors.black),
                         ),
                       ],
                     ),
@@ -239,7 +235,9 @@ class ProductDetailScreen extends StatelessWidget {
                       onPressed: () {
                         showOptionBottomSheet(
                           context: context,
-                          options: vm.options,
+                          productId: vm.productId,
+                          colorOptions: List<String>.from(vm.options['color'] ?? []),
+                          sizeOptions: List<String>.from(vm.options['size'] ?? []),
                           originalPrice: vm.originalPrice,
                           discountRate: vm.discountPercent,
                         );
@@ -269,4 +267,37 @@ class ProductDetailScreen extends StatelessWidget {
       );
     });
   }
+}
+
+void showOptionBottomSheet({
+  required BuildContext context,
+  required String productId,
+  required List<String> colorOptions,
+  required List<String> sizeOptions,
+  required int originalPrice,
+  required int discountRate,
+}) {
+  final viewModel = OptionSelectionViewModel(
+    colorOptions: colorOptions,
+    sizeOptions: sizeOptions,
+    originalPrice: originalPrice,
+    discountRate: discountRate,
+  );
+
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (_) {
+      return MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: viewModel),
+          ChangeNotifierProvider.value(value: context.read<CartViewModel>()),
+        ],
+        child: ProductDetailBottomSheet(productId: productId),
+      );
+    },
+  );
 }
