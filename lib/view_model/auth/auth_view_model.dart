@@ -160,7 +160,7 @@ class AuthViewModel with ChangeNotifier {
     _userRole = null;
     notifyListeners();
     if (context.mounted) {
-      context.go('/login');
+      context.go('/home');
     }
   }
 }
