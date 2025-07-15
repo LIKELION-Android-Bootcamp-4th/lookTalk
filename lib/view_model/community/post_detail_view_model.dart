@@ -16,18 +16,29 @@ class PostDetailViewModel with ChangeNotifier {
   String? _currentUserId;
   bool _isLiked = false;
   bool _hasNewComment = false;
+  bool _hasLikedChanged = false;
 
   Post? get post => _post;
   bool get isLoading => _isLoading;
   String? get errorMessage => _error;
   bool get isLiked => _isLiked;
   bool get hasNewComment => _hasNewComment;
+  bool get hasLikedChanged => _hasLikedChanged;
 
   final TextEditingController commentController = TextEditingController();
   final List<CommentResponse> comments = [];
 
-  void resetNewCommentFlag() {
+  void markNewComment() {
     _hasNewComment = false;
+  }
+
+  void markLikedChanged() {
+    _hasLikedChanged = true;
+  }
+
+  void resetFlags() {
+    _hasNewComment = false;
+    _hasLikedChanged = false;
   }
 
   PostDetailViewModel(this._repository, this._tokenStorage, String postId) {
@@ -73,20 +84,23 @@ class PostDetailViewModel with ChangeNotifier {
 
     final postId = _post!.id;
 
+    final previousLikedState = _isLiked;
+    final previousLikeCount = _post!.likeCount;
+
     _isLiked = !_isLiked;
     _post = _post!.copyWith(
-      likeCount: _isLiked ? _post!.likeCount + 1 : _post!.likeCount - 1,
+      likeCount: _isLiked ? previousLikeCount + 1 : previousLikeCount - 1,
     );
     notifyListeners();
 
     try {
       await _repository.toggleLike(postId); // 서버에 좋아요 요청
+      if(_isLiked != previousLikedState){
+        _hasLikedChanged = true;
+      }
     } catch (e) {
-      // 실패 시 롤백
-      _isLiked = !_isLiked;
-      _post = _post!.copyWith(
-        likeCount: _isLiked ? _post!.likeCount + 1 : _post!.likeCount - 1,
-      );
+      _isLiked = previousLikedState;
+      _post = _post!.copyWith(likeCount: previousLikeCount);
       notifyListeners();
     }
   }
@@ -102,6 +116,7 @@ class PostDetailViewModel with ChangeNotifier {
     );
 
     if (result.success && result.data != null) {
+      _hasNewComment = true;
       final newComment = Comment.fromResponse(result.data!);
 
       final updatedComments = List<Comment>.from(post!.comments)

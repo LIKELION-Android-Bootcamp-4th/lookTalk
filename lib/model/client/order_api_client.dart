@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart'; // [✅ 수정] Dio를 직접 사용하기 위해 임포트
+import 'package:look_talk/core/network/end_points/cart/cart_endpoints.dart';
 import '../../core/network/api_result.dart';
 import '../entity/request/create_order_request.dart';
 import '../entity/response/order_response.dart';
@@ -13,7 +14,7 @@ class OrderApiClient {
   Future<ApiResult<OrderResponse>> createOrder(CreateOrderRequest request) async {
     // [✅ 수정] _dioClient.post -> _dio.post
     final response = await _dio.post(
-      '/api/orders',
+      CartEndpoints.cartCheckOut,
       data: request.toJson(),
     );
     return ApiResult.fromResponse(

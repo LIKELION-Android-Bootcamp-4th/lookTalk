@@ -46,7 +46,7 @@ abstract class BasePostListViewModel with ChangeNotifier {
 
     if (reset) {
       pagination = null;
-      posts = [];
+      //posts = [];
       request = request.copyWith(page: 0);
     }
 
@@ -59,7 +59,13 @@ abstract class BasePostListViewModel with ChangeNotifier {
 
     if (result.success && result.data != null) {
       print('불러온 게시글 개수: ${result.data!.items.length}');
-      posts.addAll(result.data!.items);
+
+      if(reset){
+        posts = result.data!.items;
+      }else{
+        posts.addAll(result.data!.items);
+      }
+
       pagination = result.data!.pagination;
     } else {
       print('게시글 불러오기 실패: ${result.message}');
