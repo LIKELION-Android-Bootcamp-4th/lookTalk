@@ -47,7 +47,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Widget _buildTabContent(BuildContext context, ProductDetailViewModel vm, int index) {
     switch (index) {
       case 0:
-        return const Text('상품 설명 페이지 이미지로 대체 예정');
+        final detailImageUrl = vm.product?.detailImageUrl;
+
+        if (detailImageUrl == null || detailImageUrl.isEmpty) {
+          return const Center(child: Text('상품 설명 이미지를 불러올 수 없습니다.'));
+        }
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Image.network(
+            detailImageUrl,
+            width: double.infinity,
+            fit: BoxFit.fitWidth,
+            errorBuilder: (context, error, stackTrace) => const Text('이미지를 불러올 수 없습니다.'),
+          ),
+        );
       case 1:
         return ChangeNotifierProvider<ReviewViewModel>(
           create: (_) => provideReviewViewModel()..fetchReviewsAndAverage(vm.productId),

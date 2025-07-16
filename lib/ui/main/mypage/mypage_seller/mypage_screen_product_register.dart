@@ -64,6 +64,35 @@ class _ProductRegisterForm extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
+          GestureDetector(
+            onTap: vm.pickContentImage,
+            child: Container(
+              height: 200,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: vm.contentImage != null
+                  ? ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.file(
+                  File(vm.contentImage!.path),
+                  fit: BoxFit.fitHeight, // ⬅️ 세로 이미지 대비
+                ),
+              )
+                  : const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.image, size: 40, color: Colors.grey),
+                  SizedBox(height: 8),
+                  Text("설명용 이미지 업로드"),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
 
           _buildDropdown<GenderType>(
             hint: '성별',
