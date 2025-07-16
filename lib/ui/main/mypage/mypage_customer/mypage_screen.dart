@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/core/network/dio_client.dart';
 import 'package:look_talk/core/network/end_points/mypage.dart';
 import 'package:look_talk/core/network/token_storage.dart';
 import 'package:look_talk/ui/common/component/app_bar/app_bar_search_cart.dart';
 import 'package:look_talk/ui/common/component/common_modal.dart';
+import 'package:look_talk/ui/common/component/common_snack_bar.dart';
 import 'package:look_talk/ui/common/const/colors.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
 import 'package:look_talk/ui/common/const/text_sizes.dart';
@@ -93,7 +95,7 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
               onTap: () => {
                 Navigator.push(context, MaterialPageRoute(builder: (_) => RecentProduct()))
               },
-              child: _MyPageMenu(title: '최근 본 상품'),
+              child: _MyPageMenu(title: '최근 본 상품', icon: Icons.history,),
             ),
               gap16,
               GestureDetector(
@@ -102,7 +104,7 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
                   context.push('/manageProduct')
                   // Navigator.push(context, MaterialPageRoute(builder: (_)=>MyPageScreenSeller())),
                 },
-                child: _MyPageMenu(title: '주문/교환/반품/취소'),
+                child: _MyPageMenu(title: '주문/교환/반품/취소', icon: Icons.receipt_long,),
               ),
               gap16,
               GestureDetector(
@@ -111,7 +113,7 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
                   //context.push('/seller/orders'),
                   context.push('/notice')
                 },
-                child: _MyPageMenu(title: '공지사항'),
+                child: _MyPageMenu(title: '공지사항', icon: Icons.campaign,),
               ),
               gap16,
               // GestureDetector(
@@ -139,7 +141,7 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
                           content: "정말 로그아웃 하시겠습니까?",
                           confirmText: "로그아웃",
                           onConfirm: () async {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("로그아웃이 완료되었습니다."),));
+                            CommonSnackBar.show(context, message: '로그아웃이 완료되었습니다.');
                             await TokenStorage().deleteTokens();
                             context.read<AuthViewModel>().logout(context);
                             Navigator.pop(context);
@@ -148,7 +150,7 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
                         ),
                   );
                 },
-                child: _MyPageMenu(title: '로그아웃'),
+                child: _MyPageMenu(title: '로그아웃', icon: Icons.logout,),
               ),
               gap16,
 
@@ -176,7 +178,7 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
                         ),
                   );
                 },
-                child: _MyPageMenu(title: '회원탈퇴'),
+                child: _MyPageMenu(title: '회원탈퇴', icon: Icons.block,),
               ),
 
           ],
@@ -188,10 +190,13 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
 
 class _MyPageMenu extends StatelessWidget {
   final String title;
+  final IconData icon;
   final VoidCallback? onTap;
+
 
   const _MyPageMenu({
     required this.title,
+    required this.icon,
     this.onTap,
   });
 
@@ -201,13 +206,15 @@ class _MyPageMenu extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: GestureDetector(
         onTap: onTap,
-        child: Text(
-          title,
-          style: const TextStyle(
-              fontFamily: "NanumSquareRoundB.ttf",
-              fontSize: TextSizes.body,
-              color: AppColors.black,
-              fontWeight: FontWeight.bold),
+        child: Row(
+          children: [
+            Icon(icon, color: AppColors.darkGrey,),
+            gapW24,
+            Text(
+              title,
+              style: context.bodyBold.copyWith(fontWeight: FontWeight.w800)
+            ),
+          ],
         ),
       ),
     );

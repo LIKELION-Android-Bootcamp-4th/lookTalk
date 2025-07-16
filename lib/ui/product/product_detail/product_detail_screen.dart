@@ -1,7 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/ui/common/component/app_bar/app_bar_home_search_cart.dart';
+import 'package:look_talk/ui/common/component/common_loading.dart';
 import 'package:look_talk/ui/product/product_detail/product_detail_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:look_talk/ui/common/const/colors.dart';
@@ -15,6 +17,7 @@ import '../../../view_model/viewmodel_provider.dart';
 import '../../../model/repository/post_repository.dart';
 import '../../../model/client/post_api_client.dart';
 import '../../../core/network/dio_client.dart';
+import '../../common/const/gap.dart';
 import 'community_section_widget.dart';
 import '../../../view_model/cart/cart_view_model.dart';
 import '../../../view_model/wishlist/wishlist_view_model.dart';
@@ -109,7 +112,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               }
               return false;
             },
-            child: Scaffold(
+            child: vm.isLoading ? const CommonLoading() :
+            Scaffold(
               backgroundColor: AppColors.white,
               appBar: AppBarHomeSearchCart(
                 leading: IconButton(icon: const Icon(Icons.arrow_back_ios_new_rounded),onPressed: (){
@@ -223,33 +227,46 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ],
               ),
               bottomNavigationBar: Container(
-                height: 60,
-                decoration: const BoxDecoration(
-                  border: Border(top: BorderSide(color: Color(0xFFBDBDBD), width: 0.5)),
+                height: 90,
+                decoration: BoxDecoration(
                   color: AppColors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      offset: const Offset(0, -2),
+                      blurRadius: 8,
+                    ),
+                  ],
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
                     GestureDetector(
                       onTap: () => wishlistVm.toggleWishlist(vm.productId),
                       child: Row(
                         children: [
+                          gapW8,
                           Icon(
                             wishlistVm.isWishlisted(vm.productId)
                                 ? Icons.favorite
                                 : Icons.favorite_border,
-                            color: AppColors.black,
+                            color: wishlistVm.isWishlisted(vm.productId)
+                                ? Colors.red
+                                : Colors.black,
+                            size: 30,
                           ),
-                          const SizedBox(width: 4),
+                          gapW12,
                           Text(
                             wishlistVm.getWishlistCount(vm.productId).toString(),
-                            style: const TextStyle(fontSize: TextSizes.body, color: AppColors.black),
+                            style: wishlistVm.isWishlisted(vm.productId)
+                                ?  context.bodyBold.copyWith(fontSize: 20, color: Colors.red)
+                                : context.bodyBold.copyWith(fontSize: 20)
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    gapW24,
+                    //gapW8,
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
@@ -267,16 +284,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           backgroundColor: AppColors.btnPrimary,
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(15),
                           ),
+                          minimumSize: const Size(200, 48)
                         ),
-                        child: const Text(
+                        child: Text(
                           '구매하기',
-                          style: TextStyle(
-                            fontSize: TextSizes.body,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.white,
-                          ),
+                          style: context.h1.copyWith(color: Colors.white)
                         ),
                       ),
                     ),
