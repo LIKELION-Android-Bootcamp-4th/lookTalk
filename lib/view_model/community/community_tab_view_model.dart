@@ -7,10 +7,11 @@ class CommunityTabViewModel with ChangeNotifier {
   int get currentTabIndex => _currentTabIndex;
 
   void setTabIndex(int index) {
-    if (_currentTabIndex != index) {
-      _currentTabIndex = index;
-      notifyListeners();
-    }
+    if (_currentTabIndex == index) return;
+    _previousTabIndex = _currentTabIndex;
+    _currentTabIndex = index;
+
+    notifyListeners();
   }
 
   bool didClickSameTab() {
