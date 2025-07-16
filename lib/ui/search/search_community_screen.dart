@@ -31,7 +31,7 @@ print('{총 개수 ${posts.length}');
               final post = posts[index];
                return (post != null)
                   ? PostItem(post: post)
-                  : const SizedBox.shrink();
+                  : const Center(child: Text("게시글이 없습니다."));
             },
           ),
         ),
