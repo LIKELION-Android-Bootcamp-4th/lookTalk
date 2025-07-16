@@ -41,6 +41,7 @@ class _ManageProductSellerScreenState extends State<ManageProductSellerScreen> {
         itemCount: viewModel.orders.length,
         itemBuilder: (context, index) {
           final order = viewModel.orders[index];
+          final checkOrderRefunded = order.refundInfo ? "refunded" : order.status;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -63,11 +64,11 @@ class _ManageProductSellerScreenState extends State<ManageProductSellerScreen> {
                       height: 43,
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: _statusBgColor(order.status),
+                        color: _statusBgColor(checkOrderRefunded),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        _statusLabel(order.status),
+                        _statusLabel(checkOrderRefunded),
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
@@ -80,7 +81,7 @@ class _ManageProductSellerScreenState extends State<ManageProductSellerScreen> {
               ),
               ...order.items.map((item) => Managesellerwidget(
                 orderId : order.oderId,
-                status: order.status,
+                status: checkOrderRefunded,
                 orderItem: item,
                 totalAmount: order.totalAmount,
                 viewModel: viewModel,

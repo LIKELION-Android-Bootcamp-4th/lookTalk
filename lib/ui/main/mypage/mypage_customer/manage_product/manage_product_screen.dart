@@ -21,21 +21,22 @@ class ManageProductScreen extends StatefulWidget {
 }
 
 class _CommunityScreenState extends State<ManageProductScreen> {
+  late SearchMyProductListViewmodel viewModel;
   @override
   void initState() {
     super.initState();
-
-    Future.microtask((){ // 진입시 초기화 하기
-      context.read<SearchMyProductListViewmodel>();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      viewModel = context.read<SearchMyProductListViewmodel>();
+      viewModel.refresh();
     });
+
   }
 
 
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = context.watch<SearchMyProductListViewmodel>();
-
+    viewModel = context.watch<SearchMyProductListViewmodel>();
 
     return Scaffold(
       appBar: AppBarSearchCart(
