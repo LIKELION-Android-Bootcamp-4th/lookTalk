@@ -104,10 +104,10 @@ class _CommunityScreenState extends State<ManageProductScreen> {
 
   String _statusLabel(String status) {
     const map = {
-      'pending': '결제대기',
-      'confirmed': '결제완료',
-      'preparing': '상품준비중',
-      'shipped': '배송중',
+      'pending': '결제완료',
+      'confirmed': '주문확정',
+      'preparing': '상품준비',
+      'shipped': '배송시작',
       'delivered': '배송완료',
       'cancelled': '취소됨',
       'refunded': '환불완료',
