@@ -5,6 +5,7 @@ import 'package:look_talk/ui/common/component/common_loading.dart';
 import '../../model/entity/request/social_login_request.dart';
 import '../../model/repository/auth_repository.dart';
 import '../../model/entity/response/user.dart';
+import '../../ui/common/component/common_snack_bar.dart';
 
 class AuthViewModel with ChangeNotifier {
   final AuthRepository repository;
@@ -20,10 +21,13 @@ class AuthViewModel with ChangeNotifier {
   String? _userRole;
 
   User? get currentUser => _currentUser;
+
   AuthInfo? get tempAuthInfo => _tempAuthInfo;
+
   String? get tempProvider => _tempProvider;
 
   String get userRole => _userRole ?? 'buyer';
+
   bool get isLoggedIn => _currentUser != null;
 
   Future<bool> isLoggedInForGuard() async {
@@ -52,7 +56,11 @@ class AuthViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> handleSocialLogin(BuildContext context, AuthInfo authInfo, String provider) async {
+  Future<void> handleSocialLogin(
+    BuildContext context,
+    AuthInfo authInfo,
+    String provider,
+  ) async {
     _tempAuthInfo = authInfo;
     _tempProvider = provider;
     notifyListeners();
@@ -82,7 +90,6 @@ class AuthViewModel with ChangeNotifier {
         );
         await _tokenStorage.saveUserRole(user.mainRole ?? 'buyer');
 
-
         if (user.isNewUser) {
           _tempAuthInfo = authInfo;
           _tempProvider = provider;
@@ -90,10 +97,9 @@ class AuthViewModel with ChangeNotifier {
           notifyListeners();
           context.go('/signup');
           return;
-        }else{
+        } else {
           print(' 신규 유저 아님!!! ');
         }
-
 
         _currentUser = user;
         _userRole = user.mainRole;
@@ -103,14 +109,15 @@ class AuthViewModel with ChangeNotifier {
 
         context.go('/home');
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result.message)));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(result.message)));
       }
     } catch (e) {
       if (navigator.canPop()) navigator.pop();
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('서버 연결 실패')));
+      CommonSnackBar.show(context, message: '서버 연결 실패');
     }
   }
-
 
   Future<void> logout(BuildContext context) async {
     await _tokenStorage.deleteTokens();
@@ -123,5 +130,3 @@ class AuthViewModel with ChangeNotifier {
     }
   }
 }
-
-

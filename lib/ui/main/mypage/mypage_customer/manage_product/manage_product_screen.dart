@@ -92,10 +92,8 @@ class _CommunityScreenState extends State<ManageProductScreen> {
                 ),
               ),
           ...order.items.map((item) => ManageWidget(
-
-
             orderId : order.oderId,
-            status: checkRefund,
+            status: (order.refundInfo && order.status == 'refunded') ?'refunded' : checkRefund,
             orderItem: item,
             viewModel: viewModel,
           )),

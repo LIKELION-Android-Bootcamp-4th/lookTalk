@@ -11,6 +11,8 @@ import 'package:look_talk/model/entity/response/cart_response.dart';
 import 'package:look_talk/model/entity/product_entity.dart' as entity;
 import 'package:look_talk/model/entity/response/product_response.dart';
 
+import '../../common/component/common_snack_bar.dart';
+
 class ProductDetailBottomSheet extends StatelessWidget {
   final String productId;
   final entity.ProductEntity product;
@@ -92,9 +94,7 @@ class ProductDetailBottomSheet extends StatelessWidget {
                 child: OutlinedButton(
                   onPressed: () async {
                     if (vm.selectedColor == null || vm.selectedSize == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('색상과 사이즈를 선택해주세요.')),
-                      );
+                      CommonSnackBar.show(context, message: '색상과 사이즈를 선택해주세요.');
                       return;
                     }
 
@@ -108,9 +108,7 @@ class ProductDetailBottomSheet extends StatelessWidget {
 
                     if (result.success) {
                       Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('장바구니에 담았습니다.')),
-                      );
+                      CommonSnackBar.show(context, message: '장바구니에 담았습니다.');
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('실패: ${result.message ?? '오류 발생'}')),
@@ -129,9 +127,7 @@ class ProductDetailBottomSheet extends StatelessWidget {
                   text: "구매하기",
                   onPressed: () {
                     if (vm.selectedColor == null || vm.selectedSize == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('색상과 사이즈를 선택해주세요.')),
-                      );
+                      CommonSnackBar.show(context, message: '색상과 사이즈를 선택해주세요');
                       return;
                     }
 

@@ -8,7 +8,8 @@
   import 'package:provider/provider.dart';
 
   import '../../view_model/auth/nickname_check_view_model.dart';
-  import '../common/const/colors.dart';
+  import '../common/component/common_snack_bar.dart';
+import '../common/const/colors.dart';
   import '../common/const/gap.dart';
 
   class BuyerInfoScreen extends StatelessWidget {
@@ -112,9 +113,7 @@
 
               if (context.mounted) {
                 if (result.success) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("LookTalk에 오신 것을 환영해요!")),
-                  );
+                  CommonSnackBar.show(context, message: 'LookTalk에 오신 것을 환영해요!');
 
                   context.go('/home');
                 } else {
@@ -128,12 +127,7 @@
               }
             }
                 : () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('사용 가능한 닉네임을 입력해주세요.'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
+              CommonSnackBar.show(context, message: '사용 가능한 닉네임을 입력해주세요.');
             },
           );
         },
