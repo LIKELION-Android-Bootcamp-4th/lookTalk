@@ -54,35 +54,6 @@ class PostDetailScreen extends StatelessWidget {
       bottomSheet: _buildCommentInput(viewModel),
     );
 
-    // return Scaffold(
-    //   appBar: const AppBarSearchCart(),
-    //   body: ListView(
-    //     //crossAxisAlignment: CrossAxisAlignment.start,
-    //     children: [
-    //       Padding(
-    //         padding: const EdgeInsets.symmetric(horizontal: 24.0),
-    //         child: Column(
-    //           crossAxisAlignment: CrossAxisAlignment.start,
-    //           children: [
-    //             _buildUserInfo(context, post),
-    //             gap16,
-    //             _buildContents(context, post),
-    //             gap8,
-    //             _buildPhoto(post),
-    //             gap8,
-    //             _buildPostStats(post, viewModel, context),
-    //             gap4,
-    //             _buildDivider(),
-    //             ..._buildCommentListItems(post),
-    //           ],
-    //         ),
-    //       ),
-    //       // _buildDivider(),
-    //       // Expanded(child: _buildCommentList(post)),
-    //     ],
-    //   ),
-    //   bottomSheet: _buildCommentInput(viewModel),
-    // );
   }
 
   PreferredSizeWidget _buildAppBar(
@@ -91,7 +62,7 @@ class PostDetailScreen extends StatelessWidget {
   ) {
     return AppBarSearchCart(
       title: '게시글 상세',
-      leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: (){
+      leading: IconButton(icon: const Icon(Icons.arrow_back_ios_new_rounded), onPressed: (){
         final shouldUpdate =
             viewModel.hasNewComment || viewModel.hasLikedChanged;
         viewModel.markNewComment();
@@ -131,17 +102,6 @@ class PostDetailScreen extends StatelessWidget {
 
           if (success) {
             context.pop('deleted');
-            // ScaffoldMessenger.of(context).showSnackBar(
-            //   const SnackBar(
-            //     content: Text('게시글이 삭제되었습니다.'),
-            //     duration: Duration(seconds: 2),
-            //     behavior: SnackBarBehavior.floating,
-            //   ),
-            // );
-
-            // Future.delayed(const Duration(milliseconds: 500), () {
-            //   context.pop(true); // 게시글 목록으로 돌아가면서 true 전달 (옵션)
-            // });
           } else {
             CommonSnackBar.show(context, message: '삭제에 실패했습니다.');
           }
@@ -387,25 +347,6 @@ class PostDetailScreen extends StatelessWidget {
       //height: 32,
     );
   }
-
-  // Widget _buildCommentList(Post post) {
-  //   final comments = post.comments;
-  //
-  //   if (comments.isEmpty) {
-  //     return const Padding(
-  //       padding: EdgeInsets.symmetric(vertical: 24.0, horizontal: 24.0),
-  //       child: Text('아직 댓글이 없습니다. 첫 댓글을 남겨보세요!'),
-  //     );
-  //   }
-  //
-  //   return ListView.builder(
-  //     padding: const EdgeInsets.symmetric(horizontal: 24.0),
-  //     itemCount: comments.length,
-  //     itemBuilder: (context, index) {
-  //       return CommentItem(comment: comments[index]);
-  //     },
-  //   );
-  // }
 
   List<Widget> _buildCommentListItems(Post post) {
     final comments = post.comments;

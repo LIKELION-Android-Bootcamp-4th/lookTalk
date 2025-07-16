@@ -16,24 +16,22 @@ class SearchCommunityScreen extends StatelessWidget {
     final posts = category == 'coord_question'
         ? vm.questionCommunities
         : vm.recommendCommunities;
-print('{총 개수 ${posts.length}');
+    print('{총 개수 ${posts.length}');
+
     return Scaffold(
       appBar: category == 'coord_question'
-          ?AppBarSearchCart(title: "코디 질문",)
-          :AppBarSearchCart(title: "코디 추천",),
+          ? AppBarSearchCart(title: "코디 질문")
+          : AppBarSearchCart(title: "코디 추천"),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: List.generate(
-            posts.length,
-                (index) {
-              final post = posts[index];
-               return (post != null)
-                  ? PostItem(post: post)
-                  : const Center(child: Text("게시글이 없습니다."));
-            },
-          ),
+          children: List.generate(posts.length, (index) {
+            final post = posts[index];
+            return (post != null)
+                ? PostItem(post: post)
+                : const Center(child: Text("게시글이 없습니다."));
+          }),
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/model/entity/response/bring_sub_category_response.dart';
 import 'package:look_talk/view_model/category/category_detail/detail_listview_viewmodel.dart';
 
@@ -23,10 +24,18 @@ class DetailListview extends StatelessWidget {
               padding: const EdgeInsets.only(right: 12),
               child: Text(
                 category.name,
-                style: TextStyle(
-                  fontSize: 30,
-                  color: viewModel.isSelected(category) ? Colors.blue : Colors.grey,
-                ),
+                style: viewModel.isSelected(category)
+                    ? context.bodyBold.copyWith(
+                        color: Colors.blue,
+                        fontSize: 20,
+                      )
+                    : context.body.copyWith(color: Colors.grey, fontSize: 20),
+
+                // TextStyle(
+                //
+                //   fontSize: 20,
+                //   color: viewModel.isSelected(category) ? Colors.blue : Colors.grey,
+                // ),
               ),
             ),
           );

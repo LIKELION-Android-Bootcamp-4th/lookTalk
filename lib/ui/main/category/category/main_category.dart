@@ -32,7 +32,7 @@ class MainCategory extends StatelessWidget {
               color: isSelected ? Colors.white : Colors.grey[200],
               child: Text(
                 category.name,
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.black, fontWeight: isSelected ? FontWeight.w900: FontWeight.w600 ),
               ),
             ),
           );

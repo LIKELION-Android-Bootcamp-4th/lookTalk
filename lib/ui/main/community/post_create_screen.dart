@@ -180,23 +180,6 @@ class PostCreateScreen extends StatelessWidget {
     );
   }
 
-  // Widget _buildPictureField() {
-  //   return GestureDetector(
-  //     onTap: () {},
-  //     child: Container(
-  //       width: 100,
-  //       height: 100,
-  //       decoration: BoxDecoration(
-  //         color: AppColors.boxGrey,
-  //         borderRadius: BorderRadius.circular(22),
-  //       ),
-  //       child: Center(
-  //         child: Icon(Icons.add, size: 50, color: Color(0xFF6F6F6F)),
-  //       ),
-  //     ),
-  //   );
-  // }
-
   Widget _buildPictureField(BuildContext context) {
     final viewModel = context.watch<PostCreateViewModel>();
     final imageFile = viewModel.imageFile;

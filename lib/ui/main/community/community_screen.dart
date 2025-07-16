@@ -116,53 +116,8 @@ class CommunityScreen extends StatelessWidget {
 
             print('FAB 클릭 후 result 값: $postId');
 
-            // TODO : 등록하기 후 상세 조회화면에서 되돌아 왔을때 화면 작성한 게시글 잘 보이는지 확인
-            // if (result == true) {
-            //   final tabIndex = context
-            //       .read<CommunityTabViewModel>()
-            //       .currentTabIndex;
-            //
-            //   switch (tabIndex) {
-            //     case 0:
-            //       context.read<QuestionPostListViewModel>().fetchPosts(
-            //         reset: true,
-            //       );
-            //       break;
-            //     case 1:
-            //       context.read<RecommendPostListViewModel>().fetchPosts(
-            //         reset: true,
-            //       );
-            //       break;
-            //     case 2:
-            //       context.read<MyPostListViewModel>().fetchPosts(reset: true);
-            //       break;
-            //   }
-            // }
             if (postId  != null && postId.isNotEmpty) {
               context.push('/post/$postId');
-
-              // final tabIndex = context
-              //     .read<CommunityTabViewModel>()
-              //     .currentTabIndex;
-              //
-              // switch (tabIndex) {
-              //   case 0:
-              //     await context.read<QuestionPostListViewModel>().fetchPosts(
-              //       reset: true,
-              //     );
-              //     break;
-              //   case 1:
-              //     await context.read<RecommendPostListViewModel>().fetchPosts(
-              //       reset: true,
-              //     );
-              //     break;
-              //   case 2:
-              //     await context.read<MyPostListViewModel>().fetchPosts(
-              //       reset: true,
-              //     );
-              //     break;
-              // }
-
               Future.microtask(() {
                 final tabIndex = context.read<CommunityTabViewModel>().currentTabIndex;
 

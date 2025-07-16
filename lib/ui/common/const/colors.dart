@@ -18,4 +18,5 @@ class AppColors {
   static const Color textGrey = Color(0xFF999999); // 글자 회색
   static const Color boxGrey = Color(0xFFD9D9D9); // 박스 회색
   static const Color iconGrey = Color(0xFFC2C2C2); // icon 회색
+  static const Color darkGrey = Color(0xFF5F5C5C); // 진한 회색
 }

@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../../../../model/entity/response/bring_sub_category_response.dart';
 import '../../../../view_model/category/category_data_select_viewmodel.dart';
 import '../../../common/component/app_bar/app_bar_home_search_cart.dart';
+import '../../../common/component/app_bar/app_bar_search_cart.dart';
 import 'gender_toggle.dart';
 import 'main_category.dart';
 
@@ -20,7 +21,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBarHomeSearchCart(title: '카테고리',),
+        appBar: AppBarSearchCart(title: '카테고리',),
         body: Consumer<CategoryDataSelectViewmodel>(
           builder: (context, viewmodel, child) {
             return Column(

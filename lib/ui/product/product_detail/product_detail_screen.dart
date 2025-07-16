@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:look_talk/ui/common/component/app_bar/app_bar_home_search_cart.dart';
 import 'package:look_talk/ui/product/product_detail/product_detail_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:look_talk/ui/common/const/colors.dart';
@@ -110,40 +111,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             },
             child: Scaffold(
               backgroundColor: AppColors.white,
-              appBar: AppBar(
-                backgroundColor: AppColors.white,
-                elevation: 1,
-                leading: IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () {
-                    if (context.canPop()) {
-                      context.pop();
-                    } else {
-                      context.go('/home');
-                    }
-                  },
-                ),
-                iconTheme: const IconThemeData(color: AppColors.primary),
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.home_outlined),
-                    onPressed: () => context.push('/home'),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.search),
-                    onPressed: () => context.push('/search'),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.shopping_cart_outlined),
-                    onPressed: () {
-                      navigateWithAuthCheck(
-                        context: context,
-                        destinationIfLoggedIn: '/cart',
-                        fallbackIfNotLoggedIn: '/login',
-                      );
-                    },
-                  ),
-                ],
+              appBar: AppBarHomeSearchCart(
+                leading: IconButton(icon: const Icon(Icons.arrow_back_ios_new_rounded),onPressed: (){
+                  if (context.canPop()) {
+                    context.pop();
+                  } else {
+                    context.go('/home');
+                  }
+                },)
               ),
               body: Column(
                 children: [

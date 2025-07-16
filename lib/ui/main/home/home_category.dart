@@ -29,8 +29,8 @@ class HomeCategory extends StatelessWidget {
 
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: Colors.black,
-                      width: 1,
+                      color: AppColors.iconGrey,
+                      width: 1.3,
 
                     ),
                     color: isSelected ? AppColors.btnPrimary : AppColors.white,
@@ -39,7 +39,7 @@ class HomeCategory extends StatelessWidget {
                   ),
                   child: Text(
                     category,
-                    style: isSelected ? context.bodyBold.copyWith(color: AppColors.white) : context.body
+                    style: isSelected ? context.bodyBold.copyWith(color: AppColors.white) : context.bodyBold.copyWith(color: AppColors.darkGrey)
                   ),
                 ),
               );

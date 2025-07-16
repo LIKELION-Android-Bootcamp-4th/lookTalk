@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
+import 'package:look_talk/ui/common/component/app_bar/app_bar_search_cart.dart';
 import 'package:look_talk/ui/common/const/colors.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
 import 'package:look_talk/ui/common/const/text_sizes.dart';
@@ -32,16 +33,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text('찜', style: TextStyle(fontSize: TextSizes.headline, color: AppColors.black)),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-        actions: [
-          IconButton(onPressed: () => context.push('/search'), icon: const Icon(Icons.search, color: AppColors.black)),
-          IconButton(onPressed: () => context.push('/cart'), icon: const Icon(Icons.shopping_cart_outlined, color: AppColors.black)),
-        ],
-      ),
+      appBar: AppBarSearchCart(title: '찜',),
       body: _buildBody(context, viewModel),
     );
   }
