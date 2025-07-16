@@ -116,7 +116,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             Scaffold(
               backgroundColor: AppColors.white,
               appBar: AppBarHomeSearchCart(
-                leading: IconButton(icon: const Icon(Icons.arrow_back_ios_new_rounded),onPressed: (){
+                leading: IconButton(icon: const Icon(Icons.arrow_back),onPressed: (){
                   if (context.canPop()) {
                     context.pop();
                   } else {
