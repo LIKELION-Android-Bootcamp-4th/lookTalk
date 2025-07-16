@@ -7,6 +7,7 @@ import 'dart:ui';
 class AppColors {
   static const Color blueButton = Color(0xFFE8F3FC); //게시판 댓글 작성 버튼 색상
   static const Color primary = Color(0xFF436476); // 메인 색상
+  //static const Color primary = Color(0xFF125287); // 메인 색상
   static const Color secondary = Color(0xFFA2D9EB); // 서브 색상
   static const Color btnPrimary = Color(0xFF125287); // 버튼 메인 색상
   static const Color btnSecondary = Color(0xFFEBECEC); // 버튼 서브 색상
