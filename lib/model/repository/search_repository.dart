@@ -12,12 +12,14 @@ class SearchRepository {
       final response = await _dio.get(
         Search.allSearch,
         queryParameters: {
-          'q' : query
+          'q' : query,
+          'postLimit' : 100
         },
       );
 
       return SearchResponse.fromJson(response.data);
-    }catch (e) {
+    }catch (e, stack) {
+      print("레포 스택 ${stack}");
       throw Exception('검색이 되지 않습니다. $e');
     }
   }
