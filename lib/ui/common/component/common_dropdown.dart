@@ -35,30 +35,91 @@ class CommonDropdown extends StatelessWidget {
     this.height = 35,
   });
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   final border = OutlineInputBorder(
+  //     borderRadius: BorderRadius.circular(6),
+  //     borderSide: const BorderSide(color: AppColors.black, width: 1)
+  //   );
+  //
+  //   return SizedBox(
+  //     width: width,
+  //     height: height,
+  //     child: DropdownButtonFormField<String>(
+  //       value: selectedValue,
+  //       onChanged: onChanged,
+  //       items: items
+  //           .map((item) => DropdownMenuItem(value: item, child: Text(item)))
+  //           .toList(),
+  //       decoration: InputDecoration(
+  //         hintText: hintText ?? '선택하세요',
+  //         contentPadding: const EdgeInsets.only(left: 14),
+  //         border: border,
+  //         focusedBorder: border
+  //       ),
+  //       icon: Padding(
+  //         padding: const EdgeInsets.symmetric(horizontal: 8.0),
+  //         child: const Icon(Icons.arrow_drop_down),
+  //       ),
+  //       //alignment: AlignmentDirectional.topStart,
+  //     ),
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
-    final border = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(6),
-      borderSide: const BorderSide(color: AppColors.black, width: 1)
-    );
-
     return SizedBox(
       width: width,
-      height: height,
-      child: DropdownButtonFormField<String>(
-        value: selectedValue,
-        onChanged: onChanged,
-        items: items
-            .map((item) => DropdownMenuItem(value: item, child: Text(item)))
+      child: DropdownMenu<String>(
+        width: width,
+        initialSelection: selectedValue,
+        onSelected: onChanged,
+        dropdownMenuEntries: items
+            .map((item) => DropdownMenuEntry(value: item, label: item))
             .toList(),
-        decoration: InputDecoration(
-          hintText: hintText ?? '선택하세요',
-          contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-          border: border,
-          focusedBorder: border
+        hintText: hintText ?? '선택하세요',
+        trailingIcon: const Icon(
+          Icons.arrow_drop_down,
+          size: 20, // ✅ 원하는 사이즈로 지정 (예: 24~28 추천)
         ),
-        icon: const Icon(Icons.arrow_drop_down),
+        textStyle: const TextStyle(
+          fontSize: 13,
+          height: 1.0,
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          isDense: true,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 12,
+          ),
+          constraints: const BoxConstraints(
+            minHeight: 32,
+            maxHeight: 43,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(6),
+            borderSide: const BorderSide(color: Colors.black, width: 1),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(6),
+            borderSide: const BorderSide(color: Colors.black, width: 1),
+          ),
+        ),
+        menuStyle: MenuStyle(
+          elevation: WidgetStateProperty.all(0),
+          backgroundColor: WidgetStateProperty.all(Colors.white),
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(
+              side: const BorderSide(color: Colors.black),
+              borderRadius: BorderRadius.circular(6),
+            ),
+          ),
+          maximumSize: WidgetStateProperty.all(
+            Size(width, 200),
+          ),
+        ),
       ),
     );
   }
+
 }

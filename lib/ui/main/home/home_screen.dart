@@ -20,7 +20,7 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBarSearchCart(
-        leading: Image.asset('assets/images/logo.png'),
+        leading: Image.asset('assets/images/img.png'),
       ),
       body: viewModel.isLoading
           ? const CommonLoading()
