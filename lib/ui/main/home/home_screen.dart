@@ -27,8 +27,11 @@ class HomeScreen extends StatelessWidget {
           : Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          gap4,
+          Image.asset('assets/images/sale.png', width: double.infinity, fit: BoxFit.fitWidth,),
+          gap12,
           HomeCategory(),
-          const SizedBox(height: 8),
+          //gap4,
           Expanded(
             child: viewModel.productList.isEmpty
                 ? const Center(child: Text("찾으시는 제품이 없습니다."))
