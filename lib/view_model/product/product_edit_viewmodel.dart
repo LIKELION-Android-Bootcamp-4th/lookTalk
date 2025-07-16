@@ -5,6 +5,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:look_talk/model/entity/product_entity.dart';
 import 'package:look_talk/model/repository/product_repository.dart';
 
+import '../../ui/common/component/common_snack_bar.dart';
+
 class ProductEditViewModel extends ChangeNotifier {
   final ProductEntity product;
   final ProductRepository repository;
@@ -55,16 +57,12 @@ class ProductEditViewModel extends ChangeNotifier {
       );
 
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('상품이 수정되었습니다.')),
-        );
+        CommonSnackBar.show(context, message: '상품이 수정되었습니다.');
         Navigator.pop(context, true);
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('상품 수정 실패')),
-        );
+        CommonSnackBar.show(context, message: '상품 수정 실패하였습니다.');
       }
     }
   }
@@ -73,16 +71,12 @@ class ProductEditViewModel extends ChangeNotifier {
     try {
       await repository.deleteProduct(product.productId!);
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('상품이 삭제되었습니다.')),
-        );
+        CommonSnackBar.show(context, message: '상품이 삭제되었습니다.');
       }
       return true;
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('상품 삭제 실패')),
-        );
+        CommonSnackBar.show(context, message: '상품 삭제 실패하였습니다.');
       }
       return false;
     }

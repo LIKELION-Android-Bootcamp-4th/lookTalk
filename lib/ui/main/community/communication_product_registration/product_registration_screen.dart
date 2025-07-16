@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../../../core/extension/text_style_extension.dart';
 import '../../../../view_model/community/community_product_tab_view_model.dart';
 import '../../../../view_model/community/selected_product_view_model.dart';
+import '../../../common/component/common_snack_bar.dart';
 import '../../../common/const/colors.dart';
 
 class ProductRegistrationScreen extends StatelessWidget {
@@ -52,9 +53,7 @@ class ProductRegistrationScreen extends StatelessWidget {
                   .selectedProduct;
 
               if (selectedProduct == null) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(const SnackBar(content: Text("상품을 선택해주세요.")));
+                CommonSnackBar.show(context, message: '상품을 선택해주세요.');
                 return;
               }
 

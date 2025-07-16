@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../../model/entity/post_entity.dart';
 import '../../../view_model/community/post_detail_view_model.dart';
 import '../../common/component/app_bar/app_bar_search_cart.dart';
+import '../../common/component/common_snack_bar.dart';
 import '../../common/component/community/comment_item.dart';
 import '../../common/const/colors.dart';
 import '../../common/const/gap.dart';
@@ -142,13 +143,7 @@ class PostDetailScreen extends StatelessWidget {
             //   context.pop(true); // 게시글 목록으로 돌아가면서 true 전달 (옵션)
             // });
           } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('삭제에 실패했습니다.'),
-                duration: Duration(seconds: 2),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
+            CommonSnackBar.show(context, message: '삭제에 실패했습니다.');
           }
         },
       ),

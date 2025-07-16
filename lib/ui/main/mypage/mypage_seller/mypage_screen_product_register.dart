@@ -6,6 +6,7 @@ import 'package:look_talk/view_model/category/category_data_select_viewmodel.dar
 import 'package:look_talk/ui/common/component/common_text_field.dart';
 
 import '../../../../model/entity/response/gender_category_id.dart';
+import '../../../common/component/common_snack_bar.dart';
 
 class ProductRegisterScreen extends StatelessWidget {
   const ProductRegisterScreen({super.key});
@@ -193,13 +194,9 @@ class _ProductRegisterForm extends StatelessWidget {
 
                 if (success) {
                   DefaultTabController.of(context)?.animateTo(0);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('상품이 성공적으로 등록되었습니다.')),
-                  );
+                  CommonSnackBar.show(context, message: '상품이 성공적으로 등록되었습니다.');
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('상품 등록에 실패했습니다. 입력 값을 확인해주세요.')),
-                  );
+                  CommonSnackBar.show(context, message: '상품 등록에 실패했습니다. 입력 값을 확인해주세요.');
                 }
               },
               child: vm.isLoading

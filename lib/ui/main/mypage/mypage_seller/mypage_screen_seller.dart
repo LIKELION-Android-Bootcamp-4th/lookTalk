@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:look_talk/view_model/auth/auth_view_model.dart';
 
 import '../../../../view_model/mypage_view_model/alter_member_viewmodel.dart';
+import '../../../common/component/common_snack_bar.dart';
 
 class MyPageScreenSeller extends StatelessWidget {
   const MyPageScreenSeller({super.key});
@@ -91,9 +92,7 @@ class MyPageScreenSeller extends StatelessWidget {
                     content: "정말 로그아웃 하시겠습니까?",
                     confirmText: "로그아웃",
                     onConfirm: () async {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("로그아웃이 완료되었습니다.")),
-                      );
+                      CommonSnackBar.show(context, message: '로그아웃이 완료되었습니다.');
                       await TokenStorage().deleteTokens();
                       context.read<AuthViewModel>().logout(context);
                       Navigator.pop(context); // 다이얼로그 닫기
@@ -119,9 +118,7 @@ class MyPageScreenSeller extends StatelessWidget {
                       try {
                         await dio.delete(MyPage.deleteRegister);
                         if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("회원탈퇴가 완료되었습니다.")),
-                          );
+                          CommonSnackBar.show(context, message: '회원탈퇴가 완료되었습니다.');
                           Navigator.pop(context); // 다이얼로그 닫기
                           context.go('/home');
                         }

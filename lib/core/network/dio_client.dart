@@ -35,8 +35,8 @@ class DioClient {
             final accessToken = await _tokenStorage.getAccessToken();
             if (accessToken != null) {
 
-              options.headers['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODZkZWUzMjlkNjI4ODdmNGIxYWY3ZTgiLCJjb21wYW55SWQiOiI2ODY2ZmNlYTViMjMwZjVkYzcwOWJkZWIiLCJpc0FkbWluIjpmYWxzZSwiaXNTdXBlckFkbWluIjpmYWxzZSwiaWF0IjoxNzUyNjQ3NTA0LCJleHAiOjE3NTI3MzM5MDR9.yVWOVAQy_47H_EDYSNu5SrkmDGBCAfzU24a5S-kooro';
-
+              //options.headers['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODZkZWUzMjlkNjI4ODdmNGIxYWY3ZTgiLCJjb21wYW55SWQiOiI2ODY2ZmNlYTViMjMwZjVkYzcwOWJkZWIiLCJpc0FkbWluIjpmYWxzZSwiaXNTdXBlckFkbWluIjpmYWxzZSwiaWF0IjoxNzUyNjQ3NTA0LCJleHAiOjE3NTI3MzM5MDR9.yVWOVAQy_47H_EDYSNu5SrkmDGBCAfzU24a5S-kooro';
+              options.headers['Authorization'] = 'Bearer $accessToken';
             }
           }
 

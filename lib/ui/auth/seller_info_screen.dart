@@ -1,6 +1,7 @@
   import 'package:flutter/material.dart';
   import 'package:go_router/go_router.dart';
   import 'package:look_talk/core/extension/text_style_extension.dart';
+import 'package:look_talk/ui/common/component/common_snack_bar.dart';
   import 'package:look_talk/ui/common/component/common_text_field.dart';
   import 'package:look_talk/view_model/auth/seller_signup_view_model.dart';
   import 'package:provider/provider.dart';
@@ -133,9 +134,7 @@
 
               if (context.mounted) {
                 if (result.success) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("LookTalk에 오신 것을 환영해요!")),
-                  );
+                  CommonSnackBar.show(context, message: 'LookTalk에 오신 것을 환영해요!');
                   context.go('/home');
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(

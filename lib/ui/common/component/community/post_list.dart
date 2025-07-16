@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:look_talk/model/entity/response/post_response.dart';
 import '../../../../model/entity/post_entity.dart';
+import '../common_snack_bar.dart';
 import 'post_item.dart';
 
 class PostList extends StatelessWidget {
@@ -33,13 +34,14 @@ class PostList extends StatelessWidget {
               if (result == 'deleted' && onRefresh != null) {
                 await onRefresh!();
 
-                ScaffoldMessenger.of(rootContext).showSnackBar(
-                  const SnackBar(
-                    content: Text('게시글이 삭제되었습니다.'),
-                    duration: Duration(seconds: 2),
-                    behavior: SnackBarBehavior.floating,
-                  ),
-                );
+                // ScaffoldMessenger.of(rootContext).showSnackBar(
+                //   const SnackBar(
+                //     content: Text('게시글이 삭제되었습니다.'),
+                //     duration: Duration(seconds: 2),
+                //     behavior: SnackBarBehavior.floating,
+                //   ),
+                // );
+                CommonSnackBar.show(context, message: '게시글이 삭제되었습니다.');
               } else if (result == 'updated' && onRefresh != null) {
                 await onRefresh!(); // 댓글 수/좋아요 수 갱신
               }
