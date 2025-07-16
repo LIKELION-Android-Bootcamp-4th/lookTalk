@@ -41,7 +41,7 @@ class _ManageProductSellerScreenState extends State<ManageProductSellerScreen> {
         itemCount: viewModel.orders.length,
         itemBuilder: (context, index) {
           final order = viewModel.orders[index];
-          final checkOrderRefunded = order.refundInfo ? "refunded" : order.status;
+          final checkOrderRefunded = order.refundInfo ? "refunding" : order.status;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -81,9 +81,9 @@ class _ManageProductSellerScreenState extends State<ManageProductSellerScreen> {
               ),
               ...order.items.map((item) => Managesellerwidget(
                 orderId : order.oderId,
-                status: checkOrderRefunded,
+                status: order.status,
                 orderItem: item,
-                totalAmount: order.totalAmount,
+                quantity: item.quantity,
                 viewModel: viewModel,
               )),
             ],
@@ -102,6 +102,7 @@ class _ManageProductSellerScreenState extends State<ManageProductSellerScreen> {
       'shipped': '배송시작',
       'delivered': '배송완료',
       'cancelled': '취소됨',
+      'refunding' : '환불요청',
       'refunded': '환불완료',
     };
     return map[status] ?? status;
@@ -121,6 +122,8 @@ class _ManageProductSellerScreenState extends State<ManageProductSellerScreen> {
         return Colors.red.shade100;
       case 'refunded':
         return Colors.purple.shade100;
+        case 'refunding':
+        return Colors.purple.shade500;
       default:
         return Colors.grey.shade200;
     }

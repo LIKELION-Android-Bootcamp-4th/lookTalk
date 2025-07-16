@@ -7,7 +7,7 @@ class Managesellerwidget extends StatelessWidget {
   final String orderId;
   final String status;
   final dynamic orderItem;
-  final int? totalAmount;
+  final int? quantity;
   final SellerManageViewmodel viewModel;
 
   const Managesellerwidget({
@@ -15,7 +15,7 @@ class Managesellerwidget extends StatelessWidget {
     required this.orderId,
     required this.status,
     required this.orderItem,
-    this.totalAmount,
+    this.quantity,
     required this.viewModel,
   });
 
@@ -57,7 +57,7 @@ class Managesellerwidget extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text('옵션: ${orderItem.size ?? "옵션 없음"}'),
                     const SizedBox(height: 4),
-                    Text('${orderItem.price}원  수량: ${totalAmount ?? 0}개'),
+                    Text('${orderItem.price}원  수량: ${quantity ?? 0}개'),
                   ],
                 ),
               ),
@@ -161,6 +161,8 @@ class Managesellerwidget extends StatelessWidget {
 
   String _statusToText(String status) {
     switch (status) {
+      case 'pending' :
+        return '주문 요청';
       case 'confirmed':
         return '주문 확정';
       case 'preparing':
