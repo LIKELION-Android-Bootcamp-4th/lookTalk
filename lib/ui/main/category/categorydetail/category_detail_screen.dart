@@ -18,84 +18,126 @@ class CategoryDetailScreen extends StatelessWidget {
     final productList = viewModel.productList;
 
     return viewModel.isLoading
-      ? CommonLoading()
-      : Scaffold(
-      appBar: AppBarHomeSearchCart(title: viewModel.mainCategory.name),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          DetailListview(viewModel: viewModel),
-          gap16,
-          Expanded(
-            child: productList.isEmpty
-                ? const Center(child: Text("찾으시는 제품이 없습니다."))
-                : GridView.builder(
-              padding: const EdgeInsets.all(8),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-                childAspectRatio: 0.6,
+        ? CommonLoading()
+        : Scaffold(
+            appBar: AppBarHomeSearchCart(
+              title: viewModel.mainCategory.name,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                onPressed: () {
+                  if (context.canPop()) {
+                    context.pop();
+                  } else {
+                    context.go('/home');
+                  }
+                },
               ),
-              itemCount: productList.length,
-              itemBuilder: (context, index) {
-                final product = productList[index];
-                final imageUrl = product.thumbnailImage;
-                final isValidImage = imageUrl != null && imageUrl.trim().isNotEmpty;
-
-
-                return GestureDetector(
-                  onTap: (){
-                    if(product != null){
-                      context.push('/product/${product.id}');
-                    }
-                  },
-                child:Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    isValidImage
-                        ? Image.network(
-                      imageUrl!,
-                      width: 100,
-                      height: 103,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) =>
-                      const Icon(Icons.broken_image, size: 100, color: Colors.grey),
-                    )
-                        : const Icon(Icons.image, size: 100, color: Colors.grey),
-                    gap8,
-                    Text(product.storeName ?? '', style: context.h1.copyWith(fontSize: 12)),
-                    gap4,
-                    Text(product.name, style: context.bodyBold.copyWith(fontSize: 10)),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        if (product.discount != null) ...[
-                          Text(
-                            "${product.discount!.value}%",
-                            style: context.bodyBold.copyWith(fontSize: 12, color: Colors.red),
-                          ),
-                          gapW4,
-                          Text(
-                            "${(product.price * (100 - product.discount!.value) ~/ 100)}원",
-                            style: context.h1.copyWith(fontSize: 14),
-                          ),
-                        ] else ...[
-                          Text(
-                            "${product.price}원",
-                            style: context.h1.copyWith(fontSize: 14),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ],
-                ),
-                );
-              },
             ),
-          ),
-        ],
-      ),
-    );
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                gap8,
+                Image.asset('assets/images/ad.png', width: double.infinity, fit: BoxFit.fitWidth),
+                gap24,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: DetailListview(viewModel: viewModel),
+                ),
+                gap12,
+                Expanded(
+                  child: productList.isEmpty
+                      ? const Center(child: Text("찾으시는 제품이 없습니다."))
+                      : GridView.builder(
+                          padding: const EdgeInsets.all(8),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                crossAxisSpacing: 8,
+                                mainAxisSpacing: 8,
+                                childAspectRatio: 0.6,
+                              ),
+                          itemCount: productList.length,
+                          itemBuilder: (context, index) {
+                            final product = productList[index];
+                            final imageUrl = product.thumbnailImage;
+                            final isValidImage =
+                                imageUrl != null && imageUrl.trim().isNotEmpty;
+
+                            return GestureDetector(
+                              onTap: () {
+                                if (product != null) {
+                                  context.push('/product/${product.id}');
+                                }
+                              },
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  isValidImage
+                                      ? Image.network(
+                                          imageUrl!,
+                                          width: 100,
+                                          height: 103,
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (_, __, ___) =>
+                                              const Icon(
+                                                Icons.broken_image,
+                                                size: 100,
+                                                color: Colors.grey,
+                                              ),
+                                        )
+                                      : const Icon(
+                                          Icons.image,
+                                          size: 100,
+                                          color: Colors.grey,
+                                        ),
+                                  gap8,
+                                  Text(
+                                    product.storeName ?? '',
+                                    style: context.h1.copyWith(fontSize: 12),
+                                  ),
+                                  gap4,
+                                  Text(
+                                    product.name,
+                                    style: context.bodyBold.copyWith(
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Row(
+                                    children: [
+                                      if (product.discount != null) ...[
+                                        Text(
+                                          "${product.discount!.value}%",
+                                          style: context.bodyBold.copyWith(
+                                            fontSize: 12,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                        gapW4,
+                                        Text(
+                                          "${(product.price * (100 - product.discount!.value) ~/ 100)}원",
+                                          style: context.h1.copyWith(
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ] else ...[
+                                        Text(
+                                          "${product.price}원",
+                                          style: context.h1.copyWith(
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                ),
+              ],
+            ),
+          );
   }
 }
