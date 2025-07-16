@@ -88,7 +88,6 @@ class _CommunityScreenState extends State<ManageProductScreen> {
             orderId : order.oderId,
             status: order.status,
             orderItem: item,
-            totalAmount: order.totalAmount,
             viewModel: viewModel,
           )),
             ],
