@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:look_talk/core/network/end_points/cart/cart_endpoints.dart';
+import 'package:look_talk/model/entity/request/create_order_request.dart';
 import '../../core/network/api_result.dart';
 import '../entity/response/cart_response.dart';
 import '../entity/response/checkout_response.dart';
@@ -50,10 +51,10 @@ class CartApiClient {
     return ApiResult.fromVoidResponse(response);
   }
 
-  Future<ApiResult<CheckoutResponse>> checkout(List<String> cartIds) async {
+  Future<ApiResult<CheckoutResponse>> checkout(List<String> cartIds , ShippingInfoRequest info) async {
     final response = await _dio.post(
       CartEndpoints.cartCheckOut,
-      data: {"cartIds": cartIds},
+      data: {"cartIds": cartIds , "shippingInfo": info},
     );
     return ApiResult.fromResponse(
         response, (json) => CheckoutResponse.fromJson(json as Map<String, dynamic>));
