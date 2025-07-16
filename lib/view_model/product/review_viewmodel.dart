@@ -67,13 +67,12 @@ class ReviewViewModel extends ChangeNotifier {
     return result;
   }
 
-  Future<void> toggleReviewLike(String reviewId) async {
-    final result = await _repository.toggleLike(reviewId);
-    if (result.success) {
-      final productId = _reviews.firstWhere((r) => r.id == reviewId).productId;
-      await fetchReviewsAndAverage(productId);
-    }
+  Future<List<ReviewEntity>> fetchReviews(String productId) async {
+    final result = await _repository.getReviews(productId);
+    return result.success && result.data != null ? result.data! : [];
   }
+
+
 
   Future<ApiResult<void>> deleteReview(String reviewId) async {
     final result = await _repository.deleteReview(reviewId);

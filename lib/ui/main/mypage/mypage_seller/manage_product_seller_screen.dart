@@ -64,11 +64,15 @@ class _ManageProductSellerScreenState extends State<ManageProductSellerScreen> {
                       height: 43,
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: _statusBgColor(checkOrderRefunded),
+                        color:  (order.refundInfo && order.status == 'refunded')
+                            ? _statusBgColor('refunded')
+                            : _statusBgColor(checkOrderRefunded),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        _statusLabel(checkOrderRefunded),
+                        (order.refundInfo && order.status == 'refunded')
+                            ? _statusLabel('refunded')
+                            : _statusLabel(checkOrderRefunded),
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,

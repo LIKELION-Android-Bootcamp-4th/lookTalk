@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/view_model/mypage_view_model/search_my_product_list_viewmodel.dart';
 import 'package:look_talk/ui/product/review/review_write_screen.dart';
+import 'package:look_talk/view_model/viewmodel_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../../view_model/viewmodel_provider.dart';
+import '../../../../../core/network/token_storage.dart';
 
 class ManageWidget extends StatelessWidget {
   final String orderId;
@@ -26,6 +27,7 @@ class ManageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final imageUrl = orderItem.thumbnailImage;
     final isValidImage = imageUrl != null && imageUrl.trim().isNotEmpty;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
@@ -112,14 +114,33 @@ class ManageWidget extends StatelessWidget {
             viewModel.refund(orderId);
             break;
           case '리뷰작성':
+            final reviewViewModel = provideReviewViewModel();
+            final tokenStorage = TokenStorage();
+            final userId = await tokenStorage.getUserId();
+
+            if (userId == null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('로그인이 필요합니다')),
+              );
+              return;
+            }
+
+            final reviews = await reviewViewModel.fetchReviews(orderItem.id);
+            final alreadyWritten = reviews.any((r) => r.userId == userId);
+
+            if (alreadyWritten) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('이미 이 상품에 대한 리뷰를 작성하셨습니다.')),
+              );
+              return;
+            }
+
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (_) => ChangeNotifierProvider(
-                  create: (_) => provideReviewViewModel(),
-                  child: ReviewWriteScreen(
-                    productId: orderItem.id,
-                  ),
+                  create: (_) => reviewViewModel,
+                  child: ReviewWriteScreen(productId: orderItem.id),
                 ),
               ),
             );
@@ -135,4 +156,5 @@ class ManageWidget extends StatelessWidget {
       child: Text(label, style: const TextStyle(fontSize: 12)),
     );
   }
+
 }

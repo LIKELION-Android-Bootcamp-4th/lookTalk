@@ -107,18 +107,6 @@ class _ProductDetailReviewTabState extends State<ProductDetailReviewTab> {
               }).toList(),
             ),
           const SizedBox(height: 8),
-          Row(
-            children: [
-              IconButton(
-                icon: Icon(
-                  review.likedByCurrentUser ? Icons.favorite : Icons.favorite_border,
-                  color: review.likedByCurrentUser ? Colors.red : Colors.grey,
-                ),
-                onPressed: () => vm.toggleReviewLike(review.id),
-              ),
-              Text('${review.likeCount}'),
-            ],
-          )
         ],
       ),
     );
