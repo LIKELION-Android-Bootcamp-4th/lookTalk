@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../const/colors.dart';
+
 // 검색, 장바구니 버튼이 있는 app bar 입니다 .
 class AppBarSearchCart extends StatelessWidget implements PreferredSizeWidget {
   final Widget? leading;
@@ -21,6 +23,9 @@ class AppBarSearchCart extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       leading: leading,
       title: Text(title ?? ''),
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      backgroundColor: AppColors.white,
       actions: [
         IconButton(
           icon: const Icon(Icons.search),

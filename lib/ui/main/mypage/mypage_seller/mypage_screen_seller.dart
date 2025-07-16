@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/core/network/dio_client.dart';
 import 'package:look_talk/core/network/end_points/mypage.dart';
 import 'package:look_talk/core/network/token_storage.dart';
@@ -68,17 +69,17 @@ class MyPageScreenSeller extends StatelessWidget {
             // 메뉴 목록
             GestureDetector(
               onTap: () => context.push('/seller/products'),
-              child: const _MyPageMenu(title: '상품 조회 / 등록'),
+              child: const _MyPageMenu(title: '상품 조회 / 등록', icon: Icons.inventory_2,),
             ),
             gap16,
             GestureDetector(
               onTap: () => context.push('/seller/orders'),
-              child: const _MyPageMenu(title: '주문 조회'),
+              child: const _MyPageMenu(title: '주문 조회', icon: Icons.receipt_long,),
             ),
             gap16,
             GestureDetector(
               onTap: () => context.push('/notice'),
-              child: const _MyPageMenu(title: '공지사항'),
+              child: const _MyPageMenu(title: '공지사항', icon: Icons.campaign,),
             ),
             gap16,
 
@@ -101,7 +102,7 @@ class MyPageScreenSeller extends StatelessWidget {
                   ),
                 );
               },
-              child: const _MyPageMenu(title: '로그아웃'),
+              child: const _MyPageMenu(title: '로그아웃', icon: Icons.logout,),
             ),
             gap16,
 
@@ -129,7 +130,7 @@ class MyPageScreenSeller extends StatelessWidget {
                   ),
                 );
               },
-              child: const _MyPageMenu(title: '회원탈퇴'),
+              child: const _MyPageMenu(title: '회원탈퇴', icon: Icons.block,),
             ),
           ],
         ),
@@ -140,10 +141,12 @@ class MyPageScreenSeller extends StatelessWidget {
 
 class _MyPageMenu extends StatelessWidget {
   final String title;
+  final IconData icon;
   final VoidCallback? onTap;
 
   const _MyPageMenu({
     required this.title,
+    required this.icon,
     this.onTap,
   });
 
@@ -153,14 +156,15 @@ class _MyPageMenu extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: GestureDetector(
         onTap: onTap,
-        child: Text(
-          title,
-          style: const TextStyle(
-            fontFamily: "NanumSquareRoundB.ttf",
-            fontSize: TextSizes.body,
-            color: AppColors.black,
-            fontWeight: FontWeight.bold,
-          ),
+        child: Row(
+          children: [
+            Icon(icon, color: AppColors.darkGrey,),
+            gapW24,
+            Text(
+                title,
+                style: context.bodyBold.copyWith(fontWeight: FontWeight.w800)
+            ),
+          ],
         ),
       ),
     );

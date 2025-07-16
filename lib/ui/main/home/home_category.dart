@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/view_model/home/home_category_viewmodel.dart';
 import 'package:provider/provider.dart';
+
+import '../../common/const/colors.dart';
 
 class HomeCategory extends StatelessWidget {
   const HomeCategory({super.key});
@@ -26,21 +29,17 @@ class HomeCategory extends StatelessWidget {
 
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: Colors.black,
-                      width: 1,
+                      color: AppColors.iconGrey,
+                      width: 1.3,
 
                     ),
-                    color: isSelected ? Colors.blue : Colors.white,
+                    color: isSelected ? AppColors.btnPrimary : AppColors.white,
                     borderRadius: BorderRadius.circular(20),
 
                   ),
                   child: Text(
                     category,
-                    style: TextStyle(
-                      fontFamily: "NanumSquareRoundEB",
-                      color: isSelected ? Colors.white : Colors.black,
-                      fontSize: 12,
-                    ),
+                    style: isSelected ? context.bodyBold.copyWith(color: AppColors.white) : context.bodyBold.copyWith(color: AppColors.darkGrey)
                   ),
                 ),
               );

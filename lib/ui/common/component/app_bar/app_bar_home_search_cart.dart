@@ -7,13 +7,16 @@ import '../../../../core/utils/auth_guard.dart';
 class AppBarHomeSearchCart extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final PreferredSizeWidget? bottom;
+  final Widget? leading;
 
-  const AppBarHomeSearchCart({this.title, this.bottom, super.key});
+  const AppBarHomeSearchCart({this.title, this.bottom, this.leading, super.key});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(title ?? ''),
+      leading: leading,
+      scrolledUnderElevation: 0,
       actions: [
         IconButton(
           icon: const Icon(Icons.home_outlined),
@@ -26,7 +29,6 @@ class AppBarHomeSearchCart extends StatelessWidget implements PreferredSizeWidge
         IconButton(
           icon: const Icon(Icons.shopping_cart_outlined),
           onPressed: () {
-            // navigateWithAuthCheck 함수를 여기서 호출합니다.
             navigateWithAuthCheck(
               context: context,
               destinationIfLoggedIn: '/cart', // 로그인 시 목적지

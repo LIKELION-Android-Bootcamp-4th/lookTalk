@@ -9,8 +9,11 @@ class ProductDetailViewModel extends ChangeNotifier {
   int selectedIndex = 0;
   bool isWishlist = false;
   int wishlistCount = 0;
+  bool _isLoading = false;
 
   final List<String> tabs = ['상품정보', '리뷰', '커뮤니티', '문의'];
+
+  bool get isLoading => _isLoading;
 
   ProductEntity? product;
 
@@ -19,15 +22,19 @@ class ProductDetailViewModel extends ChangeNotifier {
   }
 
   Future<void> fetchProductDetail() async {
+    _isLoading = true;
+    notifyListeners();
+
     try {
       final result = await repository.fetchProductDetail(productId);
       product = result;
-
       wishlistCount = result.dynamicFields?['wishlistCount'] ?? 0;
-
-      notifyListeners();
     } catch (e) {
+      _isLoading = false;
       print('상품 상세 불러오기 실패: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 

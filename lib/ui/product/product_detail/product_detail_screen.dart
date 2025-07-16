@@ -1,6 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:look_talk/core/extension/text_style_extension.dart';
+import 'package:look_talk/ui/common/component/app_bar/app_bar_home_search_cart.dart';
+import 'package:look_talk/ui/common/component/common_loading.dart';
 import 'package:look_talk/ui/product/product_detail/product_detail_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:look_talk/ui/common/const/colors.dart';
@@ -14,6 +17,7 @@ import '../../../view_model/viewmodel_provider.dart';
 import '../../../model/repository/post_repository.dart';
 import '../../../model/client/post_api_client.dart';
 import '../../../core/network/dio_client.dart';
+import '../../common/const/gap.dart';
 import 'community_section_widget.dart';
 import '../../../view_model/cart/cart_view_model.dart';
 import '../../../view_model/wishlist/wishlist_view_model.dart';
@@ -47,7 +51,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Widget _buildTabContent(BuildContext context, ProductDetailViewModel vm, int index) {
     switch (index) {
       case 0:
-        return const Text('상품 설명 페이지 이미지로 대체 예정');
+        final detailImageUrl = vm.product?.detailImageUrl;
+
+        if (detailImageUrl == null || detailImageUrl.isEmpty) {
+          return const Center(child: Text('상품 설명 이미지를 불러올 수 없습니다.'));
+        }
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Image.network(
+            detailImageUrl,
+            width: double.infinity,
+            fit: BoxFit.fitWidth,
+            errorBuilder: (context, error, stackTrace) => const Text('이미지를 불러올 수 없습니다.'),
+          ),
+        );
       case 1:
         return ChangeNotifierProvider<ReviewViewModel>(
           create: (_) => provideReviewViewModel()..fetchReviewsAndAverage(vm.productId),
@@ -94,42 +112,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               }
               return false;
             },
-            child: Scaffold(
+            child: vm.isLoading ? const CommonLoading() :
+            Scaffold(
               backgroundColor: AppColors.white,
-              appBar: AppBar(
-                backgroundColor: AppColors.white,
-                elevation: 1,
-                leading: IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () {
-                    if (context.canPop()) {
-                      context.pop();
-                    } else {
-                      context.go('/home');
-                    }
-                  },
-                ),
-                iconTheme: const IconThemeData(color: AppColors.primary),
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.home_outlined),
-                    onPressed: () => context.push('/home'),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.search),
-                    onPressed: () => context.push('/search'),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.shopping_cart_outlined),
-                    onPressed: () {
-                      navigateWithAuthCheck(
-                        context: context,
-                        destinationIfLoggedIn: '/cart',
-                        fallbackIfNotLoggedIn: '/login',
-                      );
-                    },
-                  ),
-                ],
+              appBar: AppBarHomeSearchCart(
+                leading: IconButton(icon: const Icon(Icons.arrow_back),onPressed: (){
+                  if (context.canPop()) {
+                    context.pop();
+                  } else {
+                    context.go('/home');
+                  }
+                },)
               ),
               body: Column(
                 children: [
@@ -234,33 +227,46 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ],
               ),
               bottomNavigationBar: Container(
-                height: 60,
-                decoration: const BoxDecoration(
-                  border: Border(top: BorderSide(color: Color(0xFFBDBDBD), width: 0.5)),
+                height: 90,
+                decoration: BoxDecoration(
                   color: AppColors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      offset: const Offset(0, -2),
+                      blurRadius: 8,
+                    ),
+                  ],
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
                     GestureDetector(
                       onTap: () => wishlistVm.toggleWishlist(vm.productId),
                       child: Row(
                         children: [
+                          gapW8,
                           Icon(
                             wishlistVm.isWishlisted(vm.productId)
                                 ? Icons.favorite
                                 : Icons.favorite_border,
-                            color: AppColors.black,
+                            color: wishlistVm.isWishlisted(vm.productId)
+                                ? Colors.red
+                                : Colors.black,
+                            size: 30,
                           ),
-                          const SizedBox(width: 4),
+                          gapW12,
                           Text(
                             wishlistVm.getWishlistCount(vm.productId).toString(),
-                            style: const TextStyle(fontSize: TextSizes.body, color: AppColors.black),
+                            style: wishlistVm.isWishlisted(vm.productId)
+                                ?  context.bodyBold.copyWith(fontSize: 20, color: Colors.red)
+                                : context.bodyBold.copyWith(fontSize: 20)
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    gapW24,
+                    //gapW8,
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
@@ -278,16 +284,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           backgroundColor: AppColors.btnPrimary,
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(15),
                           ),
+                          minimumSize: const Size(200, 48)
                         ),
-                        child: const Text(
+                        child: Text(
                           '구매하기',
-                          style: TextStyle(
-                            fontSize: TextSizes.body,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.white,
-                          ),
+                          style: context.h1.copyWith(color: Colors.white)
                         ),
                       ),
                     ),

@@ -8,6 +8,9 @@ import 'package:provider/provider.dart';
 import '../../../../model/entity/response/bring_sub_category_response.dart';
 import '../../../../view_model/category/category_data_select_viewmodel.dart';
 import '../../../common/component/app_bar/app_bar_home_search_cart.dart';
+import '../../../common/component/app_bar/app_bar_search_cart.dart';
+import '../../../common/const/colors.dart';
+import '../../../common/const/gap.dart';
 import 'gender_toggle.dart';
 import 'main_category.dart';
 
@@ -20,19 +23,25 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBarHomeSearchCart(title: '카테고리',),
+        appBar: AppBarSearchCart(title: '카테고리',),
         body: Consumer<CategoryDataSelectViewmodel>(
           builder: (context, viewmodel, child) {
             return Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.all(16),
+                  padding: EdgeInsets.symmetric(vertical: 16),
                   child: GenderToggle(
                     selectedGender: viewmodel.selectedGender,
                     onSelectedButton: (gender) {
                       viewmodel.fetchMainCategories(gender);
                     },
                   ),
+                ),
+                gap12,
+                Divider(
+                  height: 1,
+                  thickness: 1.5,
+                  color: Colors.grey[200]
                 ),
                 Expanded(
                   child: Row(
