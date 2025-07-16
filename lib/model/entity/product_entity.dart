@@ -68,14 +68,16 @@ class ProductEntity {
     DiscountDto? parsedDiscount;
     final rawDiscount = json['discount'];
     try {
-      if (rawDiscount is String && rawDiscount.isNotEmpty) {
-        parsedDiscount = DiscountDto.fromjson(jsonDecode(rawDiscount));
-      } else if (rawDiscount is Map<String, dynamic>) {
+      if (rawDiscount is Map<String, dynamic>) {
         parsedDiscount = DiscountDto.fromjson(rawDiscount);
+      } else if (rawDiscount is String && rawDiscount.isNotEmpty) {
+        final decoded = jsonDecode(rawDiscount);
+        if (decoded is Map<String, dynamic>) {
+          parsedDiscount = DiscountDto.fromjson(decoded);
+        }
       }
     } catch (e) {
       print('discount 파싱 실패: $e');
-      parsedDiscount = null;
     }
 
     return ProductEntity(

@@ -54,6 +54,7 @@ class _ProductEditForm extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
+            // 썸네일 이미지 미리보기 및 변경 버튼
             const Text('썸네일 이미지', style: TextStyle(fontWeight: FontWeight.w600)),
             const SizedBox(height: 8),
             vm.thumbnailImageFile != null
