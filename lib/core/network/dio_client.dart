@@ -37,7 +37,6 @@ class DioClient {
 
               options.headers['Authorization'] = 'Bearer $accessToken';
 
-
             }
           }
 
