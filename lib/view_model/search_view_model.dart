@@ -29,9 +29,11 @@ class SearchViewModel extends ChangeNotifier {
               (e) => e.category == 'coord_question').toList();
       
       notifyListeners();
-    } catch (e) {
+    } catch (e, stack) {
+      print("스택 확인 \n ${stack}");
     print(' 검색중 오류 발생: $e');
     }
   }
+
 
 }

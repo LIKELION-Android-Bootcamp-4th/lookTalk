@@ -18,6 +18,10 @@ class ProductRegisterViewModel extends ChangeNotifier {
 
   XFile? _imageFile;
   XFile? get imageFile => _imageFile;
+
+  XFile? _contentImage;
+  XFile? get contentImage => _contentImage;
+
   final ImagePicker _picker = ImagePicker();
 
   bool _isLoading = false;
@@ -26,10 +30,8 @@ class ProductRegisterViewModel extends ChangeNotifier {
   final List<String> selectedSizes = [];
   final List<String> selectedColors = [];
 
-  // ✅ 옵션 조합별 수량 입력용 컨트롤러
   final Map<String, TextEditingController> stockControllers = {};
 
-  /// ✅ 옵션 조합 키로 재고 입력 컨트롤러 가져오기
   TextEditingController getStockController(String key) {
     return stockControllers.putIfAbsent(key, () => TextEditingController(text: '0'));
   }
@@ -67,6 +69,14 @@ class ProductRegisterViewModel extends ChangeNotifier {
     final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       _imageFile = pickedFile;
+      notifyListeners();
+    }
+  }
+
+  Future<void> pickContentImage() async {
+    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      _contentImage = pickedFile;
       notifyListeners();
     }
   }
@@ -118,6 +128,14 @@ class ProductRegisterViewModel extends ChangeNotifier {
       ));
     }
 
+    if (_contentImage != null) {
+      final fileName = _contentImage!.path.split('/').last;
+      formData.files.add(MapEntry(
+        'contentImage',
+        await MultipartFile.fromFile(_contentImage!.path, filename: fileName),
+      ));
+    }
+
     try {
       final response = await _dio.post(path, data: formData);
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -144,6 +162,7 @@ class ProductRegisterViewModel extends ChangeNotifier {
     selectedColors.clear();
     stockControllers.clear();
     _imageFile = null;
+    _contentImage = null; // ⬅️ 초기화
     notifyListeners();
   }
 

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../view_model/search_view_model.dart';
 import '../common/component/app_bar/app_bar_search_cart.dart';
+import '../common/component/community/post_item.dart';
 
 class SearchCommunityScreen extends StatelessWidget {
   final String category;
@@ -12,12 +13,14 @@ class SearchCommunityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<SearchViewModel>();
-    final posts = category == '코디질문'
+    final posts = category == 'coord_question'
         ? vm.questionCommunities
         : vm.recommendCommunities;
-
+print('{총 개수 ${posts.length}');
     return Scaffold(
-      appBar: AppBarSearchCart(),
+      appBar: category == 'coord_question'
+          ?AppBarSearchCart(title: "코디 질문",)
+          :AppBarSearchCart(title: "코디 추천",),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -26,10 +29,9 @@ class SearchCommunityScreen extends StatelessWidget {
             posts.length,
                 (index) {
               final post = posts[index];
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: Text("총 개수${posts.length}"), // 또는 Text(post.title) 등
-              );
+               return (post != null)
+                  ? PostItem(post: post)
+                  : const Center(child: Text("게시글이 없습니다."));
             },
           ),
         ),

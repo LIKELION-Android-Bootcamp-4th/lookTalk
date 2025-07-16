@@ -73,35 +73,7 @@ abstract class BasePostListViewModel with ChangeNotifier {
 
     isLoading = false;
     notifyListeners();
-    // if (!reset && (pagination != null && !pagination!.hasNext)) return;
-    //
-    // isLoading = true;
-    // notifyListeners();
-    //
-    // if (reset) {
-    //   pagination = null;
-    //   posts = [];
-    //   request = request.copyWith(page: 0);
-    // }
-    //
-    // final nextPage = (pagination?.page ?? 0) + 1;
-    //
-    // print('fetchPosts 실행됨 - page: $nextPage');
-    // print('요청 보냄: ${request.copyWith(page: nextPage)}');
-    //
-    // final result = await repository.fetchPostList(request.copyWith(page: nextPage));
-    //
-    // if (result.success && result.data != null) {
-    //   print('불러온 게시글 개수: ${result.data!.items.length}');
-    //   posts.addAll(result.data!.items);
-    //   pagination = result.data!.pagination;
-    // } else {
-    //   print('게시글 불러오기 실패: ${result.message}');
-    //
-    // }
-    //
-    // isLoading = false;
-    // notifyListeners();
+
   }
 
 }
