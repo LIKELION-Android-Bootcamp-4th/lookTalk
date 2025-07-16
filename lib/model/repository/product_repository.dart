@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
-import '../entity/product_entity.dart';
+import 'package:look_talk/model/entity/product_entity.dart';
+
 
 class ProductRepository {
   final Dio _dio;
@@ -32,7 +35,6 @@ class ProductRepository {
     }
   }
 
-  // ✅ 추가: 상품 삭제 API
   Future<void> deleteProduct(String productId) async {
     final path = '/api/seller/products/$productId';
 
@@ -41,6 +43,33 @@ class ProductRepository {
       print('상품 삭제 성공');
     } catch (e) {
       print('상품 삭제 실패: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> updateProduct(
+      String productId, {
+        required int stock,
+        required String status,
+        required int price,
+        int? discountRate,
+        File? thumbnailImage,
+      }) async {
+    final path = '/api/seller/products/$productId';
+
+    final formData = FormData.fromMap({
+      'stock': stock,
+      'status': status,
+      'price': price,
+      if (discountRate != null)
+        'discount': {'type': 'percentage', 'value': discountRate},
+    });
+
+    try {
+      await _dio.patch(path, data: formData);
+      print('상품 수정 성공');
+    } catch (e) {
+      print('상품 수정 실패: $e');
       rethrow;
     }
   }
