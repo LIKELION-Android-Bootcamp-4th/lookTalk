@@ -85,8 +85,6 @@ class ManageWidget extends StatelessWidget {
       case 'shipped':
         return Row(
           children: [
-            _actionButton(context, '반품신청'),
-            const SizedBox(width: 8),
             _actionButton(context, '취소하기'),
           ],
         );
