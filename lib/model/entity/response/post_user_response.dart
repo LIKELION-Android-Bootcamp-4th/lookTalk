@@ -11,8 +11,8 @@ class PostUserResponse {
 
   factory PostUserResponse.fromJson(Map<String, dynamic> json) {
     return PostUserResponse(
-      id: json['id'] as String,
-      nickName: json['nickName'] as String,
+      id: json['id']?.toString() ?? '',
+      nickName: json['nickName']?.toString() ?? '',
       profileImageUrl: json['profileImageUrl'] as String?,
     );
   }

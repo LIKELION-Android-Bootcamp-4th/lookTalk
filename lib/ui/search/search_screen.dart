@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
+import 'package:look_talk/model/entity/post_entity.dart';
+import 'package:look_talk/model/entity/response/post_response.dart';
 import 'package:look_talk/model/repository/search_repository.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
 import 'package:look_talk/view_model/search_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
+
+import '../common/component/community/post_item.dart';
+import '../common/component/community/post_list.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -76,17 +81,13 @@ class _SearchScreenState extends State<SearchScreen> {
                 child: Consumer<SearchViewModel>(
                   builder: (context, viewModel, _) {
                     final question = viewModel.questionCommunities.isNotEmpty
-                        ? viewModel.questionCommunities.first
+                        ? viewModel.questionCommunities
                         : null;
+                    print("viewModel.questionCommunities.length${viewModel.questionCommunities.length}");
                     final recommend = viewModel.recommendCommunities.isNotEmpty
-                    ? viewModel.recommendCommunities.first
+                    ? viewModel.recommendCommunities
                         : null;
-
-
-
-                    final questionImageUrl = question?.images;
-                    final isValidImage = questionImageUrl != null && questionImageUrl.isNotEmpty;
-
+                    print("viewModel.recommendCommunities.length${viewModel.recommendCommunities.length}");
                     return TabBarView(
                       children: [
                         viewModel.products.isEmpty
@@ -165,78 +166,80 @@ class _SearchScreenState extends State<SearchScreen> {
                             :SingleChildScrollView(
                           child: Column(
                             children: [
-                              GestureDetector(
-                                onTap: () {
-                                  context.push('/post/${viewModel.communities[0].id}');
-                                  // context.push(
-                                  //   '/searchCommunityDetail',
-                                  //   extra: {
-                                  //     'viewModel': viewModel,
-                                  //     'category': '코디질문',
-                                  //   },
-                                  // );
-                                },
-                                child: Column(
+
+                                Column(
                                   children: [
                                     Padding(
                                       padding: EdgeInsets.only(top: 30),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text('코디 질문', style: context.h1),
-                                          Icon(Icons.chevron_right),
-                                        ],
+                                      child: GestureDetector(
+                                        onTap: (){
+                                          context.push(
+                                            '/searchCommunityDetail',
+                                            extra: {
+                                              'viewModel': viewModel,
+                                              'category': 'coord_question',
+                                            },
+                                          );
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('코디 질문', style: context.h1),
+                                            Icon(Icons.chevron_right),
+                                          ],
+                                        ),
+
                                       ),
                                     ),
-                                    if (question != null)
-                                      communityCard(
-                                        nickname: question.user?.nickName ?? "익명",
-                                        title: question.title,
-                                        timeAgo: timeago.format(question.createdAt, locale: 'ko'),
-                                        thumbnailUrl: (question.thumbnailImage is List && question.thumbnailImage?.isNotEmpty == true)
-                                            ? question.thumbnailImage
-                                            : null,
-                                        likes: question.likeCount,
-                                      ),
+                                    GestureDetector(
+                                        onTap: () {
+                                          context.push('/post/${viewModel.communities[0].id}');
+                                        },
+                                      child: (question != null)
+                                          ? PostItem(post: question.first)
+                                          : const SizedBox.shrink(),
+                                  ),
                                   ],
-                                ),
+
                               ),
-                              GestureDetector(
-                                onTap: () {
-                                  context.push('/post/${viewModel.questionCommunities[0].id}');
-                                  // context.push(
-                                  //   '/searchCommunityDetail',
-                                  //   extra: {
-                                  //     'viewModel': viewModel,
-                                  //     'category': 'coord_recommend',
-                                  //   },
-                                  // );
-                                },
-                                child: Column(
+
+
+                                 Column(
                                   children: [
                                     Padding(
                                       padding: EdgeInsets.only(top: 30),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text('코디 추천', style: context.h1),
-                                          Icon(Icons.chevron_right),
-                                        ],
+                                      child: GestureDetector(
+                                        onTap: (){
+                                          context.push(
+                                            '/searchCommunityDetail',
+                                            extra: {
+                                              'viewModel': viewModel,
+                                              'category': 'coord_recommend',
+                                            },
+                                          );
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('코디 추천', style: context.h1),
+                                            Icon(Icons.chevron_right),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                    if (recommend != null)
-                                      communityCard(
-                                        nickname: recommend.user?.nickName ?? "익명",
-                                        title: recommend.title,
-                                        timeAgo: timeago.format(recommend.createdAt, locale: 'ko'),
-                                        thumbnailUrl: (recommend.thumbnailImage is List && recommend.thumbnailImage?.isNotEmpty == true)
-                                            ? recommend.thumbnailImage
-                                            : null,
-                                        likes: recommend.likeCount,
-                                      ),
+                                    gap32,
+                                    GestureDetector(
+                                        onTap: () {
+                                          context.push('/post/${viewModel.questionCommunities[0].id}');
+                                        },
+                                      child: (recommend != null)
+                                          ? PostItem(post: recommend.first)
+                                          : const SizedBox.shrink(),
+                                    )
+
+
                                   ],
                                 ),
-                              ),
                             ],
                           ),
                         ),
