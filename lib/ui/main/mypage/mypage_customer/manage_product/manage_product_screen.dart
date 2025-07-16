@@ -72,11 +72,15 @@ class _CommunityScreenState extends State<ManageProductScreen> {
                       height: 43,
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: _statusBgColor(checkRefund),
+                        color: (order.refundInfo && order.status == 'refunded')
+                       ? _statusBgColor('refunded')
+                       : _statusBgColor(checkRefund),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        _statusLabel(checkRefund),
+                              (order.refundInfo && order.status == 'refunded')
+                              ? _statusLabel('refunded')
+                              : _statusLabel(checkRefund),
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
