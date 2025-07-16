@@ -47,6 +47,8 @@ class _CommunityScreenState extends State<ManageProductScreen> {
         itemCount: viewModel.orders.length,
         itemBuilder: (context, index) {
           final order = viewModel.orders[index];
+          final checkRefund = order.refundInfo ? "refunded" : order.status;
+
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -69,11 +71,11 @@ class _CommunityScreenState extends State<ManageProductScreen> {
                       height: 43,
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: _statusBgColor(order.status),
+                        color: _statusBgColor(checkRefund),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        _statusLabel(order.status),
+                        _statusLabel(checkRefund),
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
@@ -85,8 +87,10 @@ class _CommunityScreenState extends State<ManageProductScreen> {
                 ),
               ),
           ...order.items.map((item) => ManageWidget(
+
+
             orderId : order.oderId,
-            status: order.status,
+            status: checkRefund,
             orderItem: item,
             viewModel: viewModel,
           )),

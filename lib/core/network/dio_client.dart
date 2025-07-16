@@ -36,7 +36,7 @@ class DioClient {
             if (accessToken != null) {
 
 
-              options.headers['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODc2ODE1NWVkNmIxNGE1ZjI5MDUwMjMiLCJjb21wYW55SWQiOiI2ODY2ZmNlYTViMjMwZjVkYzcwOWJkZWIiLCJpc0FkbWluIjpmYWxzZSwiaXNTdXBlckFkbWluIjpmYWxzZSwiaWF0IjoxNzUyNjAwMTIxLCJleHAiOjE3NTI2ODY1MjF9.6AW7WEF28cyQKyLK9e_rE1xRIdAQS0zv4xNsaOLNejY';
+              options.headers['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODZkZjI0ODlkNjI4ODdmNGIxYWZhMDAiLCJjb21wYW55SWQiOiI2ODY2ZmNlYTViMjMwZjVkYzcwOWJkZWIiLCJpc0FkbWluIjpmYWxzZSwiaXNTdXBlckFkbWluIjpmYWxzZSwiaWF0IjoxNzUyNjMzMjU2LCJleHAiOjE3NTI3MTk2NTZ9.Mexxlr5oQT5c2800lZRY3nalGO6poBnjvjirLwf_ajI';
 
             }
           }
