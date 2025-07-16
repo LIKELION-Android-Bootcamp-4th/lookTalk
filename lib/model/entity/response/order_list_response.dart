@@ -6,13 +6,15 @@ class OrderListResponse {
   final String createdAt;
   final List<OrderProductSummary> items;
   final int? totalAmount;
+  final bool refundInfo;
 
   OrderListResponse({
     required this.oderId,
     required this.status,
     required this.createdAt,
     required this.items,
-    this.totalAmount
+    this.totalAmount,
+    required this.refundInfo,
   });
 
   factory OrderListResponse.fromJson(Map<String, dynamic> json) {
@@ -31,7 +33,8 @@ class OrderListResponse {
       status: json['status'],
       createdAt: json['createdAt'],
       items: productList,
-      totalAmount: json['totalAmount']
+      totalAmount: json['totalAmount'],
+      refundInfo: json['refundInfo']  != null
     );
   }
 }

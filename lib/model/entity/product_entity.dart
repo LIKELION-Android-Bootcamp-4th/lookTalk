@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:look_talk/model/entity/response/discount_dto.dart';
 
 class ProductEntity {
@@ -13,7 +12,7 @@ class ProductEntity {
   final Map<String, dynamic>? options;
   final DiscountDto? discount;
   final String? status;
-  final String? thumbnailUrl; // ✅ 변경된 필드명
+  final String? thumbnailUrl;
   final String? contentImagePath;
   final Map<String, dynamic>? images;
   final Map<String, dynamic>? attributes;
@@ -31,7 +30,7 @@ class ProductEntity {
     this.options,
     this.discount,
     this.status,
-    this.thumbnailUrl, // ✅ 변경
+    this.thumbnailUrl,
     this.contentImagePath,
     this.images,
     this.attributes,
@@ -51,7 +50,7 @@ class ProductEntity {
       'options',
       'discount',
       'status',
-      'thumbnailImageUrl', // ✅ 백엔드 필드는 유지
+      'thumbnailImageUrl',
       'contentImageUrl',
       'images',
       'attributes',
@@ -91,7 +90,7 @@ class ProductEntity {
       options: _parseJsonField(json['options']),
       discount: parsedDiscount,
       status: json['status'],
-      thumbnailUrl: json['thumbnailImageUrl'], // ✅ 수정
+      thumbnailUrl: json['thumbnailImage']?['url'] ?? json['thumbnailImageUrl'],
       contentImagePath: json['contentImageUrl'],
       images: _parseJsonField(json['images']),
       attributes: _parseJsonField(json['attributes']),
@@ -128,7 +127,17 @@ class ProductEntity {
 
   int get finalPrice => (price * (100 - discountPercent) / 100).round();
 
-  String get imageUrl => thumbnailUrl ?? ''; // ✅ 필드명 변경 반영
+  /// 기본 대표 이미지
+  String get imageUrl => thumbnailUrl ?? '';
+
+  /// 설명용 이미지. 없으면 contentImagePath, 없으면 썸네일로 fallback
+  String get detailImageUrl {
+    final detailList = images?['detail'];
+    if (detailList is List && detailList.isNotEmpty && detailList.first is String) {
+      return detailList.first;
+    }
+    return contentImagePath ?? thumbnailUrl ?? '';
+  }
 
   static Map<String, dynamic>? _parseJsonField(dynamic field) {
     try {

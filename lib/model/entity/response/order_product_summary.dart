@@ -11,6 +11,7 @@ class OrderProductSummary {
   final String? userNickName;
   final DiscountDto? discount;
   final String? size;
+  final int? quantity;
 
   OrderProductSummary({
     required this.id,
@@ -21,6 +22,7 @@ class OrderProductSummary {
     this.discount,
     this.size,
     this.userNickName,
+    this.quantity,
   });
 
   factory OrderProductSummary.fromJson(
@@ -32,23 +34,15 @@ class OrderProductSummary {
       id: json['id'],
       name: json['productName'],
       price: json['totalPrice'],
-      thumbnailImage: _extractThumbnail(json['images']),
+      thumbnailImage: json['thumbnailImageUrl'] ,
       storeName: storeName,
       userNickName: userNickName,
       discount: null, // 현재 discount 파싱 미적용
       size: size,
+      quantity: json['quantity']
     );
   }
 
-  static String? _extractThumbnail(dynamic imagesJson) {
-    if (imagesJson is String) {
-      final decoded = jsonDecode(imagesJson);
-      return decoded['main'];
-    } else if (imagesJson is Map<String, dynamic>) {
-      return imagesJson['main'];
-    }
-    return null;
-  }
 
   /// 💡 productId 라는 이름으로도 접근 가능하게 하기
   String get productId => id;

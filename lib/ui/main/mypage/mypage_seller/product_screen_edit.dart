@@ -7,7 +7,6 @@ import 'package:look_talk/view_model/product/product_edit_viewmodel.dart';
 import 'package:look_talk/view_model/product/product_viewmodel.dart';
 import 'package:look_talk/model/repository/product_repository.dart';
 import 'package:look_talk/ui/common/component/common_text_field.dart';
-import 'package:dio/dio.dart';
 import 'package:look_talk/core/network/dio_client.dart';
 
 class ProductEditScreen extends StatelessWidget {

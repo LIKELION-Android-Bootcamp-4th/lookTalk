@@ -35,8 +35,8 @@ class DioClient {
             final accessToken = await _tokenStorage.getAccessToken();
             if (accessToken != null) {
 
-
               options.headers['Authorization'] = 'Bearer $accessToken';
+
 
             }
           }
@@ -114,7 +114,5 @@ class DioClient {
   Future<Response> delete(String path, {Map<String, dynamic>? queryParameters}) async {
     return await _dio.delete(path, queryParameters: queryParameters);
   }
-
-
 
 }
