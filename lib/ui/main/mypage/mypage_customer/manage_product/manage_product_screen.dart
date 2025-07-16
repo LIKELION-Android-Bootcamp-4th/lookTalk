@@ -21,21 +21,22 @@ class ManageProductScreen extends StatefulWidget {
 }
 
 class _CommunityScreenState extends State<ManageProductScreen> {
+  late SearchMyProductListViewmodel viewModel;
   @override
   void initState() {
     super.initState();
-
-    Future.microtask((){ // 진입시 초기화 하기
-      context.read<SearchMyProductListViewmodel>();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      viewModel = context.read<SearchMyProductListViewmodel>();
+      viewModel.refresh();
     });
+
   }
 
 
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = context.watch<SearchMyProductListViewmodel>();
-
+    viewModel = context.watch<SearchMyProductListViewmodel>();
 
     return Scaffold(
       appBar: AppBarSearchCart(
@@ -47,6 +48,8 @@ class _CommunityScreenState extends State<ManageProductScreen> {
         itemCount: viewModel.orders.length,
         itemBuilder: (context, index) {
           final order = viewModel.orders[index];
+          final checkRefund = order.refundInfo ? "refunding" : order.status;
+
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -69,11 +72,11 @@ class _CommunityScreenState extends State<ManageProductScreen> {
                       height: 43,
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: _statusBgColor(order.status),
+                        color: _statusBgColor(checkRefund),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        _statusLabel(order.status),
+                        _statusLabel(checkRefund),
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
@@ -85,8 +88,10 @@ class _CommunityScreenState extends State<ManageProductScreen> {
                 ),
               ),
           ...order.items.map((item) => ManageWidget(
+
+
             orderId : order.oderId,
-            status: order.status,
+            status: checkRefund,
             orderItem: item,
             viewModel: viewModel,
           )),
@@ -100,12 +105,13 @@ class _CommunityScreenState extends State<ManageProductScreen> {
 
   String _statusLabel(String status) {
     const map = {
-      'pending': '결제대기',
-      'confirmed': '결제완료',
-      'preparing': '상품준비중',
-      'shipped': '배송중',
+      'pending': '결제완료',
+      'confirmed': '주문확정',
+      'preparing': '상품준비',
+      'shipped': '배송시작',
       'delivered': '배송완료',
       'cancelled': '취소됨',
+      'refunding': '환불요청',
       'refunded': '환불완료',
     };
     return map[status] ?? status;
@@ -124,6 +130,8 @@ class _CommunityScreenState extends State<ManageProductScreen> {
         return Colors.red.shade100;
       case 'refunded':
         return Colors.purple.shade100;
+      case 'refunding' :
+        return Colors.purple.shade500;
       default:
         return Colors.grey.shade200;
     }

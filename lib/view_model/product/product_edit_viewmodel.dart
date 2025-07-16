@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:look_talk/model/entity/product_entity.dart';
 import 'package:look_talk/model/repository/product_repository.dart';
 
@@ -12,10 +15,17 @@ class ProductEditViewModel extends ChangeNotifier {
 
   String status = '판매중';
 
+  File? thumbnailImageFile;
+
   ProductEditViewModel({
     required this.product,
     required this.repository,
-  });
+  }) {
+    stockController.text = product.stock?.toString() ?? '0';
+    priceController.text = product.originalPrice.toString();
+    discountController.text = product.discountPercent.toString();
+    status = _convertStatusFromServer(product.status);
+  }
 
   void setStatus(String? newStatus) {
     if (newStatus != null) {
@@ -24,13 +34,39 @@ class ProductEditViewModel extends ChangeNotifier {
     }
   }
 
-  void submit() {
-    print('상품명: ${product.name}');
-    print('상품번호: ${product.productId}');
-    print('재고: ${stockController.text}');
-    print('판매상태: $status');
-    print('정가: ${priceController.text}');
-    print('할인율: ${discountController.text}');
+  Future<void> pickThumbnailImage() async {
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(source: ImageSource.gallery);
+    if (picked != null) {
+      thumbnailImageFile = File(picked.path);
+      notifyListeners();
+    }
+  }
+
+  Future<void> submit(BuildContext context) async {
+    try {
+      await repository.updateProduct(
+        product.productId!,
+        stock: int.tryParse(stockController.text) ?? 0,
+        status: _convertStatusToServer(status),
+        price: int.parse(priceController.text),
+        discountRate: int.tryParse(discountController.text),
+        thumbnailImage: thumbnailImageFile,
+      );
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('상품이 수정되었습니다.')),
+        );
+        Navigator.pop(context, true);
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('상품 수정 실패')),
+        );
+      }
+    }
   }
 
   Future<bool> deleteProduct(BuildContext context) async {
@@ -49,6 +85,32 @@ class ProductEditViewModel extends ChangeNotifier {
         );
       }
       return false;
+    }
+  }
+
+  String _convertStatusToServer(String localStatus) {
+    switch (localStatus) {
+      case '판매중':
+        return 'on_sale';
+      case '판매중지':
+        return 'hidden';
+      case '품절':
+        return 'sold_out';
+      default:
+        return 'on_sale';
+    }
+  }
+
+  String _convertStatusFromServer(String? serverStatus) {
+    switch (serverStatus) {
+      case 'on_sale':
+        return '판매중';
+      case 'hidden':
+        return '판매중지';
+      case 'sold_out':
+        return '품절';
+      default:
+        return '판매중';
     }
   }
 

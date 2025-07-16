@@ -26,14 +26,17 @@ class Home {
     DiscountDto? discount;
 
     final rawDiscount = json['discount'];
-    if (rawDiscount != null && rawDiscount is String && rawDiscount.isNotEmpty) {
-      try {
-        final decoded = jsonDecode(rawDiscount);
-        discount = DiscountDto.fromjson(decoded);
-      } catch (e) {
-        discount = null;
+    try {
+      if (rawDiscount is String && rawDiscount.isNotEmpty) {
+        discount = DiscountDto.fromjson(jsonDecode(rawDiscount));
+      } else if (rawDiscount is Map<String, dynamic>) {
+        discount = DiscountDto.fromjson(rawDiscount);
       }
+    } catch (e) {
+      print('discount 파싱 실패: $e');
+      discount = null;
     }
+
     return Home(
       productId: json['id'] ?? '',
       name: json['name'] ?? '',
@@ -47,6 +50,7 @@ class Home {
       discount: discount,
     );
   }
+
 }
 
 class HomeResponse {
