@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/model/entity/notice_entity.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
@@ -27,7 +28,7 @@ class NoticeDetailScreen extends StatelessWidget {
                     Text("${notice.title}",
                       style: context.bodyBold,),
                     gap32,
-                    Text("${notice.currentAt}"),
+                    Text(_formatDate(notice.currentAt)),
                     gap32,
                     Text("${notice.content}")
 
@@ -39,5 +40,14 @@ class NoticeDetailScreen extends StatelessWidget {
       )
 
     );
+  }
+
+  String _formatDate(String rawDate) {
+    try {
+      final parsedDate = DateTime.parse(rawDate);
+      return DateFormat('yyyy.MM.dd').format(parsedDate);
+    } catch (_) {
+      return rawDate; // 파싱 실패 시 원본 그대로
+    }
   }
 }

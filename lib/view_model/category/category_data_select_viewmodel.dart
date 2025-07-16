@@ -39,6 +39,13 @@ class CategoryDataSelectViewmodel with ChangeNotifier {
     try {
       final result = await repository.categoryResult(parentId);
       _mainCategories = result;
+
+      if (_mainCategories.isNotEmpty) { // 카테고리에서 기본적으로 상의가 선택되어있었으면 좋겠어서 추가했습니다!
+        _selectedMainCategory = _mainCategories.first;
+
+        // 첫 번째 메인 카테고리를 선택하면 서브 카테고리도 자동 호출
+        await fetchSubCategories(_selectedMainCategory!.id);
+      }
     } catch (e) {
       print('카테고리 로드 중 에러 발생 $e');
       _mainCategories = [];

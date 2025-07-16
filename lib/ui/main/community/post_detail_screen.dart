@@ -53,7 +53,6 @@ class PostDetailScreen extends StatelessWidget {
       ),
       bottomSheet: _buildCommentInput(viewModel),
     );
-
   }
 
   PreferredSizeWidget _buildAppBar(
@@ -62,14 +61,17 @@ class PostDetailScreen extends StatelessWidget {
   ) {
     return AppBarSearchCart(
       title: '게시글 상세',
-      leading: IconButton(icon: const Icon(Icons.arrow_back_ios_new_rounded), onPressed: (){
-        final shouldUpdate =
-            viewModel.hasNewComment || viewModel.hasLikedChanged;
-        viewModel.markNewComment();
-        viewModel.markLikedChanged();
-        context.pop(shouldUpdate ? 'updated' : null);
-        //context.pop(viewModel.post);
-      },),
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back_ios_new_rounded),
+        onPressed: () {
+          final shouldUpdate =
+              viewModel.hasNewComment || viewModel.hasLikedChanged;
+          viewModel.markNewComment();
+          viewModel.markLikedChanged();
+          context.pop(shouldUpdate ? 'updated' : null);
+          //context.pop(viewModel.post);
+        },
+      ),
       actions: viewModel.isAuthor
           ? [
               PopupMenuButton<String>(
@@ -78,8 +80,14 @@ class PostDetailScreen extends StatelessWidget {
                     _showDeleteDialog(context);
                   }
                 },
+                offset: const Offset(0, 45),
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6),
+                  side: const BorderSide(color: Colors.grey, width: 1),
+                ),
                 itemBuilder: (context) => const [
-                  PopupMenuItem(value: 'delete', child: Text('삭제')),
+                  PopupMenuItem(value: 'delete', height: 30, child: Text('삭제')),
                 ],
               ),
             ]
@@ -107,10 +115,8 @@ class PostDetailScreen extends StatelessWidget {
           }
         },
       ),
-
     );
   }
-
 
   Widget _buildUserInfo(BuildContext context, Post post) {
     final hasProfileImage = post.user.profileImageUrl?.isNotEmpty == true;
@@ -343,7 +349,7 @@ class PostDetailScreen extends StatelessWidget {
   Widget _buildDivider() {
     return const Divider(
       color: AppColors.iconGrey,
-      thickness: 1,
+      thickness: 0.75,
       //height: 32,
     );
   }
