@@ -62,7 +62,7 @@ class PostDetailScreen extends StatelessWidget {
     return AppBarSearchCart(
       title: '게시글 상세',
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios_new_rounded),
+        icon: const Icon(Icons.arrow_back),
         onPressed: () {
           final shouldUpdate =
               viewModel.hasNewComment || viewModel.hasLikedChanged;

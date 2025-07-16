@@ -23,7 +23,7 @@ class CategoryDetailScreen extends StatelessWidget {
             appBar: AppBarHomeSearchCart(
               title: viewModel.mainCategory.name,
               leading: IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                icon: const Icon(Icons.arrow_back),
                 onPressed: () {
                   if (context.canPop()) {
                     context.pop();
