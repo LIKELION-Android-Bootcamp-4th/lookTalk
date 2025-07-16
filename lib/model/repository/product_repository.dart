@@ -35,7 +35,7 @@ class ProductRepository {
   }
 
   Future<void> deleteProduct(String productId) async {
-    final path = '/api/seller/products/$productId';
+    final path = '/api/seller/products/${productId}/force';
 
     try {
       await _dio.delete(path);
