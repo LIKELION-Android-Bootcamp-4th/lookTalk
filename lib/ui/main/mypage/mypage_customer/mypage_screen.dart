@@ -108,8 +108,8 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
               GestureDetector(
                 onTap: () =>
                 {
-                  context.push('/seller/orders'),
-                 // context.push('/notice')
+                  //context.push('/seller/orders'),
+                  context.push('/notice')
                 },
                 child: _MyPageMenu(title: '공지사항'),
               ),
