@@ -48,7 +48,7 @@ class _CommunityScreenState extends State<ManageProductScreen> {
         itemCount: viewModel.orders.length,
         itemBuilder: (context, index) {
           final order = viewModel.orders[index];
-          final checkRefund = order.refundInfo ? "refunded" : order.status;
+          final checkRefund = order.refundInfo ? "refunding" : order.status;
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,6 +111,7 @@ class _CommunityScreenState extends State<ManageProductScreen> {
       'shipped': '배송시작',
       'delivered': '배송완료',
       'cancelled': '취소됨',
+      'refunding': '환불요청',
       'refunded': '환불완료',
     };
     return map[status] ?? status;
@@ -129,6 +130,8 @@ class _CommunityScreenState extends State<ManageProductScreen> {
         return Colors.red.shade100;
       case 'refunded':
         return Colors.purple.shade100;
+      case 'refunding' :
+        return Colors.purple.shade500;
       default:
         return Colors.grey.shade200;
     }
