@@ -1,14 +1,57 @@
-// import 'package:flutter/material.dart';
-// import 'package:look_talk/ui/common/component/common_dropdown.dart';
-// import 'package:look_talk/ui/common/component/common_loading.dart';
-// import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../../model/entity/request/post_list_request.dart';
+import '../../../view_model/community/community_tab_view_model.dart';
+import '../../../view_model/community/recommend_post_list_view_model.dart';
+import '../../common/component/common_dropdown.dart';
+import '../../common/component/common_loading.dart';
+import '../../common/component/community/post_list.dart';
+
+class CommunityRecommendTab extends StatefulWidget {
+  const CommunityRecommendTab({super.key});
+
+  @override
+  State<CommunityRecommendTab> createState() => _CommunityRecommendTabState();
+}
+
+// class _CommunityRecommendTabState extends State<CommunityRecommendTab> {
+//   bool _fetched = false;
+//   bool _listenerRegistered = false;
+//   CommunityTabViewModel? _tabViewModel;
 //
-// import '../../../model/entity/request/post_list_request.dart';
-// import '../../../view_model/community/recommend_post_list_view_model.dart';
-// import '../../common/component/community/post_list.dart';
+//   @override
+//   void didChangeDependencies() {
+//     super.didChangeDependencies();
 //
-// class CommunityRecommendTab extends StatelessWidget {
-//   const CommunityRecommendTab({super.key});
+//     _tabViewModel ??= context.read<CommunityTabViewModel>();
+//
+//     if (!_listenerRegistered) {
+//       _tabViewModel!.addListener(_onTabChanged);
+//       _listenerRegistered = true;
+//     }
+//
+//     if (!_fetched) {
+//       Future.microtask(() {
+//         context.read<RecommendPostListViewModel>().fetchPosts(reset: true);
+//       });
+//       _fetched = true;
+//     }
+//   }
+//
+//   void _onTabChanged() {
+//     final currentIndex = _tabViewModel?.currentTabIndex;
+//     if (currentIndex == 1) {
+//       print('추천 탭 전환됨 → 게시글 새로고침');
+//       context.read<RecommendPostListViewModel>().fetchPosts(reset: true);
+//     }
+//   }
+//
+//   @override
+//   void dispose() {
+//     _tabViewModel?.removeListener(_onTabChanged);
+//     super.dispose();
+//   }
 //
 //   @override
 //   Widget build(BuildContext context) {
@@ -33,7 +76,7 @@
 //           hintText: '정렬 기준',
 //           onChanged: (label) {
 //             final newSort = SortTypeFromString.fromLabel(label ?? '');
-//             vm.changeSort(newSort);
+//             vm.changeSort(newSort); // 내부에서 fetchPosts 처리됨
 //           },
 //         ),
 //       ),
@@ -59,35 +102,33 @@
 //   }
 // }
 
-import 'package:flutter/cupertino.dart';
-import 'package:http/http.dart';
-import 'package:provider/provider.dart';
-
-import '../../../model/entity/request/post_list_request.dart';
-import '../../../view_model/community/recommend_post_list_view_model.dart';
-import '../../common/component/common_dropdown.dart';
-import '../../common/component/common_loading.dart';
-import '../../common/component/community/post_list.dart';
-
-class CommunityRecommendTab extends StatefulWidget {
-  const CommunityRecommendTab({super.key});
-
-  @override
-  State<CommunityRecommendTab> createState() => _CommunityRecommendTabState();
-}
 
 class _CommunityRecommendTabState extends State<CommunityRecommendTab> {
-  bool _fetched = false;
+  late final CommunityTabViewModel _tabViewModel;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!_fetched) {
-      Future.microtask(() {
-        context.read<RecommendPostListViewModel>().fetchPosts(reset: true);
-      });
-      _fetched = true;
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _tabViewModel = context.read<CommunityTabViewModel>();
+      _tabViewModel.addListener(_onTabChanged);
+
+      context.read<RecommendPostListViewModel>().fetchPosts(reset: true);
+    });
+  }
+
+  void _onTabChanged() {
+    if (_tabViewModel.currentTabIndex == 1) {
+      print('[RecommendTab] 게시글 새로고침');
+      context.read<RecommendPostListViewModel>().fetchPosts(reset: true);
     }
+  }
+
+  @override
+  void dispose() {
+    _tabViewModel.removeListener(_onTabChanged);
+    super.dispose();
   }
 
   @override
@@ -113,7 +154,7 @@ class _CommunityRecommendTabState extends State<CommunityRecommendTab> {
           hintText: '정렬 기준',
           onChanged: (label) {
             final newSort = SortTypeFromString.fromLabel(label ?? '');
-            vm.changeSort(newSort); // 이건 OK, 내부에서 중복 요청 방지하면 됨
+            vm.changeSort(newSort);
           },
         ),
       ),
