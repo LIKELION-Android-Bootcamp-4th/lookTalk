@@ -138,8 +138,6 @@ class CartViewModel extends ChangeNotifier {
   }
 
 
-
-
   Future<void> clearCart() async {
     final result = await repository.clearCart();
     if (result.success) {
@@ -152,13 +150,22 @@ class CartViewModel extends ChangeNotifier {
     notifyListeners();
   }
   Future<CheckoutResponse?> creatOrder({
-    required List<CartItem> cartItems,
+    //required List<CartItem> cartItems,
+    List<String>? cartIds,
     required ShippingInfoRequest info,
 
   }) async {
     isLoading=true;
-    final cartIds = cartItems.map((e) => e.id!).toList();
+    // final cartIds = cartItems.map((e) => e.id!).toList();
+    // final result = await repository.checkout(cartIds, info);
+
+    final body = {
+      'shippingInfo': info.toJson(),
+      if (cartIds != null) 'cartIds': cartIds, // 🔹 null일 경우 생략
+    };
+
     final result = await repository.checkout(cartIds, info);
+
     if (result.success) {
       return result.data;
     }else {

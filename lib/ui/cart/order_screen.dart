@@ -85,8 +85,12 @@ class _OrderScreenContentState extends State<_OrderScreenContent> {
       address: addressController.text,
     );
     if (hasCartID) {
+      final cartIds = widget.productsToOrder
+          .map((item) => item.id!) // null 아님 보장됨
+          .toList();
+
       final response = await cartViewModel.creatOrder(
-        cartItems: widget.productsToOrder,
+        cartIds: cartIds,
         info: shippingInfo,
       );
       if (response != null) {
@@ -101,7 +105,7 @@ class _OrderScreenContentState extends State<_OrderScreenContent> {
         return OrderItemRequest(
           productId: cartItem.product.id,
           quantity: cartItem.quantity,
-          options: {},
+          options: cartItem.selectedOptions ?? {},
           unitPrice: cartItem.cartPrice,
         );
       }).toList();

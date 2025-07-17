@@ -39,7 +39,7 @@ class CartRepository {
     return _apiClient.clearCart();
   }
 
-  Future<ApiResult<CheckoutResponse>> checkout(List<String> cartIds , ShippingInfoRequest info) {
+  Future<ApiResult<CheckoutResponse>> checkout(List<String>? cartIds , ShippingInfoRequest info) {
     return _apiClient.checkout(cartIds , info);
   }
 }

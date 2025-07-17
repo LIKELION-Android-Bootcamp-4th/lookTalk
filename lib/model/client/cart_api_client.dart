@@ -61,10 +61,15 @@ class CartApiClient {
     return ApiResult.fromVoidResponse(response);
   }
 
-  Future<ApiResult<CheckoutResponse>> checkout(List<String> cartIds , ShippingInfoRequest info) async {
+  Future<ApiResult<CheckoutResponse>> checkout(List<String>? cartIds , ShippingInfoRequest info) async {
+    final Map<String, dynamic> data = {
+      'shippingInfo': info,
+      if (cartIds != null) 'cartIds': cartIds,
+    };
+
     final response = await _dio.post(
       CartEndpoints.cartCheckOut,
-      data: {"cartIds": cartIds , "shippingInfo": info},
+      data: data,
     );
     return ApiResult.fromResponse(
         response, (json) => CheckoutResponse.fromJson(json as Map<String, dynamic>));

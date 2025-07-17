@@ -51,7 +51,7 @@ class CartItem {
       cartPrice: json['cartPrice'] as int? ?? 0,
       totalPrice: json['totalPrice'] as int? ?? 0,
       product: Product.fromJson(json['product'] as Map<String, dynamic>? ?? {}),
-      selectedOptions: (json['selectedOptions'] as Map?)?.map(
+      selectedOptions: (json['options'] as Map?)?.map(
             (key, value) => MapEntry(key.toString(), value.toString()),
       ),
       storeName: json['storeName'] as String? ?? ''
