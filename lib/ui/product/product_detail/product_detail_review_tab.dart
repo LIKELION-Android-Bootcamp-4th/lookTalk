@@ -77,8 +77,8 @@ class _ProductDetailReviewTabState extends State<ProductDetailReviewTab> {
             children: [
               CircleAvatar(
                 backgroundImage:
-                review.userProfileImage != null ? NetworkImage(review.userProfileImage!) : null,
-                child: review.userProfileImage == null ? const Icon(Icons.person) : null,
+                review.profileImageUrl != null ? NetworkImage(review.profileImageUrl!) : null,
+                child: review.profileImageUrl == null ? const Icon(Icons.person) : null,
               ),
               const SizedBox(width: 8),
               Text(review.nickname),

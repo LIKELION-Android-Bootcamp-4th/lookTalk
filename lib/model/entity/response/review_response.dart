@@ -5,7 +5,7 @@ class ReviewResponse {
   final String productId;
   final String userId;
   final String nickname;
-  final String? userProfileImage;
+  final String? profileImageUrl;
   final int rating;
   final String content;
   final List<String> imageUrls;
@@ -18,7 +18,7 @@ class ReviewResponse {
     required this.productId,
     required this.userId,
     required this.nickname,
-    required this.userProfileImage,
+    required this.profileImageUrl,
     required this.rating,
     required this.content,
     required this.imageUrls,
@@ -33,7 +33,7 @@ class ReviewResponse {
       productId: json['productId'],
       userId: json['userId'],
       nickname: json['nickname'],
-      userProfileImage: json['userProfileImage'],
+      profileImageUrl: json['user']?['profileImage']?['url'],
       rating: json['rating'],
       content: json['content'],
       imageUrls: List<String>.from(json['imageUrls'] ?? []),
@@ -49,7 +49,7 @@ class ReviewResponse {
       productId: productId,
       userId: userId,
       nickname: nickname,
-      userProfileImage: userProfileImage,
+      profileImageUrl: profileImageUrl,
       rating: rating,
       content: content,
       imageUrls: imageUrls,

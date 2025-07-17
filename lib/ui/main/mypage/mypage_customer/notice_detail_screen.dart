@@ -30,7 +30,10 @@ class NoticeDetailScreen extends StatelessWidget {
                     gap32,
                     Text(_formatDate(notice.currentAt)),
                     gap32,
-                    Text("${notice.content}")
+                    Text(
+                      notice.content.replaceAll("\\n", "\n"),
+                      style: context.body.copyWith(fontSize: 14),
+                    )
 
 
                   ],

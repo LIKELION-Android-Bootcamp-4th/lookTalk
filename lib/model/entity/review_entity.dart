@@ -3,7 +3,7 @@ class ReviewEntity {
   final String productId;
   final String userId;
   final String nickname;
-  final String? userProfileImage;
+  final String? profileImageUrl;
   final int rating;
   final String content;
   final List<String> imageUrls;
@@ -16,7 +16,7 @@ class ReviewEntity {
     required this.productId,
     required this.userId,
     required this.nickname,
-    required this.userProfileImage,
+    required this.profileImageUrl,
     required this.rating,
     required this.content,
     required this.imageUrls,
@@ -31,7 +31,7 @@ class ReviewEntity {
       productId: json['productId'] ?? '', // fallback 처리
       userId: json['createdBy'] ?? '',
       nickname: json['user']?['nickName'] ?? '알 수 없음',
-      userProfileImage: null, // API에 없다면 null
+      profileImageUrl: json['profileImageUrl'] as String?,
       rating: json['rating'],
       content: json['comment'],
       imageUrls: (json['images'] as List<dynamic>)
