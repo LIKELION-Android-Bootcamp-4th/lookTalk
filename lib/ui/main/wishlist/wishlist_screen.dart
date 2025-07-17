@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/ui/common/component/app_bar/app_bar_search_cart.dart';
+import 'package:look_talk/ui/common/component/common_snack_bar.dart';
 import 'package:look_talk/ui/common/const/colors.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
 import 'package:look_talk/ui/common/const/text_sizes.dart';
@@ -121,12 +122,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                 Navigator.of(dialogContext).pop();
 
                 // 추가 완료 SnackBar 보여주기
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text("'${item.name}'이(가) 장바구니에 추가되었습니다."),
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
+                CommonSnackBar.show(context, message: '${item.name}이(가) 장바구니에 추가되었습니다.');
               },
             ),
           ],

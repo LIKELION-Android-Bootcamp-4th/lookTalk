@@ -11,7 +11,7 @@ class DioClient {
 
   Dio(
     BaseOptions(
-      baseUrl: 'http://git.hansul.kr:3000',
+      baseUrl: 'http://git.hansul.kr:3001',
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
       headers: {

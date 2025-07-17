@@ -167,7 +167,7 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
                             try {
                               await dio.delete(MyPage.deleteRegister);
                               if (mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("회원탈퇴가 완료되었습니다."),));
+                                CommonSnackBar.show(context, message: '회원탈퇴가 완료되었습니다.');
                                 Navigator.pop(context);
                                 context.go('/home');
                               }

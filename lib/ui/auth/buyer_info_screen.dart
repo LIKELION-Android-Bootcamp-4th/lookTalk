@@ -117,12 +117,7 @@ import '../common/const/colors.dart';
 
                   context.go('/home');
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(result.message),
-                      duration: const Duration(seconds: 2),
-                    ),
-                  );
+                  CommonSnackBar.show(context, message: '${result.message}');
                 }
               }
             }
