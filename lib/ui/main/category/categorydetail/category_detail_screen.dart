@@ -102,6 +102,7 @@ class CategoryDetailScreen extends StatelessWidget {
                                       fontSize: 10,
                                     ),
                                     maxLines: 1,
+
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   const SizedBox(height: 4),
