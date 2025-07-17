@@ -137,28 +137,17 @@ import 'package:look_talk/ui/common/component/common_snack_bar.dart';
                   CommonSnackBar.show(context, message: 'LookTalk에 오신 것을 환영해요!');
                   context.go('/home');
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(result.message),
-                      duration: const Duration(seconds: 2),
-                    ),
-                  );
+                  CommonSnackBar.show(context, message: '${result.message}');
                 }
               }
             }
                 : () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    isLoading
-                        ? '로딩 중입니다.'
-                        : !isAvailable
-                        ? '사용 가능한 상점명을 입력해주세요.'
-                        : '회사 설명을 입력해주세요.',
-                  ),
-                  duration: const Duration(seconds: 2),
-                ),
-              );
+              final message = isLoading
+                  ? '로딩 중입니다.'
+                  : !isAvailable
+                  ? '사용 가능한 상점명을 입력해주세요.'
+                  : '회사 설명을 입력해주세요.';
+              CommonSnackBar.show(context, message: message);
             },
           );
         },

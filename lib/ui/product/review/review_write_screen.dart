@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:look_talk/ui/common/component/common_snack_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:look_talk/ui/common/component/primary_button.dart';
 import 'package:look_talk/view_model/product/review_viewmodel.dart';
@@ -25,7 +26,7 @@ class _ReviewWriteScreenState extends State<ReviewWriteScreen> {
 
   Future<void> _pickImage() async {
     if (_images.length >= 5) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('이미지는 최대 5장까지 첨부할 수 있어요.')));
+      CommonSnackBar.show(context, message: '이미지는 최대 5장까지 첨부할 수 있어요.');
       return;
     }
 
@@ -54,7 +55,7 @@ class _ReviewWriteScreenState extends State<ReviewWriteScreen> {
     if (result.success) {
       Navigator.pop(context); // 작성 완료 후 뒤로가기
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result.message)));
+      CommonSnackBar.show(context, message: '${result.message}');
     }
   }
 

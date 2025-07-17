@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
+import 'package:look_talk/ui/common/component/common_snack_bar.dart';
 import 'package:look_talk/view_model/mypage_view_model/search_my_product_list_viewmodel.dart';
 import 'package:look_talk/ui/product/review/review_write_screen.dart';
 import 'package:look_talk/view_model/viewmodel_provider.dart';
@@ -119,9 +120,7 @@ class ManageWidget extends StatelessWidget {
             final userId = await tokenStorage.getUserId();
 
             if (userId == null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('로그인이 필요합니다')),
-              );
+              CommonSnackBar.show(context, message: '로그인이 필요합니다.');
               return;
             }
 
@@ -129,9 +128,7 @@ class ManageWidget extends StatelessWidget {
             final alreadyWritten = reviews.any((r) => r.userId == userId);
 
             if (alreadyWritten) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('이미 이 상품에 대한 리뷰를 작성하셨습니다.')),
-              );
+              CommonSnackBar.show(context, message: '이미 이 상품에 대한 리뷰를 작성하셨습니다.');
               return;
             }
 

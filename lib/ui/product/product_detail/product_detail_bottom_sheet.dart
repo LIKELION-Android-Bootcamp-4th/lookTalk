@@ -118,9 +118,7 @@ class ProductDetailBottomSheet extends StatelessWidget {
                         Navigator.pop(context);
                         CommonSnackBar.show(context, message: '장바구니에 담았습니다.');
                       } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('실패: ${result.message ?? '오류 발생'}')),
-                        );
+                        CommonSnackBar.show(context, message: '장바구니에 담기 실패했습니다.');
                       }
                     },
                     style: OutlinedButton.styleFrom(
