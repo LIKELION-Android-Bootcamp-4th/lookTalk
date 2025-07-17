@@ -5,8 +5,10 @@ import 'package:look_talk/model/repository/alter_member_repository.dart';
 
 class AlterMemberViewmodel with ChangeNotifier{
   final AlterMemberRepository repository;
+  bool _isLoading = true;
 
   AlterMemberResponse? _alterMember;
+  bool get isLoading => _isLoading;
   AlterMemberResponse? get alterMember => _alterMember;
 
   AlterMemberViewmodel({required this.repository}){
@@ -14,8 +16,14 @@ class AlterMemberViewmodel with ChangeNotifier{
   }
 
   void _init() async{
-    _alterMember = await repository.resultMember();
-    notifyListeners();
+    try {
+      _alterMember = await repository.resultMember();
+    } catch (e) {
+      print('AlterMember 초기화 실패: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
 }
   Future<void> fetchLatestMember() async {
     _alterMember = await repository.resultMember();
