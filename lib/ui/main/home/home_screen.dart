@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/ui/common/component/app_bar/app_bar_search_cart.dart';
+import 'package:look_talk/ui/common/component/common_loading.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
 import 'package:look_talk/ui/main/home/home_category.dart';
 import 'package:look_talk/view_model/home/home_category_viewmodel.dart';
@@ -31,7 +32,7 @@ class HomeScreen extends StatelessWidget {
           const HomeCategory(),
           Expanded(
             child: viewModel.isLoading
-                ? const Center(child: CircularProgressIndicator())
+                ? const CommonLoading()
                 : viewModel.productList.isEmpty
                 ? const Center(child: Text("찾으시는 제품이 없습니다."))
                 : GridView.builder(

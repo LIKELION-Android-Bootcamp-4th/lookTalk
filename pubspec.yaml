@@ -79,6 +79,14 @@ dev_dependencies:
 
   timeago: ^3.7.1
 
+  flutter_launcher_icons: ^0.14.4
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/img_1.png" # 로고 경로
+  remove_alpha_ios: true # iOS용 투명 배경 제거
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
