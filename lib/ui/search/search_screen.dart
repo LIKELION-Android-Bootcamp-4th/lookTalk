@@ -165,6 +165,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                           style: context.bodyBold.copyWith(
                                             fontSize: 10,
                                           ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                         SizedBox(height: 4),
                                         Row(
@@ -181,6 +183,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                               ),
                                               gapW4,
                                               Text(
+
                                                 "${(product.price * (100 - product.discount!.value) ~/ 100)}원",
                                                 style: context.h1.copyWith(
                                                   fontSize: 14,
@@ -348,12 +351,16 @@ class _SearchScreenState extends State<SearchScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text(
-                      title,
-                      style: context.bodyBold,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                    Container(
+                      constraints: const BoxConstraints(maxHeight: 10),
+                      child: Text(
+                        title,
+                        style: context.bodyBold,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
+
                     if (thumbnailUrl?.isNotEmpty == true)
                       Image.network(
                         thumbnailUrl!,
@@ -389,6 +396,12 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ],
       ),
+    );
+  }
+  String formatPrice(int price) {
+    return price.toString().replaceAllMapped(
+      RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
+          (match) => '${match[1]},',
     );
   }
 }

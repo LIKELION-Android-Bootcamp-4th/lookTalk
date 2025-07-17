@@ -33,6 +33,7 @@ class CartItem {
   final Product product; // product_response.dart 기준 Product
   final Map<String, String>? selectedOptions;
 
+
   CartItem({
     this.id,
     required this.quantity,

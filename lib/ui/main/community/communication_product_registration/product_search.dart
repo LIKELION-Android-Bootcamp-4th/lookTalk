@@ -106,7 +106,7 @@ class _CommunityProductSearchState extends State<CommunityProductSearch> {
         context.read<SelectedProductViewModel>().selectFromProductSearch(product);
       },
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8),

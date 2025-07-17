@@ -58,6 +58,7 @@ final GoRouter router = GoRouter(
     final isGoingToSignup = state.matchedLocation.startsWith('/signup');
     final isGoingToMyPage = state.matchedLocation.startsWith('/mypage');
 
+
     if (!isLoggedIn && isGoingToMyPage) return '/login';
     if (!isLoggedIn && !isGoingToLogin && !isGoingToSignup) return null;
     if (isLoggedIn && isGoingToLogin) return '/home';
