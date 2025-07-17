@@ -98,9 +98,9 @@ class CategoryDetailScreen extends StatelessWidget {
                                   gap4,
                                   Text(
                                     product.name,
-                                    style: context.bodyBold.copyWith(
-                                      fontSize: 10,
-                                    ),
+                                    style: context.bodyBold.copyWith(fontSize: 10),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                   const SizedBox(height: 4),
                                   Row(
