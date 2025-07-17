@@ -8,7 +8,7 @@
 
 
     <application
-        android:label="look_talk"
+        android:label="LookTalk"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
