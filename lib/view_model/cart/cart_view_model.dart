@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:collection';
+import '../../model/entity/request/create_order_request.dart';
+import '../../model/entity/response/checkout_response.dart';
 import '../../model/repository/cart_repository.dart';
 import 'package:look_talk/model/entity/response/cart_response.dart';
 import '../../core/network/api_result.dart';
@@ -112,5 +114,19 @@ class CartViewModel extends ChangeNotifier {
       error = result.message;
     }
     notifyListeners();
+  }
+  Future<CheckoutResponse?> creatOrder({
+    required List<CartItem> cartItems,
+    required ShippingInfoRequest info,
+
+  }) async {
+    isLoading=true;
+    final cartIds = cartItems.map((e) => e.id!).toList();
+    final result = await repository.checkout(cartIds, info);
+    if (result.success) {
+      return result.data;
+    }else {
+      error=result.message;
+    }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:look_talk/core/network/api_result.dart';
 import 'package:look_talk/model/client/cart_api_client.dart';
+import 'package:look_talk/model/entity/request/create_order_request.dart';
 import 'package:look_talk/model/entity/response/cart_response.dart';
 import 'package:look_talk/model/entity/response/checkout_response.dart';
 
@@ -36,7 +37,7 @@ class CartRepository {
     return _apiClient.clearCart();
   }
 
-  Future<ApiResult<CheckoutResponse>> checkout(List<String> cartIds) {
-    return _apiClient.checkout(cartIds);
+  Future<ApiResult<CheckoutResponse>> checkout(List<String> cartIds , ShippingInfoRequest info) {
+    return _apiClient.checkout(cartIds , info);
   }
 }

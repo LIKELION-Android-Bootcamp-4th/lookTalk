@@ -1,5 +1,3 @@
-// lib/model/entity/response/checkout_response.dart
-
 class CheckoutResponse {
   final List<OrderData> orders;
 
@@ -26,10 +24,11 @@ class OrderData {
   });
 
   factory OrderData.fromJson(Map<String, dynamic> json) {
+    final doc=json['_doc']??json;
     return OrderData(
-      id: json['id'] ?? '',
-      orderNumber: json['orderNumber'] ?? '',
-      totalAmount: json['totalAmount'] ?? 0,
+      id: doc['id'] ?? '',
+      orderNumber: doc['orderNumber'] ?? '',
+      totalAmount: doc['totalAmount'] ?? 0,
     );
   }
 }
