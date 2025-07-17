@@ -5,6 +5,7 @@ import 'package:look_talk/core/network/dio_client.dart';
 import 'package:look_talk/core/network/end_points/mypage.dart';
 import 'package:look_talk/core/network/token_storage.dart';
 import 'package:look_talk/ui/common/component/app_bar/app_bar_search_cart.dart';
+import 'package:look_talk/ui/common/component/common_loading.dart';
 import 'package:look_talk/ui/common/component/common_modal.dart';
 import 'package:look_talk/ui/common/component/common_snack_bar.dart';
 import 'package:look_talk/ui/common/const/colors.dart';
@@ -49,6 +50,14 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<AlterMemberViewmodel>();
+    if (viewModel.isLoading) {
+      return const Scaffold(
+        body: Center(
+          child: CommonLoading(), // 또는 CommonLoading()
+        ),
+      );
+    }
+
     final viewImageUrl = viewModel.alterMember?.member.profileImage;
     final dio = DioClient.instance;
     return Scaffold(
