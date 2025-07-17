@@ -120,8 +120,6 @@ SellerManageViewmodel provideSellerManageViewmodel() => SellerManageViewmodel(re
 
 // 홈화면
 HomeCategoryViewModel provideHomeViewModelDefault() {
-  final categoryRepository = CategoryRepository(dio);
   final categoryDetailRepository = CategoryDetailRepository(dio);
-  final homeRepository = HomeRepository(dio, categoryDetailRepository, categoryRepository);
-  return HomeCategoryViewModel(homeRepository);
+  return HomeCategoryViewModel(categoryDetailRepository);
 }

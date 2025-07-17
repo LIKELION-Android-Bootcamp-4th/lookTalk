@@ -11,35 +11,35 @@ class HomeCategory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+
     return Consumer<HomeCategoryViewModel>(
       builder: (context, viewModel, _) {
         return SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: viewModel.homeCategory.map((category) {
-              final isSelected = viewModel.selectedCategory == category;
+            children: viewModel.categoryNames.map((categoryName) {
+              final isSelected = viewModel.selectedCategoryName == categoryName;
 
               return GestureDetector(
-                onTap: () => viewModel.changeHomeCategory(category),
+                onTap: () => viewModel.changeHomeCategory(categoryName),
                 child: Container(
                   alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(vertical: 5),
-                  margin: EdgeInsets.all(5),
-                  width: screenWidth*0.16,
-
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  margin: const EdgeInsets.all(5),
+                  width: screenWidth * 0.16,
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: AppColors.iconGrey,
                       width: 1.3,
-
                     ),
                     color: isSelected ? AppColors.btnPrimary : AppColors.white,
                     borderRadius: BorderRadius.circular(20),
-
                   ),
                   child: Text(
-                    category,
-                    style: isSelected ? context.bodyBold.copyWith(color: AppColors.white) : context.bodyBold.copyWith(color: AppColors.darkGrey)
+                    categoryName,
+                    style: isSelected
+                        ? context.bodyBold.copyWith(color: AppColors.white)
+                        : context.bodyBold.copyWith(color: AppColors.darkGrey),
                   ),
                 ),
               );
