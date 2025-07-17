@@ -33,7 +33,7 @@ class ProductRegisterViewModel extends ChangeNotifier {
   final Map<String, TextEditingController> stockControllers = {};
 
   TextEditingController getStockController(String key) {
-    return stockControllers.putIfAbsent(key, () => TextEditingController(text: '0'));
+    return stockControllers.putIfAbsent(key, () => TextEditingController());
   }
 
   void updateStockControllers() {
@@ -41,7 +41,7 @@ class ProductRegisterViewModel extends ChangeNotifier {
     for (final color in selectedColors) {
       for (final size in selectedSizes) {
         final key = '${color}_${size}';
-        stockControllers.putIfAbsent(key, () => TextEditingController(text: '0'));
+        stockControllers.putIfAbsent(key, () => TextEditingController());
       }
     }
     notifyListeners();
