@@ -76,6 +76,7 @@ class HomeScreen extends StatelessWidget {
                       Text(
                         product.name,
                         style: context.bodyBold.copyWith(fontSize: 10),
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 4),
