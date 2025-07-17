@@ -109,9 +109,7 @@ class AuthViewModel with ChangeNotifier {
 
         context.go('/home');
       } else {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(result.message)));
+        CommonSnackBar.show(context, message: '${result.message}');
       }
     } catch (e) {
       if (navigator.canPop()) navigator.pop();

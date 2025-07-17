@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
+import 'package:look_talk/ui/common/component/common_snack_bar.dart';
 import 'package:look_talk/view_model/mypage_view_model/seller_manage_viewmodel.dart';
 
 class Managesellerwidget extends StatelessWidget {
@@ -143,9 +144,7 @@ class Managesellerwidget extends StatelessWidget {
                 setState(() {
                   selected = null;
                 });
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("송장 번호가 입력되지 않았습니다.")),
-                );
+                CommonSnackBar.show(context, message: '송장 번호가 입력되지 않았습니다.');
               }
             } else {
               newStatus(value);

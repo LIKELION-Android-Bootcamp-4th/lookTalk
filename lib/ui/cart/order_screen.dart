@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:look_talk/model/entity/response/cart_response.dart';
 import 'package:look_talk/model/entity/request/create_order_request.dart';
 import 'package:look_talk/model/entity/response/product_response.dart'; // [수정] product_response import
+import 'package:look_talk/ui/common/component/common_snack_bar.dart';
 import 'package:look_talk/view_model/cart/cart_view_model.dart';
 import 'package:look_talk/view_model/order/order_view_model.dart';
 import 'package:look_talk/view_model/viewmodel_provider.dart';
@@ -89,18 +90,11 @@ class _OrderScreenContentState extends State<_OrderScreenContent> {
         info: shippingInfo,
       );
       if (response != null) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('주문이 완료되었습니다.')));
+        CommonSnackBar.show(context, message: '주문이 완료되었습니다.');
         Navigator.of(context).popUntil((route) => route.isFirst);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '주문 생성에 실패했습니다: ${orderViewModel.error ?? '알 수 없는 오류'}',
-            ),
-          ),
-        );
+        final message = '주문 생성에 실패했습니다: ${orderViewModel.error ?? '알 수 없는 오류'}';
+        CommonSnackBar.show(context, message: message);
       }
     } else {
       final orderItems = widget.productsToOrder.map((cartItem) {
@@ -123,22 +117,11 @@ class _OrderScreenContentState extends State<_OrderScreenContent> {
 
           await cartViewModel.fetchCart();
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                '주문이 완료되었습니다. (주문번호: ${orderResponse.orderNumber})',
-              ),
-            ),
-          );
+          CommonSnackBar.show(context, message: '주문이 완료되었습니다.');
           Navigator.of(context).popUntil((route) => route.isFirst);
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                '주문 생성에 실패했습니다: ${orderViewModel.error ?? '알 수 없는 오류'}',
-              ),
-            ),
-          );
+          final message = '주문 생성에 실패했습니다: ${orderViewModel.error ?? '알 수 없는 오류'}';
+          CommonSnackBar.show(context, message: message);
         }
       }
     }

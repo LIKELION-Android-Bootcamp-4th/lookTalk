@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:look_talk/core/extension/text_style_extension.dart';
 import 'package:look_talk/ui/common/component/app_bar/app_bar_text.dart';
 import 'package:look_talk/ui/common/component/common_dropdown.dart';
+import 'package:look_talk/ui/common/component/common_snack_bar.dart';
 import 'package:look_talk/ui/common/component/common_text_field.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
 import 'package:look_talk/view_model/community/selected_product_view_model.dart';
@@ -84,9 +85,7 @@ class PostCreateScreen extends StatelessWidget {
           }
         } catch (e) {
           //print('예외 발생!!!! $e');
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(e.toString())));
+          CommonSnackBar.show(context, message: '${e.toString()}');
         }
       },
     );

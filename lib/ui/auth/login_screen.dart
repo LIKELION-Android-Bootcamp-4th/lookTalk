@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart' as kakao;
 import 'package:look_talk/core/extension/text_style_extension.dart';
+import 'package:look_talk/ui/common/component/common_snack_bar.dart';
 import 'package:look_talk/ui/common/const/gap.dart';
 import 'package:provider/provider.dart';
 import '../../model/entity/request/social_login_request.dart';
@@ -184,9 +185,7 @@ class LoginScreen extends StatelessWidget {
 
   void _showError(BuildContext context, String message) {
     if (context.mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
+      CommonSnackBar.show(context, message: '$message');
     }
   }
 }
