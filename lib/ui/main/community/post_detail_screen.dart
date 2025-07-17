@@ -426,6 +426,9 @@ class PostDetailScreen extends StatelessWidget {
                     return IconButton(
                       icon: const Icon(Icons.send),
                       onPressed: () async {
+                        //FocusScope.of(context).unfocus();
+                        FocusManager.instance.primaryFocus?.unfocus();
+
                         final postId = viewModel.post?.id;
                         if (postId != null) {
                           await viewModel.submitComment(postId);
