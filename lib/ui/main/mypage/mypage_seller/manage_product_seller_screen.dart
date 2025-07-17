@@ -33,9 +33,9 @@ class _ManageProductSellerScreenState extends State<ManageProductSellerScreen> {
 
     return Scaffold(
       appBar: AppBarSearchCart(
-        title: '주문/반품/취소',
-
+        title: '주문조회',
       ),
+
       body: ListView.builder(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         itemCount: viewModel.orders.length,
