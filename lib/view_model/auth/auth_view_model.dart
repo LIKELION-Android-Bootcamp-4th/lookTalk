@@ -124,7 +124,9 @@ class AuthViewModel with ChangeNotifier {
     _userRole = null;
     notifyListeners();
     if (context.mounted) {
-      context.go('/home');
+      Future.microtask(() {
+        context.go('/home');
+      });
     }
   }
 }
