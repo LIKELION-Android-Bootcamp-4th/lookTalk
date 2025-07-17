@@ -98,16 +98,19 @@ class CategoryDetailScreen extends StatelessWidget {
                                   gap4,
                                   Text(
                                     product.name,
-                                    style: context.bodyBold.copyWith(fontSize: 10),
+                                    style: context.bodyBold.copyWith(
+                                      fontSize: 10,
+                                    ),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   const SizedBox(height: 4),
                                   Row(
                                     children: [
-                                      if (product.discount != null) ...[
+                                      if (product.discount != null &&
+                                          product.discount!.value > 0) ...[
                                         Text(
-                                          "${product.discount!.value}%",
+                                          "${product.discount!.value}% ",
                                           style: context.bodyBold.copyWith(
                                             fontSize: 12,
                                             color: Colors.red,
@@ -115,17 +118,15 @@ class CategoryDetailScreen extends StatelessWidget {
                                         ),
                                         gapW4,
                                         Text(
-                                          "${(product.price * (100 - product.discount!.value) ~/ 100)}원",
-                                          style: context.h1.copyWith(
-                                            fontSize: 14,
-                                          ),
+                                          '${formatPrice(
+                                              product.price * (100 - product.discount!.value) ~/ 100
+                                          )}원',
+                                          style: context.h1.copyWith(fontSize: 14),
                                         ),
                                       ] else ...[
                                         Text(
-                                          "${product.price}원",
-                                          style: context.h1.copyWith(
-                                            fontSize: 14,
-                                          ),
+                                          '${formatPrice(product.price)}원',
+                                          style: context.h1.copyWith(fontSize: 14),
                                         ),
                                       ],
                                     ],
@@ -139,5 +140,11 @@ class CategoryDetailScreen extends StatelessWidget {
               ],
             ),
           );
+  }
+  String formatPrice(int price) {
+    return price.toString().replaceAllMapped(
+      RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
+          (match) => '${match[1]},',
+    );
   }
 }

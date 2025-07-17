@@ -56,7 +56,7 @@ final GoRouter router = GoRouter(
     final isLoggedIn = authViewModel.isLoggedIn;
     final isGoingToLogin = state.matchedLocation == '/login';
     final isGoingToSignup = state.matchedLocation.startsWith('/signup');
-    final isGoingToMyPage = state.matchedLocation == '/mypage';
+    final isGoingToMyPage = state.matchedLocation.startsWith('/mypage');
 
     if (!isLoggedIn && isGoingToMyPage) return '/login';
     if (!isLoggedIn && !isGoingToLogin && !isGoingToSignup) return null;

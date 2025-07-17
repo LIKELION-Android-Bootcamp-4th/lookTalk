@@ -1,6 +1,6 @@
 import 'package:look_talk/model/entity/response/comment_response.dart';
 import 'package:look_talk/model/entity/response/post_user_response.dart';
-
+import 'dart:convert';
 import '../comment.dart';
 
 class PostResponse {
@@ -90,18 +90,26 @@ class ProductResponse {
     this.discount,
   });
 
-  factory ProductResponse.fromJson(Map<String, dynamic> json){
+  factory ProductResponse.fromJson(Map<String, dynamic> json) {
     final store = json['store'] as Map<String, dynamic>?;
-    //final discountJson = json['discount'] as Map<String, dynamic>?;
-
-    final dynamic discountJson = json['discount']; // 타입 명시 X
+    final dynamic discountJson = json['discount'];
 
     Discount? parsedDiscount;
+
     if (discountJson != null) {
-      if (discountJson is Map<String, dynamic>) {
-        parsedDiscount = Discount.fromJson(discountJson);
-      } else if (discountJson is int) {
-        parsedDiscount = Discount(value: discountJson);
+      try {
+        if (discountJson is String) {
+          final parsedMap = jsonDecode(discountJson);
+          if (parsedMap is Map<String, dynamic>) {
+            parsedDiscount = Discount.fromJson(parsedMap);
+          }
+        } else if (discountJson is Map<String, dynamic>) {
+          parsedDiscount = Discount.fromJson(discountJson);
+        } else if (discountJson is int) {
+          parsedDiscount = Discount(value: discountJson);
+        }
+      } catch (e) {
+        print('discount 파싱 실패: $e');
       }
     }
 
@@ -111,7 +119,7 @@ class ProductResponse {
       price: json['price'] ?? 0,
       thumbnailImageUrl: json['thumbnailImageUrl'],
       storeName: store?['name'],
-      discount: parsedDiscount
+      discount: parsedDiscount,
     );
   }
 }
@@ -122,10 +130,18 @@ class Discount {
   Discount({required this.value});
 
   factory Discount.fromJson(Map<String, dynamic> json) {
-    return Discount(
-      value: json['value'] ?? 0,
-    );
+    final raw = json['value'] ?? json['rate'];
+    int parsed = 0;
+
+    if (raw is int) {
+      parsed = raw;
+    } else if (raw is String) {
+      parsed = int.tryParse(raw) ?? 0;
+    }
+
+    return Discount(value: parsed);
   }
+
 }
 
 

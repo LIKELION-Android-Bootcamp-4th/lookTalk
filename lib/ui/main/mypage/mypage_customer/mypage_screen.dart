@@ -33,19 +33,19 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
   @override
   void initState() {
     super.initState();
-    _checkAccessToken();
+    // _checkAccessToken();
   }
 
 
 
-  Future<void> _checkAccessToken() async {
-    final token = await _tokenStorage.getAccessToken();
-    if (!mounted) return;
-
-    if (token == null || token.isEmpty) {
-      context.go('/login');
-    }
-  }
+  // Future<void> _checkAccessToken() async {
+  //   final token = await _tokenStorage.getAccessToken();
+  //   if (!mounted) return;
+  //
+  //   if (token == null || token.isEmpty) {
+  //     context.go('/login');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -152,9 +152,9 @@ class _MyPageScreenCustomerState extends State<MyPageScreenCustomer> {
                           onConfirm: () async {
                             CommonSnackBar.show(context, message: '로그아웃이 완료되었습니다.');
                             await TokenStorage().deleteTokens();
-                            context.read<AuthViewModel>().logout(context);
                             Navigator.pop(context);
-                            context.go('/home');
+                            context.read<AuthViewModel>().logout(context);
+
                           },
                         ),
                   );
