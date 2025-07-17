@@ -18,12 +18,14 @@ import '../../common/component/common_snack_bar.dart';
 class ProductDetailBottomSheet extends StatelessWidget {
   final String productId;
   final entity.ProductEntity product;
+  final int discountRate;
 
 
   const ProductDetailBottomSheet({
     super.key,
     required this.productId,
     required this.product,
+    required this.discountRate,
   });
 
   @override
@@ -106,15 +108,16 @@ class ProductDetailBottomSheet extends StatelessWidget {
                         return;
                       }
 
-                      final result = await cartVM.addCartItem(
+                      final success = await cartVM.addCartItem(
                         productId: productId,
+                        unitPrice: vm.discountedPrice,
+                        quantity: vm.quantity,
                         color: vm.selectedColor!,
                         size: vm.selectedSize!,
-                        quantity: vm.quantity,
-                        unitPrice: vm.discountedPrice,
+                        discountPercent: discountRate > 0 ? discountRate : null,
                       );
 
-                      if (result.success) {
+                      if (success) {
                         Navigator.pop(context);
                         CommonSnackBar.show(context, message: '장바구니에 담았습니다.');
                       } else {
@@ -151,6 +154,7 @@ class ProductDetailBottomSheet extends StatelessWidget {
                           'size': vm.selectedSize!,
                           'color': vm.selectedColor!,
                         },
+                        storeName: product.storeName
                       );
 
                       Navigator.pop(context); // 바텀시트 닫기

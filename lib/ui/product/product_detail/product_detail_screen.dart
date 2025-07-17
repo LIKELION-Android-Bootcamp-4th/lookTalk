@@ -371,7 +371,7 @@ void showOptionBottomSheet({
           ChangeNotifierProvider.value(value: viewModel),
           ChangeNotifierProvider.value(value: context.read<CartViewModel>()),
         ],
-        child: ProductDetailBottomSheet(productId: productId, product: product),
+        child: ProductDetailBottomSheet(productId: productId, product: product, discountRate: discountRate,),
       );
     },
   );

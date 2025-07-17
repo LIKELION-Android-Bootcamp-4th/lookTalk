@@ -79,30 +79,66 @@ class CartViewModel extends ChangeNotifier {
   }
 
   /// ✅ 장바구니에 상품 추가 (단가 + 옵션 포함)
-  Future<ApiResult<CartItem>> addCartItem({
+  // Future<ApiResult<CartItem>> addCartItem({
+  //   required String productId,
+  //   required String color,
+  //   required String size,
+  //   required int unitPrice,
+  //   required int quantity,
+  // }) async {
+  //   final result = await repository.addCartItem(
+  //     productId: productId,
+  //     unitPrice: unitPrice,
+  //     quantity: quantity,
+  //     color: color,
+  //     size: size,
+  //   );
+  //
+  //   if (result.success) {
+  //     await fetchCart();
+  //   } else {
+  //     error = result.message;
+  //     notifyListeners();
+  //   }
+  //
+  //   return result;
+  // }
+
+  Future<bool> addCartItem({
     required String productId,
-    required String color,
-    required String size,
     required int unitPrice,
     required int quantity,
+    required String color,
+    required String size,
+    int? discountPercent,
   }) async {
+    isLoading = true;
+    error = null;
+    notifyListeners();
+
     final result = await repository.addCartItem(
       productId: productId,
       unitPrice: unitPrice,
       quantity: quantity,
       color: color,
       size: size,
+      discountPercent: discountPercent,
     );
 
     if (result.success) {
-      await fetchCart();
+      print('장바구니 넣기 성공');
+      return true;
     } else {
-      error = result.message;
-      notifyListeners();
+      error = result.message ?? '장바구니 추가 중 오류가 발생했어요.';
+      return false;
     }
 
-    return result;
+    isLoading = false;
+    notifyListeners();
   }
+
+
+
 
   Future<void> clearCart() async {
     final result = await repository.clearCart();

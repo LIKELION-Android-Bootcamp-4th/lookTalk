@@ -32,6 +32,7 @@ class CartItem {
   final int totalPrice; // 수량 * 단가
   final Product product; // product_response.dart 기준 Product
   final Map<String, String>? selectedOptions;
+  final String? storeName;
 
   CartItem({
     this.id,
@@ -40,6 +41,7 @@ class CartItem {
     required this.totalPrice,
     required this.product,
     this.selectedOptions,
+    this.storeName
   });
 
   factory CartItem.fromJson(Map<String, dynamic> json) {
@@ -52,6 +54,7 @@ class CartItem {
       selectedOptions: (json['selectedOptions'] as Map?)?.map(
             (key, value) => MapEntry(key.toString(), value.toString()),
       ),
+      storeName: json['storeName'] as String? ?? ''
     );
   }
 }

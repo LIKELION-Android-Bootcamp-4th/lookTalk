@@ -23,16 +23,26 @@ class CartApiClient {
     required int quantity,
     required String color,
     required String size,
+    int? discountPercent,
   }) async {
     final payload = {
       'productId': productId,
       'unitPrice': unitPrice,
       'quantity': quantity,
-      'color': color,
-      'size': size,
+      'options': {
+        'color': color,
+        'size': size,
+      },
     };
 
-    final response = await _dio.post(CartEndpoints.getcartList, data: payload);
+    if(discountPercent != null){
+      payload['discount'] = {
+        'type': 'percent',
+        'amount': discountPercent,
+      };
+    }
+
+    final response = await _dio.post(CartEndpoints.addCartItem, data: payload);
     return ApiResult.fromResponse(
         response, (json) => CartItem.fromJson(json as Map<String, dynamic>));
   }

@@ -133,7 +133,7 @@ class _CartScreenState extends State<CartScreen> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   // [수정] store의 name을 사용하고, null일 경우를 대비합니다.
-                                  Text(item.product.store?.name ?? '스토어 없음', style: TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
+                                  Text(item.storeName ?? '스토어 없음', style: TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
                                   InkWell(
                                     onTap: () {
                                       if (item.id != null) {
@@ -231,12 +231,33 @@ class _CartScreenState extends State<CartScreen> {
       );
     }
     else {
-      // 할인 적용 시, 원가 계산 (할인율이 0이 아닐 때만)
-      final originalPrice = (finalPrice / (1 - (discountInfo.value / 100))).round();
+      final discountPercent = discountInfo.value;
+      final originalPrice = (finalPrice / (1 - (discountPercent / 100))).round();
 
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
+          // 할인율
+          Text(
+            '$discountPercent%',
+            style: const TextStyle(
+              color: AppColors.red,
+              fontWeight: FontWeight.bold,
+              fontSize: TextSizes.body,
+            ),
+          ),
+          gapW8,
+          // 최종 가격
+          Text(
+            '${numberFormat.format(finalPrice)}원',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: TextSizes.body,
+              color: AppColors.black,
+            ),
+          ),
+          gapW8,
+          // 원래 가격 (줄 그은 회색)
           Text(
             '${numberFormat.format(originalPrice)}원',
             style: const TextStyle(
@@ -245,19 +266,35 @@ class _CartScreenState extends State<CartScreen> {
               decoration: TextDecoration.lineThrough,
             ),
           ),
-          // gap4,  // 간격이 너무 넓어 보일 수 있어 조절
-          Row(
-            children: [
-              Text('${discountInfo.value}%', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
-              gapW8,
-              Text(
-                '${numberFormat.format(finalPrice)}원',
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body),
-              ),
-            ],
-          ),
         ],
       );
+      // // 할인 적용 시, 원가 계산 (할인율이 0이 아닐 때만)
+      // final originalPrice = (finalPrice / (1 - (discountInfo.value / 100))).round();
+      //
+      // return Column(
+      //   crossAxisAlignment: CrossAxisAlignment.start,
+      //   children: [
+      //     Text(
+      //       '${numberFormat.format(originalPrice)}원',
+      //       style: const TextStyle(
+      //         fontSize: TextSizes.caption,
+      //         color: AppColors.textGrey,
+      //         decoration: TextDecoration.lineThrough,
+      //       ),
+      //     ),
+      //     // gap4,  // 간격이 너무 넓어 보일 수 있어 조절
+      //     Row(
+      //       children: [
+      //         Text('${discountInfo.value}%', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: TextSizes.body)),
+      //         gapW8,
+      //         Text(
+      //           '${numberFormat.format(finalPrice)}원',
+      //           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.body),
+      //         ),
+      //       ],
+      //     ),
+      //   ],
+      // );
     }
   }
 }

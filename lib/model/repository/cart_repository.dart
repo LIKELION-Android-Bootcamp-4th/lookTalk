@@ -19,6 +19,7 @@ class CartRepository {
     required int quantity,
     required String color,
     required String size,
+    int? discountPercent,
   }) {
     return _apiClient.addCartItem(
       productId: productId,
@@ -26,6 +27,7 @@ class CartRepository {
       quantity: quantity,
       color: color,
       size: size,
+      discountPercent: discountPercent
     );
   }
 
