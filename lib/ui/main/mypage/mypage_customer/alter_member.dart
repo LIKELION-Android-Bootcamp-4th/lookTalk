@@ -75,7 +75,7 @@ class AlterMemberState extends State<AlterMember> {
                   });
 
                   if (context.mounted) {
-                    context.go('/mypage');
+                    context.pushReplacement('/mypage');
                   }
                 },
                 child: Text("완료", style: context.bodyBold),
