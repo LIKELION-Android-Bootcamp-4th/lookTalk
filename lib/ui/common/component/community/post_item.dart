@@ -41,12 +41,13 @@ class PostItem extends StatelessWidget {
                       ),
                       SizedBox(width: 8),
                       SizedBox(
-                        width: 200.0,
+                        width: 150.0,
                         child: Text(
                             hasUser ? user!.nickName : '알 수 없음',
                           style: TextStyle(fontWeight: FontWeight.bold),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           softWrap: false,
-                          overflow: hasProfileImage ? TextOverflow.visible : TextOverflow.ellipsis,
                         ),
                       ),
                     ],
@@ -54,22 +55,32 @@ class PostItem extends StatelessWidget {
                   gap8,
       
                   // 제목
-                  Text(
+                  Container(
+                    constraints: const BoxConstraints(maxHeight: 20),
+                    child:
+                   Text(
                     post.title,
-                    style: context.bodyBold,
-                    softWrap: false,
-                    overflow: hasProfileImage ? TextOverflow.visible : TextOverflow.ellipsis,
+                     style: context.bodyBold,
+                     maxLines: 1,
+                     overflow: TextOverflow.ellipsis,
+                     softWrap: false,
                   ),
+        ),
       
                   gap4,
-      
-                  // 본문
-                  Text(
-                    post.content,
-                    maxLines: 1,
-                    softWrap: false,
-                    overflow:  hasProfileImage ? TextOverflow.visible : TextOverflow.ellipsis,
+
+                  Container(
+                    constraints: const BoxConstraints(maxHeight: 20),
+                    child:Text(
+                      post.content,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
                   ),
+                  ),
+
+                  // 본문
+
       
                   // 좋아요/댓글
                   gap8,
