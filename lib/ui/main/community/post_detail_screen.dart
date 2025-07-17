@@ -229,11 +229,17 @@ class PostDetailScreen extends StatelessWidget {
                     color: AppColors.textGrey,
                   ),
                 ),
-                Text(product.name, style: context.body),
+                Text(
+                  product.name,
+                  style: context.body,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 gap4,
                 Row(
                   children: [
-                    if (product.discount != null) ...[
+                    if (product.discount != null &&
+                        product.discount!.value > 0) ...[
                       Text(
                         '${product.discount!.value}%',
                         style: context.h1.copyWith(
@@ -243,12 +249,21 @@ class PostDetailScreen extends StatelessWidget {
                       ),
                       gapW8,
                       Text(
-                        '${_calculateDiscountedPrice(product.price, product.discount!.value)}원',
+                        '${formatPrice(_calculateDiscountedPrice(product.price, product.discount!.value))}원',
                         style: context.h1.copyWith(fontSize: 14),
+                      ),
+                      gapW8,
+                      Text(
+                        '${formatPrice(product.price)}원',
+                        style: context.body.copyWith(
+                          fontSize: 12,
+                          color: AppColors.textGrey,
+                          decoration: TextDecoration.lineThrough,
+                        ),
                       ),
                     ] else ...[
                       Text(
-                        '${product.price}원',
+                        '${formatPrice(product.price)}원',
                         style: context.h1.copyWith(fontSize: 14),
                       ),
                     ],
@@ -426,6 +441,13 @@ class PostDetailScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  String formatPrice(int price) {
+    return price.toString().replaceAllMapped(
+      RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
+      (match) => '${match[1]},',
     );
   }
 }

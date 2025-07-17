@@ -158,30 +158,32 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Row(
-                              children: [
-                                Text(
-                                  '${vm.discountPercent}%',
-                                  style: const TextStyle(
-                                    fontSize: TextSizes.body,
-                                    color: AppColors.black,
-                                    fontWeight: FontWeight.bold,
+                          if (vm.discountPercent > 0) ...[
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '${vm.discountPercent}%',
+                                    style: const TextStyle(
+                                      fontSize: TextSizes.body,
+                                      color: AppColors.red,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  '${vm.originalPrice.toString().replaceAllMapped(RegExp(r"(\d)(?=(\d{3})+(?!\d))"), (match) => "${match[1]},")}원',
-                                  style: const TextStyle(
-                                    fontSize: TextSizes.body,
-                                    color: AppColors.black,
-                                    decoration: TextDecoration.lineThrough,
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    '${vm.originalPrice.toString().replaceAllMapped(RegExp(r"(\d)(?=(\d{3})+(?!\d))"), (match) => "${match[1]},")}원',
+                                    style: const TextStyle(
+                                      fontSize: TextSizes.body,
+                                      color: AppColors.black,
+                                      decoration: TextDecoration.lineThrough,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
+                          ],
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
                             child: Text(
@@ -189,10 +191,46 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               style: const TextStyle(
                                 fontSize: TextSizes.body,
                                 fontWeight: FontWeight.w700,
-                                color: AppColors.red,
+                                color: AppColors.black,
                               ),
                             ),
                           ),
+
+                          // Padding(
+                          //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          //   child: Row(
+                          //     children: [
+                          //       Text(
+                          //         '${vm.discountPercent}%',
+                          //         style: const TextStyle(
+                          //           fontSize: TextSizes.body,
+                          //           color: AppColors.black,
+                          //           fontWeight: FontWeight.bold,
+                          //         ),
+                          //       ),
+                          //       const SizedBox(width: 8),
+                          //       Text(
+                          //         '${vm.originalPrice.toString().replaceAllMapped(RegExp(r"(\d)(?=(\d{3})+(?!\d))"), (match) => "${match[1]},")}원',
+                          //         style: const TextStyle(
+                          //           fontSize: TextSizes.body,
+                          //           color: AppColors.black,
+                          //           decoration: TextDecoration.lineThrough,
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
+                          // Padding(
+                          //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          //   child: Text(
+                          //     '${vm.finalPrice.toString().replaceAllMapped(RegExp(r"(\d)(?=(\d{3})+(?!\d))"), (match) => "${match[1]},")}원',
+                          //     style: const TextStyle(
+                          //       fontSize: TextSizes.body,
+                          //       fontWeight: FontWeight.w700,
+                          //       color: AppColors.red,
+                          //     ),
+                          //   ),
+                          // ),
                           const SizedBox(height: 16),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
