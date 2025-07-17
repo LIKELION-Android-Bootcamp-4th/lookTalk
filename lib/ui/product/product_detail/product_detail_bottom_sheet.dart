@@ -89,7 +89,7 @@ class ProductDetailBottomSheet extends StatelessWidget {
                     ],
                   ),
                   Text(
-                    "${vm.totalPrice} 원",
+                    "${formatPrice(vm.totalPrice)} 원",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: TextSizes.headline),
                   ),
                 ],
@@ -169,6 +169,12 @@ class ProductDetailBottomSheet extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+  String formatPrice(int price) {
+    return price.toString().replaceAllMapped(
+      RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
+          (match) => '${match[1]},',
     );
   }
 }
