@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "313828330437",
+    "project_id": "looktalk-4802d",
+    "storage_bucket": "looktalk-4802d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:313828330437:android:bbb111cd77cfc50b44d9ac",
+        "android_client_info": {
+          "package_name": "com.example.look_talk"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB79oDQUf_o7-R54W9849druFzdbdv6xHo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:313828330437:android:ef9736efb484697044d9ac",
+        "android_client_info": {
+          "package_name": "com.example.looktalk"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB79oDQUf_o7-R54W9849druFzdbdv6xHo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
