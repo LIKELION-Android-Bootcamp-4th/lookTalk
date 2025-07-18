@@ -47,14 +47,14 @@
 - ID찾기, PW찾기
 - 로그인 시 쿠키(Cookie) 및 세션(Session) 생성
 
-#### 🌐 회원가입 - <a href="https://github.com/chaehyuenwoo/SpringBoot-Project-MEGABOX/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C(Member)" >상세보기 - WIKI 이동</a>
+#### 🌐 회원가입 - <a href="https://github.com/LIKELION-Android-Bootcamp-4th/lookTalk/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C-(%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85)" >상세보기 - WIKI 이동</a>
 - 주소 API 연동
 - ID 중복 체크
-#### 🛍️ 메인 Page - <a href="https://github.com/chaehyuenwoo/SpringBoot-Project-MEGABOX/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C(Member)" >상세보기 - WIKI 이동</a>
+#### 🛍️ 메인 Page - <a href="https://github.com/LIKELION-Android-Bootcamp-4th/lookTalk/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C-(%EC%87%BC%ED%95%91%EB%AA%B0)" >상세보기 - WIKI 이동</a>
 - 주소 API 연동
 - 회원정보 변경
 
-#### 💬 커뮤니티 - <a href="https://github.com/chaehyuenwoo/SpringBoot-Project-MEGABOX/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C(%EC%98%81%ED%99%94-%EC%98%88%EB%A7%A4)" >상세보기 - WIKI 이동</a>
+#### 💬 커뮤니티 - <a href="https://github.com/LIKELION-Android-Bootcamp-4th/lookTalk/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C-(%EC%BB%A4%EB%AE%A4%EB%8B%88%ED%8B%B0)" >상세보기 - WIKI 이동</a>
 - 영화 선택(날짜 지정)
 - 영화관 선택(대분류/소분류 선택) 및 시간 선택
 - 좌석 선택
@@ -63,10 +63,10 @@
 #### 🛒 장바구니 / 결제
 - 
 -
-#### 🙋 마이페이지 (사용자) - <a href="https://github.com/chaehyuenwoo/SpringBoot-Project-MEGABOX/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C(%EB%A9%94%EC%9D%B8-Page)" >상세보기 - WIKI 이동</a>
+#### 🙋 마이페이지 (사용자) - <a href="https://github.com/LIKELION-Android-Bootcamp-4th/lookTalk/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C-(%EB%A7%88%EC%9D%B4%ED%8E%98%EC%9D%B4%EC%A7%80-%E2%80%90-%EA%B5%AC%EB%A7%A4%EC%9E%90)" >상세보기 - WIKI 이동</a>
 - YouTube API 연동
 - 메인 포스터(영화) 이미지 슬라이드(CSS)
 
-#### 👨‍💼 마이페이지 (판매자)  
+#### 👨‍💼 마이페이지 (판매자)   - <a href="https://github.com/LIKELION-Android-Bootcamp-4th/lookTalk/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C-(%EB%A7%88%EC%9D%B4%ED%8E%98%EC%9D%B4%EC%A7%80-%E2%80%90-%ED%8C%90%EB%A7%A4%EC%9E%90)" >상세보기 - WIKI 이동</a>
 - 영화관 추가(대분류, 소분류)
 - 영화 추가(상영시간 및 상영관 설정)
