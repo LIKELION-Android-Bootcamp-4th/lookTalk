@@ -33,6 +33,9 @@
 <img width="1192" height="608" alt="image" src="https://github.com/user-attachments/assets/f76a8eea-7eae-4038-9a23-1a4f9dc193ee" />
 <img width="962" height="620" alt="image" src="https://github.com/user-attachments/assets/3179a9f6-bec3-4120-bc7c-a4dc754e6362" />
 
+### ⚙️ 브랜치 관리
+feature-based로 관리 
+
 
 
 
