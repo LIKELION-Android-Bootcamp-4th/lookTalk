@@ -34,9 +34,9 @@
 <img width="962" height="620" alt="image" src="https://github.com/user-attachments/assets/3179a9f6-bec3-4120-bc7c-a4dc754e6362" />
 
 ### ⚙️ 브랜치 관리
-기능은 feature을 통해 관리.
-각 feature에서 작성한 뒤, develop으로 merge 진행.
-최종 프로젝트는 main 브렌치에서 관리. 
+- 기능은 feature을 통해 관리.
+- 각 feature에서 작성한 뒤, develop으로 merge 진행.
+- 최종 프로젝트는 main 브렌치에서 관리. 
 
 
 
