@@ -25,6 +25,9 @@
 - **Device** : Android Emulator 
 - **ORM** : Mybatis
 
+### 서버 Swagger 주소 
+- 주소 : http://git.hansul.kr:3001/api/docs/
+
 ### 📐 아키텍처 설계 
 - MVVM모델로 구성
 - Model : Client, Repository, Response로 구성
@@ -36,7 +39,10 @@
 ### ⚙️ 브랜치 관리
 - 기능은 feature을 통해 관리.
 - 각 feature에서 작성한 뒤, develop으로 merge 진행.
-- 최종 프로젝트는 main 브렌치에서 관리. 
+- 최종 프로젝트는 main 브렌치에서 관리.
+
+
+## 프로젝트 리팩토링 및 기능 추가
 
 
 
