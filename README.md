@@ -24,6 +24,12 @@
 - **Device** : Android Emulator 
 - **ORM** : Mybatis
 
+### 아키텍처 설계
+- MVVM모델로 구성
+- Model : Client, Repository, Response로 구성
+- View : UI 담당. 공통 위젯 및 각 화면 UI 구성
+- VIewMode : 상태 관리 및 비즈니스 로직 담당. 비즈니스 로직에 필요한 데이터는 Model에 의존. 
+
 ## 📌 주요 기능
 #### 소셜 로그인 - <a href="https://github.com/chaehyuenwoo/SpringBoot-Project-MEGABOX/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C(Login)" >상세보기 - WIKI 이동</a>
 - DB값 검증
