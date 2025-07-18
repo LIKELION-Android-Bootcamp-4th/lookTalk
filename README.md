@@ -1,16 +1,53 @@
-# look_talk
+# Flutter-Project-LookTalk
+커뮤니티 기반 옷 쇼핑몰 플랫폼 
 
-A new Flutter project.
 
-## Getting Started
+## 🖥️ 프로젝트 소개
+옷 쇼핑몰과 커뮤니티 기능이 있는 애플리케이션입니다. 
+<br>
 
-This project is a starting point for a Flutter application.
+## 🕰️ 개발 기간
+* 25.06.25일 - 25.07.17일
 
-A few resources to get you started if this is your first Flutter project:
+### 🧑‍🤝‍🧑 맴버구성
+ - 팀장  : 이수지 - 소셜 로그인(카카오, 네이버, 구글 OAuth 2.0 연동), 회원가입 기능(역할 선택(구매자/판매자), 닉네임/상점명 중복 확인), 게시글 작성(상품 정보 추가), 좋아요, 댓글, 게시글 조회, 공통 컴포넌트들 모듈화, 서버 구조 기본 틀 
+ - 팀원1 : 김명헌 - 로그인, 회원가입, ID찾기, PW찾기, 마이 페이지,메인 페이지, 통합 및 형상관리, PPT제작, 발표
+ - 팀원2 : 신기루 - 메인 페이지, 메인 CSS
+ - 팀원3 : 이창한 - 1대1 문의 게시판(CRUD), 공지사항 게시판(CRUD)
+ - 팀원4 : 김창훈 - 1대1 문의 게시판(CRUD), 공지사항 게시판(CRUD)
+ - 팀원5 : 김성재 - 로그인, 회원가입, ID찾기, PW찾기
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### ⚙️ 개발 환경
+- **Flutter** : `3.22.1`
+- **Dart** : '3.8.1'
+- **IDE** : Android Studio Meerkat 
+- **Android SDK** : 35
+- **iOS Deployment  Target** : 13.0 이상 
+- **Device** : Android Emulator 
+- **ORM** : Mybatis
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 📌 주요 기능
+#### 소셜 로그인 - <a href="https://github.com/chaehyuenwoo/SpringBoot-Project-MEGABOX/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C(Login)" >상세보기 - WIKI 이동</a>
+- DB값 검증
+- ID찾기, PW찾기
+- 로그인 시 쿠키(Cookie) 및 세션(Session) 생성
+#### 회원가입 - <a href="https://github.com/chaehyuenwoo/SpringBoot-Project-MEGABOX/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C(Member)" >상세보기 - WIKI 이동</a>
+- 주소 API 연동
+- ID 중복 체크
+#### 메인 Page - <a href="https://github.com/chaehyuenwoo/SpringBoot-Project-MEGABOX/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C(Member)" >상세보기 - WIKI 이동</a>
+- 주소 API 연동
+- 회원정보 변경
+
+#### 커뮤니티 - <a href="https://github.com/chaehyuenwoo/SpringBoot-Project-MEGABOX/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C(%EC%98%81%ED%99%94-%EC%98%88%EB%A7%A4)" >상세보기 - WIKI 이동</a>
+- 영화 선택(날짜 지정)
+- 영화관 선택(대분류/소분류 선택) 및 시간 선택
+- 좌석 선택
+- 결제 페이지
+- 예매 완료
+#### 마이페이지 (사용자) - <a href="https://github.com/chaehyuenwoo/SpringBoot-Project-MEGABOX/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C(%EB%A9%94%EC%9D%B8-Page)" >상세보기 - WIKI 이동</a>
+- YouTube API 연동
+- 메인 포스터(영화) 이미지 슬라이드(CSS)
+
+#### 마이페이지 (구매자)  
+- 영화관 추가(대분류, 소분류)
+- 영화 추가(상영시간 및 상영관 설정)
