@@ -37,7 +37,7 @@
 
 
 ## 📌 주요 기능
-#### 소셜 로그인 - <a href="https://github.com/LIKELION-Android-Bootcamp-4th/lookTalk.wiki.git" >상세보기 - WIKI 이동</a>
+#### 소셜 로그인 - <a href="https://github.com/LIKELION-Android-Bootcamp-4th/lookTalk/wiki/%EB%A1%9C%EA%B7%B8%EC%9D%B8-%ED%8E%98%EC%9D%B4%EC%A7%80" >상세보기 - WIKI 이동</a>
 - DB값 검증
 - ID찾기, PW찾기
 - 로그인 시 쿠키(Cookie) 및 세션(Session) 생성
