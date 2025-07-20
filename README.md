@@ -6,7 +6,7 @@
 옷 쇼핑몰과 커뮤니티 기능이 있는 애플리케이션입니다. 
 <br>
 
-## 🕰️ 개발 기간
+### 🕰️ 개발 기간
 * 25.06.25 - 25.07.17
 
 ### 🧑‍🤝‍🧑 맴버구성
@@ -39,10 +39,6 @@
 - 기능은 feature을 통해 관리.
 - 각 feature에서 작성한 뒤, develop으로 merge 진행.
 - 최종 프로젝트는 main 브렌치에서 관리.
-
-
-### 🛠️ 프로젝트 리팩토링 및 기능 추가 - <a href="https://github.com/LIKELION-Android-Bootcamp-4th/lookTalk/wiki/%EB%A6%AC%ED%8C%A9%ED%86%A0%EB%A7%81-%EC%82%AC%EC%95%88-%EB%B0%8F-%EC%9C%A0%EC%A7%80%EB%B3%B4%EC%88%98-%EC%82%AC%ED%95%AD">상세보기 -WIKI 이동</a>
-
 
 
 
@@ -85,3 +81,6 @@
 - 공지사항 조회
 - 상품 조회/등록/수정 
 - 주문 조회 및 배송 상태 변경
+
+
+## 🛠️ 프로젝트 리팩토링 및 기능 추가 - <a href="https://github.com/LIKELION-Android-Bootcamp-4th/lookTalk/wiki/%EB%A6%AC%ED%8C%A9%ED%86%A0%EB%A7%81-%EC%82%AC%EC%95%88-%EB%B0%8F-%EC%9C%A0%EC%A7%80%EB%B3%B4%EC%88%98-%EC%82%AC%ED%95%AD">상세보기 -WIKI 이동</a>
