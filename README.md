@@ -10,7 +10,7 @@
 * 25.06.25일 - 25.07.17일
 
 ### 🧑‍🤝‍🧑 맴버구성
- - 팀장  : 이수지 - 소셜 로그인, 회원가입, 커뮤니티, 공통 컴포넌트들 모듈화, API 통신 구조 설계 및 구현
+ - 팀장  : 이수지 - 소셜 로그인, 회원가입, 커뮤니티, 공통 컴포넌트들 모듈화, API 통신 구조 설계, UI 화면 설계
  - 팀원1 : 김명헌 - 구매자 마이 페이지관리, 홈 화면, 통합 및 형상관리, 아키텍처 설계, 주문 상태 로직 관리, 영상 편집
  - 팀원2 : 신기루 - 장바구니 , 결제 , ppt제작
  - 팀원3 : 이창한 - 판매자 마이 페이지 관리, 사용자 관련 데이토 로직 담당, 리뷰 및 제품 상페 페이지 담당, 발표   
@@ -18,7 +18,7 @@
 
 ### ⚙️ 개발 환경
 - **Flutter** : `3.22.1`
-- **Dart** : '3.8.1'
+- **Dart** : `3.8.1`
 - **IDE** : Android Studio Meerkat 
 - **Android SDK** : 35
 - **iOS Deployment  Target** : 13.0 이상 
@@ -41,16 +41,16 @@
 - 최종 프로젝트는 main 브렌치에서 관리.
 
 
-## 프로젝트 리팩토링 및 기능 추가 - <a href="https://github.com/LIKELION-Android-Bootcamp-4th/lookTalk/wiki/%EB%A6%AC%ED%8C%A9%ED%86%A0%EB%A7%81-%EC%82%AC%EC%95%88-%EB%B0%8F-%EC%9C%A0%EC%A7%80%EB%B3%B4%EC%88%98-%EC%82%AC%ED%95%AD">상세보기 -WIKI 이동</a>
+### 프로젝트 리팩토링 및 기능 추가 - <a href="https://github.com/LIKELION-Android-Bootcamp-4th/lookTalk/wiki/%EB%A6%AC%ED%8C%A9%ED%86%A0%EB%A7%81-%EC%82%AC%EC%95%88-%EB%B0%8F-%EC%9C%A0%EC%A7%80%EB%B3%B4%EC%88%98-%EC%82%AC%ED%95%AD">상세보기 -WIKI 이동</a>
 
 
 
 
 ## 📌 주요 기능
 #### 소셜 로그인 - <a href="https://github.com/LIKELION-Android-Bootcamp-4th/lookTalk/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C-(Login)" >상세보기 - WIKI 이동</a>
-- DB값 검증
-- ID찾기, PW찾기
-- 로그인 시 쿠키(Cookie) 및 세션(Session) 생성
+- 카카오, 네이버, 구글 기반 OAuth 2.0 인증 구현
+- 액세스 토큰을 통한 사용자 정보 수신 및 검증
+- 서버로 토큰 전달 후 사용자 여부 확인 
 
 #### 🌐 회원가입 - <a href="https://github.com/LIKELION-Android-Bootcamp-4th/lookTalk/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C-(%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85)" >상세보기 - WIKI 이동</a>
 - 주소 API 연동
