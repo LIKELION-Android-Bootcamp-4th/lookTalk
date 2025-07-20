@@ -32,8 +32,8 @@
 - Model : Client, Repository, Response로 구성
 - View : UI 담당. 공통 위젯 및 각 화면 UI 구성
 - VIewMode : 상태 관리 및 비즈니스 로직 담당. 비즈니스 로직에 필요한 데이터는 Model에 의존.
-<img width="1192" height="608" alt="image" src="https://github.com/user-attachments/assets/f76a8eea-7eae-4038-9a23-1a4f9dc193ee" />
-<img width="962" height="620" alt="image" src="https://github.com/user-attachments/assets/3179a9f6-bec3-4120-bc7c-a4dc754e6362" />
+<img width="511" height="239" alt="Image" src="https://github.com/user-attachments/assets/100e5ac7-db66-4bf2-9348-583a39448a03" />
+<img width="458" height="243" alt="Image" src="https://github.com/user-attachments/assets/1ee5f675-d407-4d30-a4a2-bf3605e8c1d3" />
 
 ### ⚙️ 브랜치 관리
 - 기능은 feature을 통해 관리.
