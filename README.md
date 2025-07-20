@@ -58,8 +58,8 @@
 - 중복 체크 (닉네임/상점명)
   
 #### 🛍️ 메인 Page - <a href="https://github.com/LIKELION-Android-Bootcamp-4th/lookTalk/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C-(%EC%87%BC%ED%95%91%EB%AA%B0)" >상세보기 - WIKI 이동</a>
-- 주소 API 연동
-- 회원정보 변경
+- 상위 카테고리별 상품 조회
+- 카테고리 
 
 #### 💬 커뮤니티 - <a href="https://github.com/LIKELION-Android-Bootcamp-4th/lookTalk/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C-(%EC%BB%A4%EB%AE%A4%EB%8B%88%ED%8B%B0)" >상세보기 - WIKI 이동</a>
 - 코디 질문 / 코디 추천 / My+ 탭 구성 
@@ -69,14 +69,19 @@
 - 게시글 좋아요 
 - 댓글 작성 및 조회 
 
-#### 🛒 장바구니 / 결제
-- 
--
+#### 🛒 장바구니 / 결제 - <a href="https://github.com/LIKELION-Android-Bootcamp-4th/lookTalk/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C-(%EC%9E%A5%EB%B0%94%EA%B5%AC%EB%8B%88,-%EA%B2%80%EC%83%89)" >상세보기 - WIKI 이동</a>
+- 장바구니 목록 조회
+- 상품 결제 
 
 #### 🙋 마이페이지 (사용자) - <a href="https://github.com/LIKELION-Android-Bootcamp-4th/lookTalk/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C-(%EB%A7%88%EC%9D%B4%ED%8E%98%EC%9D%B4%EC%A7%80-%E2%80%90-%EA%B5%AC%EB%A7%A4%EC%9E%90)" >상세보기 - WIKI 이동</a>
-- YouTube API 연동
-- 메인 포스터(영화) 이미지 슬라이드(CSS)
+- 로그아웃
+- 공지사항 조회
+- 주문/반품/취소 내역 조회
+- 리뷰 작성
+- 반품 신청/주문 취소 
 
 #### 👨‍💼 마이페이지 (판매자)   - <a href="https://github.com/LIKELION-Android-Bootcamp-4th/lookTalk/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C-(%EB%A7%88%EC%9D%B4%ED%8E%98%EC%9D%B4%EC%A7%80-%E2%80%90-%ED%8C%90%EB%A7%A4%EC%9E%90)" >상세보기 - WIKI 이동</a>
-- 영화관 추가(대분류, 소분류)
-- 영화 추가(상영시간 및 상영관 설정)
+- 로그아웃
+- 공지사항 조회
+- 상품 조회/등록/수정 
+- 주문 조회 및 배송 상태 변경
