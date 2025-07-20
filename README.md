@@ -47,12 +47,12 @@
 
 
 ## 📌 주요 기능
-#### 소셜 로그인 - <a href="https://github.com/LIKELION-Android-Bootcamp-4th/lookTalk/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C-(Login)" >상세보기 - WIKI 이동</a>
+#### 🔐 소셜 로그인 - <a href="https://github.com/LIKELION-Android-Bootcamp-4th/lookTalk/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C-(Login)" >상세보기 - WIKI 이동</a>
 - 소셜 로그인 (OAuth 2.0 기반) 
 - accessToken 및 refreshToken 발급 및 Secure Storage 저장 
 - 신규 사용자 분기 처리 (`isNewUser`)
 
-#### 🌐 회원가입 - <a href="https://github.com/LIKELION-Android-Bootcamp-4th/lookTalk/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C-(%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85)" >상세보기 - WIKI 이동</a>
+#### 📝 회원가입 - <a href="https://github.com/LIKELION-Android-Bootcamp-4th/lookTalk/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C-(%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85)" >상세보기 - WIKI 이동</a>
 - 플랫폼 역할 선택 (구매자/판매자)
 - 닉네임 또는 상점명/상점 설명 입력
 - 중복 체크 (닉네임/상점명)
