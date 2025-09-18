@@ -1,4 +1,4 @@
-package com.example.look_talk
+package com.bone_soup.look_talk
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 
