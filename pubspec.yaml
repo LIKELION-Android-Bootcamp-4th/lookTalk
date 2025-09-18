@@ -62,6 +62,7 @@ dependencies:
   intl: ^0.20.2
 
   timeago: ^3.7.1
+  firebase_core: ^4.1.0
 
 
 dev_dependencies:

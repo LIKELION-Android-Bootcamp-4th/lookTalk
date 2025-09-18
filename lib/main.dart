@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
@@ -14,14 +15,18 @@ import 'view_model/viewmodel_provider.dart';
 
 // 기존 Provider import들
 import 'view_model/community/community_tab_view_model.dart';
-
+import 'firebase_options.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   KakaoSdk.init(nativeAppKey: '2be79d6c89568bf54e78a7e7b1bc3fbc', loggingEnabled: true);
   final GoogleSignIn googleSignIn = GoogleSignIn(
     clientId: '297394298746-334r4944egru9obvf9au90es85pvv5va.apps.googleusercontent.com',
   );
   await googleSignIn.signInSilently();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(
     MultiProvider(
       providers: [
